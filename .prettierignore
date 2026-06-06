@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# Expo / build output
+.expo/
+dist/
+web-build/
+
+# Test coverage
+coverage/
+
+# Lockfiles (formatted by their tools, not Prettier)
+package-lock.json
+
+# Generated type declarations
+expo-env.d.ts
