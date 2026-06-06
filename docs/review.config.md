@@ -8,17 +8,17 @@
 
 ## Labels
 
-| Purpose | Label | Type | Meaning |
-| ------- | ----- | ---- | ------- |
-| `needs-review` | `review-needs-review` | State | Open PR awaiting its first review (entry state, applied at creation) |
-| `reviewing` | `review-reviewing` | State | Review in progress — prevents concurrent reviews |
-| `approved` | `review-approved` | State | No remaining issues, ready for human merge |
-| `changes-requested` | `review-changes-requested` | State | Concrete problems remain that a human must address |
-| `needs-discussion` | `review-needs-discussion` | State | Architectural or scope questions need human judgment |
-| `needs-re-review` | `review-needs-re-review` | State | New commits pushed since last review — re-review required |
-| `failed` | `review-failed` | State | Review could not be completed |
-| `updating` | `review-updating` | State | A builder agent is addressing review feedback |
-| `fixes-applied` | `review-fixes-applied` | Action | Claude pushed fix commits to the PR branch (sticky) |
+| Purpose             | Label                      | Type   | Meaning                                                              |
+| ------------------- | -------------------------- | ------ | -------------------------------------------------------------------- |
+| `needs-review`      | `review-needs-review`      | State  | Open PR awaiting its first review (entry state, applied at creation) |
+| `reviewing`         | `review-reviewing`         | State  | Review in progress — prevents concurrent reviews                     |
+| `approved`          | `review-approved`          | State  | No remaining issues, ready for human merge                           |
+| `changes-requested` | `review-changes-requested` | State  | Concrete problems remain that a human must address                   |
+| `needs-discussion`  | `review-needs-discussion`  | State  | Architectural or scope questions need human judgment                 |
+| `needs-re-review`   | `review-needs-re-review`   | State  | New commits pushed since last review — re-review required            |
+| `failed`            | `review-failed`            | State  | Review could not be completed                                        |
+| `updating`          | `review-updating`          | State  | A builder agent is addressing review feedback                        |
+| `fixes-applied`     | `review-fixes-applied`     | Action | Claude pushed fix commits to the PR branch (sticky)                  |
 
 ## Auto-Merge on Approval
 

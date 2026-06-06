@@ -72,8 +72,8 @@ Every issue always carries exactly one of these lifecycle labels.
 
 ### Claude
 
-| Purpose         | Label             | Applied by                                            |
-| --------------- | ----------------- | ----------------------------------------------------- |
+| Purpose         | Label             | Applied by                                               |
+| --------------- | ----------------- | -------------------------------------------------------- |
 | claude-authored | `claude-authored` | finish-story (PRs), report-issue / finish-story (issues) |
 
 ## Ready Gate
@@ -120,14 +120,14 @@ Issues should include these sections at minimum:
 
 ## Project Board
 
-| Setting             | Value                          |
-| ------------------- | ------------------------------ |
-| project-number      | `10`                           |
-| project-title       | `Mobile App Template`          |
-| project-node-id     | `PVT_kwDODj6aos4BZ4n6`         |
+| Setting             | Value                            |
+| ------------------- | -------------------------------- |
+| project-number      | `10`                             |
+| project-title       | `Mobile App Template`            |
+| project-node-id     | `PVT_kwDODj6aos4BZ4n6`           |
 | status-field-id     | `PVTSSF_lADODj6aos4BZ4n6zhU0LQ0` |
-| start-date-field-id | `n/a`                          |
-| end-date-field-id   | `n/a`                          |
+| start-date-field-id | `n/a`                            |
+| end-date-field-id   | `n/a`                            |
 
 ### Status Options
 

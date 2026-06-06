@@ -74,8 +74,8 @@ development:
 
 ## Supplementary Files
 
-| File | When to consult |
-| ---- | --------------- |
-| `ClaudeProject.md` | Project identity, labels, quality gate, branch convention, board config. Read at the start of any workflow command. |
-| `docs/review.config.md` | Review label definitions, non-compliance gates, tech-stack review rules. Read when performing or preparing for code review. |
+| File                                       | When to consult                                                                                                                                                   |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ClaudeProject.md`                         | Project identity, labels, quality gate, branch convention, board config. Read at the start of any workflow command.                                               |
+| `docs/review.config.md`                    | Review label definitions, non-compliance gates, tech-stack review rules. Read when performing or preparing for code review.                                       |
 | `.decisions/mobile-template-2026-06-06.md` | Architecture decisions: Expo SDK version, theme system, a11y requirements, build toolchain, state management. Consult before making cross-cutting design choices. |
