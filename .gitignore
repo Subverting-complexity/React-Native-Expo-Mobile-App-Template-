@@ -30,5 +30,8 @@ web-build/
 # TypeScript
 *.tsbuildinfo
 
+# Test coverage
+coverage/
+
 # github-workflow plugin scratch files
 .claude/plan.md
