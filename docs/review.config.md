@@ -22,10 +22,10 @@
 
 ## Auto-Merge on Approval
 
-| Setting                 | Value      |
-| ----------------------- | ---------- |
-| auto-merge-on-approval  | `disabled` |
-| require-ci-before-merge | `false`    |
+| Setting                 | Value     |
+| ----------------------- | --------- |
+| auto-merge-on-approval  | `enabled` |
+| require-ci-before-merge | `false`   |
 
 ## Hard Non-Compliance Gates
 
