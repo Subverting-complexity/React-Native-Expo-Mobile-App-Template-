@@ -1,17 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { lightTheme } from '@/theme';
+import { useTheme } from '@/theme';
 
 export default function HomeScreen() {
+  const { theme } = useTheme();
   return (
     <View
-      style={[
-        styles.container,
-        { backgroundColor: lightTheme.colors.background },
-      ]}
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
-      <Text style={{ color: lightTheme.colors.textPrimary }}>
-        Expo Template
-      </Text>
+      <Text style={{ color: theme.colors.textPrimary }}>Expo Template</Text>
     </View>
   );
 }
