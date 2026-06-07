@@ -16,10 +16,12 @@
     "quality": "npm run typecheck && npm run test -- --coverage --passWithNoTests"
   },
   "dependencies": {
+    "@expo-google-fonts/atkinson-hyperlegible": "^0.4.1",
     "@expo/metro-runtime": "~56.0.14",
     "@react-native-async-storage/async-storage": "^3.1.1",
     "expo": "~56.0.9",
     "expo-constants": "~56.0.17",
+    "expo-font": "~56.0.5",
     "expo-linking": "~56.0.13",
     "expo-modules-core": "^56.0.15",
     "expo-router": "~56.2.9",

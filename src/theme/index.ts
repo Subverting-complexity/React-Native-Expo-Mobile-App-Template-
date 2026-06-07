@@ -16,6 +16,8 @@ export type {
   TextVariant,
   TextScale,
   FontFamilies,
+  FontFamily,
+  FontFamilyValue,
 } from './typography';
 export type {
   ShadowScale,
@@ -30,7 +32,7 @@ export type { ZIndexScale } from './zIndex';
 export { lightColors, darkColors } from './colors';
 export { spacing } from './spacing';
 export { radii } from './radii';
-export { typography } from './typography';
+export { typography, FONT_FAMILIES } from './typography';
 export { shadows, iosShadows, androidShadows, webShadows } from './shadows';
 export { zIndex } from './zIndex';
 
