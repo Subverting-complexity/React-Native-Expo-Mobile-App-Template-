@@ -2,6 +2,8 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useAppFonts } from '../src/hooks/useAppFonts';
 
+import { ThemeProvider } from '@/theme';
+
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useAppFonts();
 
@@ -13,9 +15,9 @@ export default function RootLayout() {
   }
 
   return (
-    <>
+    <ThemeProvider>
       <Stack />
       <StatusBar style="auto" />
-    </>
+    </ThemeProvider>
   );
 }

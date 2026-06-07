@@ -36,6 +36,10 @@ export { typography, FONT_FAMILIES } from './typography';
 export { shadows, iosShadows, androidShadows, webShadows } from './shadows';
 export { zIndex } from './zIndex';
 
+export type { ColorMode, StorageAdapter, ThemeContextValue } from './ThemeContext';
+export { ThemeProvider } from './ThemeProvider';
+export { useTheme } from './useTheme';
+
 export interface ThemeTokens {
   colors: ColorPalette;
   spacing: typeof spacing;
