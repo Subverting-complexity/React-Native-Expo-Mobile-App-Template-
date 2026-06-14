@@ -5,6 +5,7 @@ import { radii } from '../radii';
 import { typography } from '../typography';
 import { iosShadows, androidShadows, webShadows } from '../shadows';
 import { zIndex } from '../zIndex';
+import { a11y } from '../a11y';
 
 describe('color palettes', () => {
   it('light palette has all required keys', () => {
@@ -136,6 +137,17 @@ describe('z-index scale', () => {
   });
 });
 
+describe('a11y tokens', () => {
+  it('minimum touch target is 44 (WCAG 2.5.5 / HIG)', () => {
+    expect(a11y.minTouchTarget).toBe(44);
+  });
+
+  it('minimum touch target is a positive number', () => {
+    expect(typeof a11y.minTouchTarget).toBe('number');
+    expect(a11y.minTouchTarget).toBeGreaterThan(0);
+  });
+});
+
 describe('consolidated theme objects', () => {
   it('lightTheme includes all token categories', () => {
     expect(lightTheme).toHaveProperty('colors');
@@ -144,6 +156,7 @@ describe('consolidated theme objects', () => {
     expect(lightTheme).toHaveProperty('typography');
     expect(lightTheme).toHaveProperty('shadows');
     expect(lightTheme).toHaveProperty('zIndex');
+    expect(lightTheme).toHaveProperty('a11y');
   });
 
   it('darkTheme includes all token categories', () => {
@@ -153,13 +166,15 @@ describe('consolidated theme objects', () => {
     expect(darkTheme).toHaveProperty('typography');
     expect(darkTheme).toHaveProperty('shadows');
     expect(darkTheme).toHaveProperty('zIndex');
+    expect(darkTheme).toHaveProperty('a11y');
   });
 
-  it('lightTheme and darkTheme share spacing, radii, typography, and zIndex references', () => {
+  it('lightTheme and darkTheme share spacing, radii, typography, zIndex, and a11y references', () => {
     expect(lightTheme.spacing).toBe(darkTheme.spacing);
     expect(lightTheme.radii).toBe(darkTheme.radii);
     expect(lightTheme.typography).toBe(darkTheme.typography);
     expect(lightTheme.zIndex).toBe(darkTheme.zIndex);
+    expect(lightTheme.a11y).toBe(darkTheme.a11y);
   });
 
   it('lightTheme and darkTheme have different color palettes', () => {
