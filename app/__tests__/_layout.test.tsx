@@ -1,3 +1,4 @@
+import { AccessibilityInfo } from 'react-native';
 import { render } from '@testing-library/react-native';
 import RootLayout from '../_layout';
 
@@ -20,10 +21,26 @@ jest.mock('../../src/hooks/useAppFonts', () => ({
   useAppFonts: jest.fn(),
 }));
 
-const mockUseAppFonts =
-  jest.requireMock<{ useAppFonts: jest.Mock }>('../../src/hooks/useAppFonts').useAppFonts;
+const mockUseAppFonts = jest.requireMock<{ useAppFonts: jest.Mock }>(
+  '../../src/hooks/useAppFonts',
+).useAppFonts;
 
 describe('RootLayout', () => {
+  beforeEach(() => {
+    jest
+      .spyOn(AccessibilityInfo, 'isReduceMotionEnabled')
+      .mockResolvedValue(false);
+    jest
+      .spyOn(AccessibilityInfo, 'addEventListener')
+      .mockReturnValue({ remove: jest.fn() } as ReturnType<
+        typeof AccessibilityInfo.addEventListener
+      >);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   it('renders nothing while fonts are loading', () => {
     mockUseAppFonts.mockReturnValue([false, null]);
     const { toJSON } = render(<RootLayout />);
