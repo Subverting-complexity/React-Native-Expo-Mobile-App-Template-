@@ -15,11 +15,19 @@ export function useReduceMotionDetection(): boolean {
   useEffect(() => {
     let mounted = true;
 
-    AccessibilityInfo.isReduceMotionEnabled().then((enabled) => {
-      if (mounted) {
-        setReduceMotion(enabled);
-      }
-    });
+    // Default to false (motion allowed) if the platform query rejects, so a
+    // failed probe never leaves an unhandled rejection or a stuck state.
+    AccessibilityInfo.isReduceMotionEnabled()
+      .then((enabled) => {
+        if (mounted) {
+          setReduceMotion(enabled);
+        }
+      })
+      .catch(() => {
+        if (mounted) {
+          setReduceMotion(false);
+        }
+      });
 
     const subscription = AccessibilityInfo.addEventListener(
       'reduceMotionChanged',

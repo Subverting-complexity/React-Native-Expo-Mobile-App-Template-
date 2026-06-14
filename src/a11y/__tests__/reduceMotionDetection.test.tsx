@@ -58,4 +58,23 @@ describe('useReduceMotionDetection', () => {
     unmount();
     expect(remove).toHaveBeenCalledTimes(1);
   });
+
+  it('stays false when the OS query rejects', async () => {
+    const remove = jest.fn();
+    jest
+      .spyOn(AccessibilityInfo, 'isReduceMotionEnabled')
+      .mockRejectedValue(new Error('unsupported'));
+    jest
+      .spyOn(AccessibilityInfo, 'addEventListener')
+      .mockReturnValue({ remove } as ReturnType<
+        typeof AccessibilityInfo.addEventListener
+      >);
+
+    const { result } = renderHook(() => useReduceMotionDetection());
+
+    await waitFor(() =>
+      expect(AccessibilityInfo.isReduceMotionEnabled).toHaveBeenCalled(),
+    );
+    expect(result.current).toBe(false);
+  });
 });
