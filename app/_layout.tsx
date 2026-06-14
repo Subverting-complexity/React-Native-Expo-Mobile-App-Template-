@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useAppFonts } from '../src/hooks/useAppFonts';
 
+import { A11yProvider } from '@/a11y';
 import { ThemeProvider } from '@/theme';
 
 export default function RootLayout() {
@@ -16,8 +17,10 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider>
-      <Stack />
-      <StatusBar style="auto" />
+      <A11yProvider>
+        <Stack />
+        <StatusBar style="auto" />
+      </A11yProvider>
     </ThemeProvider>
   );
 }
