@@ -38,6 +38,15 @@ export { typography, FONT_FAMILIES } from './typography';
 export { shadows, iosShadows, androidShadows, webShadows } from './shadows';
 export { zIndex } from './zIndex';
 export { a11y } from './a11y';
+export {
+  AA_NORMAL_TEXT,
+  AA_LARGE_TEXT,
+  AA_NON_TEXT,
+  hexToRgb,
+  relativeLuminance,
+  contrastRatio,
+  meetsAA,
+} from './contrast';
 
 export type {
   ColorMode,
