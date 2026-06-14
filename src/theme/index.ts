@@ -35,8 +35,21 @@ export { radii } from './radii';
 export { typography, FONT_FAMILIES } from './typography';
 export { shadows, iosShadows, androidShadows, webShadows } from './shadows';
 export { zIndex } from './zIndex';
+export {
+  AA_NORMAL_TEXT,
+  AA_LARGE_TEXT,
+  AA_NON_TEXT,
+  hexToRgb,
+  relativeLuminance,
+  contrastRatio,
+  meetsAA,
+} from './contrast';
 
-export type { ColorMode, StorageAdapter, ThemeContextValue } from './ThemeContext';
+export type {
+  ColorMode,
+  StorageAdapter,
+  ThemeContextValue,
+} from './ThemeContext';
 export { ThemeProvider } from './ThemeProvider';
 export { useTheme } from './useTheme';
 

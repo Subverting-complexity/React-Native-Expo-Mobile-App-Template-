@@ -39,7 +39,7 @@ export const lightColors: ColorPalette = {
   borderSubtle: '#F1F3F5',
 
   textPrimary: '#212529',
-  textSecondary: '#6C757D',
+  textSecondary: '#5C636A',
   textDisabled: '#ADB5BD',
   textInverse: '#FFFFFF',
 
@@ -51,10 +51,10 @@ export const lightColors: ColorPalette = {
   secondaryVariant: '#6741D9',
   onSecondary: '#FFFFFF',
 
-  success: '#2F9E44',
+  success: '#1E7E34',
   onSuccess: '#FFFFFF',
-  warning: '#E67700',
-  onWarning: '#FFFFFF',
+  warning: '#D9760A',
+  onWarning: '#1A1200',
   error: '#C92A2A',
   onError: '#FFFFFF',
   info: '#1971C2',
