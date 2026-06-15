@@ -56,6 +56,10 @@ export type {
   StorageAdapter,
   ThemeContextValue,
 } from './ThemeContext';
+// Exported so consumers that must tolerate a missing provider (e.g. an error
+// boundary fallback rendered above ThemeProvider) can read the context
+// directly with useContext instead of useTheme, which throws when absent.
+export { ThemeContext } from './ThemeContext';
 export { ThemeProvider } from './ThemeProvider';
 export { useTheme } from './useTheme';
 
