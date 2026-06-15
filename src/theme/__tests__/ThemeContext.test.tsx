@@ -154,12 +154,11 @@ describe('useTheme', () => {
 
 describe('ThemeContext', () => {
   it('is null by default (without provider)', () => {
-    let captured: ReturnType<typeof React.useContext> = undefined;
     function Capture() {
-      captured = React.useContext(ThemeContext);
-      return null;
+      const value = React.useContext(ThemeContext);
+      return <Text testID="ctx">{value === null ? 'null' : 'present'}</Text>;
     }
-    render(<Capture />);
-    expect(captured).toBeNull();
+    const { getByTestId } = render(<Capture />);
+    expect(getByTestId('ctx').props.children).toBe('null');
   });
 });
