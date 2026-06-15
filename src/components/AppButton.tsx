@@ -9,6 +9,7 @@ import {
 
 import { AppPressable, type AppPressableProps } from './AppPressable';
 import { AppText } from './AppText';
+import { A11Y_ROLES } from '@/a11y';
 import { useTheme, FONT_FAMILIES } from '@/theme';
 import type { ColorPalette, ThemeTokens } from '@/theme';
 
@@ -161,7 +162,7 @@ export function AppButton({
 
   return (
     <AppPressable
-      accessibilityRole="button"
+      accessibilityRole={A11Y_ROLES.button}
       accessibilityLabel={accessibilityLabel ?? label}
       accessibilityState={{ disabled: isDisabled, busy: loading }}
       disabled={isDisabled}
