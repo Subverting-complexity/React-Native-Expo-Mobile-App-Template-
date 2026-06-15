@@ -29,7 +29,7 @@ describe('color palettes', () => {
   });
 
   it('all color values are strings', () => {
-    for (const [key, value] of Object.entries(lightColors)) {
+    for (const [, value] of Object.entries(lightColors)) {
       expect(typeof value).toBe('string');
     }
   });

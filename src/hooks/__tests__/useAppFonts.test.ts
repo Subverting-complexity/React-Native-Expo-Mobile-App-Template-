@@ -1,4 +1,5 @@
 import { renderHook } from '@testing-library/react-native';
+import { useAppFonts } from '../useAppFonts';
 
 jest.mock('expo-font', () => ({
   useFonts: jest.fn(),
@@ -10,8 +11,6 @@ jest.mock('@expo-google-fonts/atkinson-hyperlegible', () => ({
   AtkinsonHyperlegible_700Bold: 'mock-bold',
   AtkinsonHyperlegible_700Bold_Italic: 'mock-bold-italic',
 }));
-
-import { useAppFonts } from '../useAppFonts';
 
 const mockUseFonts = jest.requireMock<{ useFonts: jest.Mock }>('expo-font').useFonts;
 
