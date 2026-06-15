@@ -19,6 +19,9 @@ export type {
   FontFamilies,
   FontFamily,
   FontFamilyValue,
+  TextVariantName,
+  TextVariantStyle,
+  TextVariants,
 } from './typography';
 export type {
   ShadowScale,
