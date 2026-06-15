@@ -3,8 +3,8 @@ import { render } from '@testing-library/react-native';
 import RootLayout from '../_layout';
 
 jest.mock('expo-router', () => {
-  const React = require('react');
-  const { View } = require('react-native');
+  const React = jest.requireActual('react');
+  const { View } = jest.requireActual('react-native');
   return { Stack: () => React.createElement(View, { testID: 'stack' }) };
 });
 
