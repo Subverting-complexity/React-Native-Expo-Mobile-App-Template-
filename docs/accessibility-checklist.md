@@ -58,6 +58,34 @@ above, in line with WCAG:
   (for example a focused input), it uses a higher-contrast accent token, not
   `border`.
 
+## Automated accessibility linting
+
+Accessibility mistakes that are visible in the source are caught by ESLint
+before review. The `eslint-plugin-react-native-a11y` rules run as part of
+`npm run lint`, which `npm run quality` and CI both invoke — so a violation
+fails the gate and blocks merge, not just a local check.
+
+The gated rules (configured in `eslint.config.js`, scoped to `app/` and `src/`
+UI source, test files excluded) are:
+
+- **Valid accessibility props when present** — an `accessibilityRole`,
+  `accessibilityState`, `accessibilityValue`, `accessibilityActions`,
+  `accessibilityLiveRegion`, `accessibilityIgnoresInvertColors`, or
+  `importantForAccessibility` prop must use a value the platform understands.
+  These fire only when the prop is present, so they add no noise to elements
+  that omit it.
+- **Announceable interactive elements** — every touchable / `TextInput` must
+  carry at least one descriptor (a role, a label plus hint, or accessibility
+  actions) so assistive tech can describe it.
+- **No nested touchables** — a clickable element inside an `accessible`
+  container is rejected, because the container swallows one of the targets.
+
+The "require an accessibility prop on everything" rules are intentionally left
+off: the `App*` components already force `accessibilityLabel` and
+`accessibilityRole` at the type level, and demanding a hint on every labelled
+element is noisy without improving the experience. The gate is verified by
+`src/__tests__/a11yLint.test.ts`, which lints fixtures through the real config.
+
 ## Per-screen accessibility checklist
 
 Run through this before merging any screen or feature:
@@ -93,6 +121,7 @@ Run through this before merging any screen or feature:
 
 ### Verification
 
-- [ ] `npm run quality` passes (includes the contrast test).
+- [ ] `npm run quality` passes (includes the contrast test and the a11y lint
+      rules described above).
 - [ ] Spot-checked with a screen reader (VoiceOver / TalkBack) on at least one
       flow.
