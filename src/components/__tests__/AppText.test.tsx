@@ -1,7 +1,8 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { render, waitFor } from '@testing-library/react-native';
 
 import { AppText } from '../AppText';
+import { MAX_FONT_SIZE_MULTIPLIER } from '@/a11y';
 import {
   ThemeProvider,
   lightColors,
@@ -29,6 +30,28 @@ function renderWithTheme(ui: React.ReactElement, saved: string | null = null) {
 function styleOf(node: { props: { style?: unknown } }) {
   return StyleSheet.flatten(node.props.style);
 }
+
+// `useWindowDimensions` reads its initial value from `Dimensions.get('window')`,
+// so spying there lets us drive the OS font scale. The mock returns a *stable*
+// object per scale — a fresh reference each call would make the hook's
+// change-effect fire forever. Default to 1 so the suite matches an unscaled OS.
+let windowDims = { width: 360, height: 640, scale: 2, fontScale: 1 };
+const dimsSpy = jest.spyOn(Dimensions, 'get');
+
+function setFontScale(fontScale: number) {
+  windowDims = { width: 360, height: 640, scale: 2, fontScale };
+}
+
+beforeEach(() => {
+  setFontScale(1);
+  dimsSpy.mockImplementation((dim) =>
+    dim === 'window' ? windowDims : { width: 360, height: 640, scale: 2, fontScale: 1 },
+  );
+});
+
+afterAll(() => {
+  dimsSpy.mockRestore();
+});
 
 describe('AppText', () => {
   it('renders its children', () => {
@@ -86,5 +109,60 @@ describe('AppText', () => {
       <AppText numberOfLines={2}>Long</AppText>,
     );
     expect(getByText('Long').props.numberOfLines).toBe(2);
+  });
+
+  describe('Dynamic Type scaling', () => {
+    const base = typography.sizes.md.lineHeight;
+
+    it('scales lineHeight with the OS font scale up to the cap', () => {
+      setFontScale(1.3);
+      const { getByText } = renderWithTheme(<AppText>Body</AppText>);
+      expect(styleOf(getByText('Body')).lineHeight).toBeCloseTo(base * 1.3);
+    });
+
+    it('clamps lineHeight scaling at the default cap', () => {
+      setFontScale(3);
+      const { getByText } = renderWithTheme(<AppText>Body</AppText>);
+      expect(styleOf(getByText('Body')).lineHeight).toBeCloseTo(
+        base * MAX_FONT_SIZE_MULTIPLIER,
+      );
+    });
+
+    it('applies the default cap to the underlying Text node', () => {
+      const { getByText } = renderWithTheme(<AppText>Body</AppText>);
+      expect(getByText('Body').props.maxFontSizeMultiplier).toBe(
+        MAX_FONT_SIZE_MULTIPLIER,
+      );
+    });
+
+    it('honors a per-instance maxFontSizeMultiplier override', () => {
+      setFontScale(3);
+      const { getByText } = renderWithTheme(
+        <AppText maxFontSizeMultiplier={2}>Body</AppText>,
+      );
+      const node = getByText('Body');
+      expect(styleOf(node).lineHeight).toBeCloseTo(base * 2);
+      expect(node.props.maxFontSizeMultiplier).toBe(2);
+    });
+
+    it('opts out of the cap when maxFontSizeMultiplier is null', () => {
+      setFontScale(3);
+      const { getByText } = renderWithTheme(
+        <AppText maxFontSizeMultiplier={null}>Body</AppText>,
+      );
+      const node = getByText('Body');
+      expect(styleOf(node).lineHeight).toBeCloseTo(base * 3);
+      expect(node.props.maxFontSizeMultiplier).toBeNull();
+    });
+
+    it('freezes scaling when allowFontScaling is false', () => {
+      setFontScale(3);
+      const { getByText } = renderWithTheme(
+        <AppText allowFontScaling={false}>Body</AppText>,
+      );
+      const node = getByText('Body');
+      expect(styleOf(node).lineHeight).toBe(base);
+      expect(node.props.allowFontScaling).toBe(false);
+    });
   });
 });
