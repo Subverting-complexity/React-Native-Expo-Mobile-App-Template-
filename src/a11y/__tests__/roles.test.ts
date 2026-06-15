@@ -9,6 +9,7 @@ describe('A11Y_ROLES', () => {
       button: 'button',
       link: 'link',
       alert: 'alert',
+      progressbar: 'progressbar',
     });
   });
 
@@ -16,7 +17,7 @@ describe('A11Y_ROLES', () => {
     // Compile-time guarantee surfaced at runtime: each value is assignable to
     // React Native's AccessibilityRole union.
     const roles: AccessibilityRole[] = Object.values(A11Y_ROLES);
-    expect(roles).toHaveLength(4);
+    expect(roles).toHaveLength(5);
     roles.forEach((role) => expect(typeof role).toBe('string'));
   });
 

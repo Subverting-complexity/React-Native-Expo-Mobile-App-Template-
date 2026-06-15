@@ -24,12 +24,17 @@ import type { AccessibilityRole } from 'react-native';
  *   as a toast or an inline error. Render it with this role **and** announce
  *   its text through {@link announceForAccessibility} so it is spoken without
  *   the user having to move focus to it.
+ * - **`progressbar`** — a control communicating the progress of a task, either
+ *   determinate (a fraction complete) or indeterminate (a busy spinner). Pair a
+ *   determinate bar with `accessibilityValue` so the percentage is spoken, and
+ *   give a standalone spinner an `accessibilityLabel` describing what is loading.
  */
 export const A11Y_ROLES = {
   header: 'header',
   button: 'button',
   link: 'link',
   alert: 'alert',
+  progressbar: 'progressbar',
 } as const satisfies Record<string, AccessibilityRole>;
 
 /** Convention key into {@link A11Y_ROLES} (e.g. `'header' | 'button' | …`). */
