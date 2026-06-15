@@ -26,7 +26,12 @@ export type TextTone =
   | 'error'
   | 'info';
 
-const TONE_COLORS: Record<TextTone, keyof ColorPalette> = {
+/**
+ * Maps each semantic text {@link TextTone} to a single palette colour token.
+ * Exported so sibling components (links, back buttons) resolve a tone to the
+ * same colour token AppText uses — the mapping lives here once.
+ */
+export const TONE_COLORS: Record<TextTone, keyof ColorPalette> = {
   primary: 'textPrimary',
   secondary: 'textSecondary',
   disabled: 'textDisabled',
