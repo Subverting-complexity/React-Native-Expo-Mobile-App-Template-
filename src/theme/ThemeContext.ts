@@ -1,12 +1,11 @@
 import { createContext } from 'react';
 import type { ThemeTokens } from './index';
 
-export type ColorMode = 'light' | 'dark' | 'system';
+// StorageAdapter is defined once in the storage module (the persistence port)
+// and re-exported here so theme consumers keep importing it from `@/theme`.
+export type { StorageAdapter } from '@/storage';
 
-export interface StorageAdapter {
-  getItem(key: string): Promise<string | null>;
-  setItem(key: string, value: string): Promise<void>;
-}
+export type ColorMode = 'light' | 'dark' | 'system';
 
 export interface ThemeContextValue {
   theme: ThemeTokens;

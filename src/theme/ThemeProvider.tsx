@@ -1,13 +1,11 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { useColorScheme } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { storage as defaultStorage } from '@/storage';
 import { lightTheme, darkTheme } from './index';
 import { ThemeContext, type ColorMode, type StorageAdapter } from './ThemeContext';
 
 const STORAGE_KEY = '@theme/colorMode';
-
-const defaultStorage: StorageAdapter = AsyncStorage;
 
 interface ThemeProviderProps {
   children: ReactNode;
