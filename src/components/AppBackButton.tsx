@@ -1,10 +1,5 @@
 import { useMemo, type ReactNode } from 'react';
-import {
-  StyleSheet,
-  View,
-  type StyleProp,
-  type ViewStyle,
-} from 'react-native';
+import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { AppPressable, type AppPressableProps } from './AppPressable';
 import { AppText, TONE_COLORS, type TextTone } from './AppText';
@@ -16,7 +11,10 @@ import type { TextVariantName, ThemeTokens } from '@/theme';
 export type AppBackButtonSize = 'sm' | 'md' | 'lg';
 
 /** Glyph size key (typography scale) per size — keeps the arrow token-sourced. */
-const GLYPH_SIZE: Record<AppBackButtonSize, keyof ThemeTokens['typography']['sizes']> = {
+const GLYPH_SIZE: Record<
+  AppBackButtonSize,
+  keyof ThemeTokens['typography']['sizes']
+> = {
   sm: 'lg',
   md: '2xl',
   lg: '3xl',
@@ -40,7 +38,9 @@ function resolveBackIcon(
 ): ReactNode {
   if (icon == null) {
     return (
-      <AppText style={{ fontSize: size, lineHeight: size, color }}>{BACK_GLYPH}</AppText>
+      <AppText style={{ fontSize: size, lineHeight: size, color }}>
+        {BACK_GLYPH}
+      </AppText>
     );
   }
   return typeof icon === 'function' ? icon({ color, size }) : icon;
@@ -54,11 +54,10 @@ function resolveBackIcon(
  * custom `icon` replaces the default arrow — keeping the component free of any
  * icon dependency.
  */
-export interface AppBackButtonProps
-  extends Omit<
-    AppPressableProps,
-    'accessibilityRole' | 'accessibilityLabel' | 'children' | 'style'
-  > {
+export interface AppBackButtonProps extends Omit<
+  AppPressableProps,
+  'accessibilityRole' | 'accessibilityLabel' | 'children' | 'style'
+> {
   /** Optional visible text rendered after the glyph. */
   label?: string;
   /** Replaces the default arrow. A node, or a builder given `{ color, size }`. */
@@ -118,7 +117,10 @@ export function AppBackButton({
     >
       <View>{renderedIcon}</View>
       {label ? (
-        <AppText variant={LABEL_VARIANT[size]} tone={isDisabled ? 'disabled' : tone}>
+        <AppText
+          variant={LABEL_VARIANT[size]}
+          tone={isDisabled ? 'disabled' : tone}
+        >
           {label}
         </AppText>
       ) : null}

@@ -1,10 +1,5 @@
 import { useMemo, type ReactNode } from 'react';
-import {
-  ScrollView,
-  View,
-  type StyleProp,
-  type ViewStyle,
-} from 'react-native';
+import { ScrollView, View, type StyleProp, type ViewStyle } from 'react-native';
 import { SafeAreaView, type Edge } from 'react-native-safe-area-context';
 
 import { useTheme } from '@/theme';

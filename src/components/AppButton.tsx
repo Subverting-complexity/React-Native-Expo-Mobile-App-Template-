@@ -38,7 +38,11 @@ const VARIANTS: Record<AppButtonVariant, VariantColors> = {
     foreground: 'onSecondary',
     border: null,
   },
-  outline: { background: 'transparent', foreground: 'primary', border: 'primary' },
+  outline: {
+    background: 'transparent',
+    foreground: 'primary',
+    border: 'primary',
+  },
   ghost: { background: 'transparent', foreground: 'primary', border: null },
   danger: { background: 'error', foreground: 'onError', border: null },
 };
@@ -46,7 +50,11 @@ const VARIANTS: Record<AppButtonVariant, VariantColors> = {
 /** Spacing-token keys per size, resolved against the theme at render. */
 const SIZE_SPEC: Record<
   AppButtonSize,
-  { paddingV: keyof ThemeTokens['spacing']; paddingH: keyof ThemeTokens['spacing']; text: keyof ThemeTokens['typography']['sizes'] }
+  {
+    paddingV: keyof ThemeTokens['spacing'];
+    paddingH: keyof ThemeTokens['spacing'];
+    text: keyof ThemeTokens['typography']['sizes'];
+  }
 > = {
   sm: { paddingV: 2, paddingH: 4, text: 'sm' },
   md: { paddingV: 3, paddingH: 5, text: 'md' },
@@ -59,11 +67,10 @@ const SIZE_SPEC: Record<
  * `label` doubles as the default `accessibilityLabel` (overridable) and as the
  * visible text, so a button is never shipped without an announceable name.
  */
-export interface AppButtonProps
-  extends Omit<
-    AppPressableProps,
-    'accessibilityLabel' | 'accessibilityRole' | 'children' | 'style'
-  > {
+export interface AppButtonProps extends Omit<
+  AppPressableProps,
+  'accessibilityLabel' | 'accessibilityRole' | 'children' | 'style'
+> {
   /** Visible button text and default screen-reader name. */
   label: string;
   variant?: AppButtonVariant;
@@ -89,10 +96,7 @@ interface ResolvedColors {
 }
 
 /** Maps a variant's colour-token keys to concrete theme colours. */
-function resolveColors(
-  theme: ThemeTokens,
-  v: VariantColors,
-): ResolvedColors {
+function resolveColors(theme: ThemeTokens, v: VariantColors): ResolvedColors {
   return {
     background:
       v.background === 'transparent'
@@ -173,7 +177,10 @@ export function AppButton({
       {...rest}
     >
       {loading ? (
-        <ActivityIndicator color={colors.foreground} accessibilityElementsHidden />
+        <ActivityIndicator
+          color={colors.foreground}
+          accessibilityElementsHidden
+        />
       ) : (
         <AppText variant="label" style={labelStyle} numberOfLines={1}>
           {label}

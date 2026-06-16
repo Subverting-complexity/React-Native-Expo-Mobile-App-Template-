@@ -3,7 +3,11 @@ import { useColorScheme } from 'react-native';
 
 import { storage as defaultStorage } from '@/storage';
 import { lightTheme, darkTheme } from './index';
-import { ThemeContext, type ColorMode, type StorageAdapter } from './ThemeContext';
+import {
+  ThemeContext,
+  type ColorMode,
+  type StorageAdapter,
+} from './ThemeContext';
 
 const STORAGE_KEY = '@theme/colorMode';
 
@@ -12,7 +16,10 @@ interface ThemeProviderProps {
   storage?: StorageAdapter;
 }
 
-export function ThemeProvider({ children, storage = defaultStorage }: ThemeProviderProps) {
+export function ThemeProvider({
+  children,
+  storage = defaultStorage,
+}: ThemeProviderProps) {
   const systemScheme = useColorScheme();
   const [colorMode, setColorModeState] = useState<ColorMode>('system');
 

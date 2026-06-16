@@ -31,8 +31,16 @@ interface VariantColors {
 
 const VARIANTS: Record<AppIconButtonVariant, VariantColors> = {
   primary: { background: 'primary', foreground: 'onPrimary', border: null },
-  secondary: { background: 'secondary', foreground: 'onSecondary', border: null },
-  outline: { background: 'transparent', foreground: 'primary', border: 'primary' },
+  secondary: {
+    background: 'secondary',
+    foreground: 'onSecondary',
+    border: null,
+  },
+  outline: {
+    background: 'transparent',
+    foreground: 'primary',
+    border: 'primary',
+  },
   ghost: { background: 'transparent', foreground: 'primary', border: null },
   danger: { background: 'error', foreground: 'onError', border: null },
 };
@@ -44,7 +52,10 @@ const VARIANTS: Record<AppIconButtonVariant, VariantColors> = {
  */
 const SIZE_SPEC: Record<
   AppIconButtonSize,
-  { padding: keyof ThemeTokens['spacing']; icon: keyof ThemeTokens['typography']['sizes'] }
+  {
+    padding: keyof ThemeTokens['spacing'];
+    icon: keyof ThemeTokens['typography']['sizes'];
+  }
 > = {
   sm: { padding: 2, icon: 'lg' },
   md: { padding: 3, icon: '2xl' },
@@ -69,11 +80,10 @@ export type AppIcon = ReactNode | ((props: AppIconRenderProps) => ReactNode);
  * fall back on). The button is icon-library-agnostic: pass any element as
  * `icon`, or a render function that receives the resolved `{ color, size }`.
  */
-export interface AppIconButtonProps
-  extends Omit<
-    AppPressableProps,
-    'accessibilityRole' | 'children' | 'style'
-  > {
+export interface AppIconButtonProps extends Omit<
+  AppPressableProps,
+  'accessibilityRole' | 'children' | 'style'
+> {
   /** Icon element, or a builder receiving the resolved colour and size. */
   icon: AppIcon;
   variant?: AppIconButtonVariant;
@@ -94,7 +104,9 @@ interface ResolvedColors {
 function resolveColors(theme: ThemeTokens, v: VariantColors): ResolvedColors {
   return {
     background:
-      v.background === 'transparent' ? 'transparent' : theme.colors[v.background],
+      v.background === 'transparent'
+        ? 'transparent'
+        : theme.colors[v.background],
     foreground: theme.colors[v.foreground],
     border: v.border ? theme.colors[v.border] : undefined,
   };
@@ -145,7 +157,13 @@ export function AppIconButton({
 
   const containerStyle = useMemo<ViewStyle>(
     () =>
-      buildContainerStyle(theme, theme.spacing[spec.padding], radius, colors, isDisabled),
+      buildContainerStyle(
+        theme,
+        theme.spacing[spec.padding],
+        radius,
+        colors,
+        isDisabled,
+      ),
     [theme, spec.padding, radius, colors, isDisabled],
   );
 

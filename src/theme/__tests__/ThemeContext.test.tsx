@@ -62,7 +62,9 @@ describe('ThemeProvider', () => {
       </ThemeProvider>,
     );
     await waitFor(() =>
-      expect(getByTestId('bg').props.children).toBe(lightTheme.colors.background),
+      expect(getByTestId('bg').props.children).toBe(
+        lightTheme.colors.background,
+      ),
     );
   });
 
@@ -74,7 +76,9 @@ describe('ThemeProvider', () => {
       </ThemeProvider>,
     );
     await waitFor(() =>
-      expect(getByTestId('bg').props.children).toBe(darkTheme.colors.background),
+      expect(getByTestId('bg').props.children).toBe(
+        darkTheme.colors.background,
+      ),
     );
   });
 
@@ -114,7 +118,9 @@ describe('ThemeProvider', () => {
       </ThemeProvider>,
     );
     await waitFor(() =>
-      expect(getByTestId('bg').props.children).toBe(lightTheme.colors.background),
+      expect(getByTestId('bg').props.children).toBe(
+        lightTheme.colors.background,
+      ),
     );
   });
 
@@ -125,7 +131,9 @@ describe('ThemeProvider', () => {
       </ThemeProvider>,
     );
     await waitFor(() =>
-      expect(getByTestId('bg').props.children).toBe(darkTheme.colors.background),
+      expect(getByTestId('bg').props.children).toBe(
+        darkTheme.colors.background,
+      ),
     );
   });
 
@@ -137,7 +145,9 @@ describe('ThemeProvider', () => {
       </ThemeProvider>,
     );
     await waitFor(() =>
-      expect(getByTestId('bg').props.children).toBe(darkTheme.colors.background),
+      expect(getByTestId('bg').props.children).toBe(
+        darkTheme.colors.background,
+      ),
     );
   });
 });
