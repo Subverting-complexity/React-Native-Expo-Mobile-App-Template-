@@ -13,7 +13,12 @@
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
     "test": "jest",
-    "quality": "npm run lint && npm run typecheck && npm run test -- --coverage --passWithNoTests"
+    "quality": "npm run lint && npm run typecheck && npm run test -- --coverage --passWithNoTests",
+    "build:dev": "npx eas-cli build --profile development",
+    "build:preview": "npx eas-cli build --profile preview",
+    "build:prod": "npx eas-cli build --profile production",
+    "submit:ios": "npx eas-cli submit --platform ios --profile production",
+    "submit:android": "npx eas-cli submit --platform android --profile production"
   },
   "dependencies": {
     "@expo-google-fonts/atkinson-hyperlegible": "^0.4.1",
