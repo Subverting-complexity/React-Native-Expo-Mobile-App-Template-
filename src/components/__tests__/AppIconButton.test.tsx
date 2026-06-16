@@ -29,7 +29,11 @@ const icon = <AppText>★</AppText>;
 describe('AppIconButton', () => {
   it('requires and exposes an accessibility label and button role', () => {
     const { getByLabelText } = renderWithTheme(
-      <AppIconButton icon={icon} accessibilityLabel="Favourite" onPress={jest.fn()} />,
+      <AppIconButton
+        icon={icon}
+        accessibilityLabel="Favourite"
+        onPress={jest.fn()}
+      />,
     );
     expect(getByLabelText('Favourite').props.accessibilityRole).toBe('button');
   });
@@ -46,7 +50,12 @@ describe('AppIconButton', () => {
   it('does not fire onPress when disabled and reports disabled state', () => {
     const onPress = jest.fn();
     const { getByLabelText } = renderWithTheme(
-      <AppIconButton icon={icon} accessibilityLabel="Add" onPress={onPress} disabled />,
+      <AppIconButton
+        icon={icon}
+        accessibilityLabel="Add"
+        onPress={onPress}
+        disabled
+      />,
     );
     const el = getByLabelText('Add');
     fireEvent.press(el);
@@ -59,7 +68,12 @@ describe('AppIconButton', () => {
   it('hides the icon, blocks presses, and reports busy when loading', () => {
     const onPress = jest.fn();
     const { queryByText, getByLabelText } = renderWithTheme(
-      <AppIconButton icon={icon} accessibilityLabel="Add" onPress={onPress} loading />,
+      <AppIconButton
+        icon={icon}
+        accessibilityLabel="Add"
+        onPress={onPress}
+        loading
+      />,
     );
     expect(queryByText('★')).toBeNull();
     const el = getByLabelText('Add');
@@ -72,7 +86,11 @@ describe('AppIconButton', () => {
 
   it('inherits the 44x44 minimum touch target from AppPressable', () => {
     const { getByLabelText } = renderWithTheme(
-      <AppIconButton icon={icon} accessibilityLabel="Add" onPress={jest.fn()} />,
+      <AppIconButton
+        icon={icon}
+        accessibilityLabel="Add"
+        onPress={jest.fn()}
+      />,
     );
     const flat = StyleSheet.flatten(getByLabelText('Add').props.style);
     expect(flat.minWidth).toBe(a11y.minTouchTarget);
@@ -90,13 +108,19 @@ describe('AppIconButton', () => {
     );
     // md size derives its glyph size from the `2xl` typography token.
     await waitFor(() => {
-      expect(getByText(`size:${typography.sizes['2xl'].fontSize}`)).toBeTruthy();
+      expect(
+        getByText(`size:${typography.sizes['2xl'].fontSize}`),
+      ).toBeTruthy();
     });
   });
 
   it('applies the primary variant background from theme tokens', async () => {
     const { getByLabelText } = renderWithTheme(
-      <AppIconButton icon={icon} accessibilityLabel="Add" onPress={jest.fn()} />,
+      <AppIconButton
+        icon={icon}
+        accessibilityLabel="Add"
+        onPress={jest.fn()}
+      />,
       'light',
     );
     await waitFor(() => {
@@ -107,7 +131,12 @@ describe('AppIconButton', () => {
 
   it('renders as a circle when round is set', async () => {
     const { getByLabelText } = renderWithTheme(
-      <AppIconButton icon={icon} accessibilityLabel="Add" onPress={jest.fn()} round />,
+      <AppIconButton
+        icon={icon}
+        accessibilityLabel="Add"
+        onPress={jest.fn()}
+        round
+      />,
       'light',
     );
     await waitFor(() => {

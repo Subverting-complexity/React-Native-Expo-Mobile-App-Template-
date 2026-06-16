@@ -17,11 +17,7 @@ export interface WebShadow {
 
 export type ShadowToken = IosShadow | AndroidShadow | WebShadow;
 
-function iosShadow(
-  height: number,
-  radius: number,
-  opacity: number,
-): IosShadow {
+function iosShadow(height: number, radius: number, opacity: number): IosShadow {
   return {
     shadowColor: '#000000',
     shadowOffset: { width: 0, height },

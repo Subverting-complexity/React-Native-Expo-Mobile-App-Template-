@@ -12,7 +12,9 @@ jest.mock('@expo-google-fonts/atkinson-hyperlegible', () => ({
   AtkinsonHyperlegible_700Bold_Italic: 'mock-bold-italic',
 }));
 
-const mockUseFonts = jest.requireMock<{ useFonts: jest.Mock }>('expo-font').useFonts;
+const mockUseFonts = jest.requireMock<{ useFonts: jest.Mock }>(
+  'expo-font',
+).useFonts;
 
 describe('useAppFonts', () => {
   it('returns [false, null] while fonts are loading', () => {

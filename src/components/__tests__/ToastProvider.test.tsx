@@ -17,7 +17,10 @@ function Harness({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider storage={makeStorage()}>
       <A11yContext.Provider
-        value={{ reduceMotion: true, maxFontSizeMultiplier: MAX_FONT_SIZE_MULTIPLIER }}
+        value={{
+          reduceMotion: true,
+          maxFontSizeMultiplier: MAX_FONT_SIZE_MULTIPLIER,
+        }}
       >
         <ToastProvider>{children}</ToastProvider>
       </A11yContext.Provider>

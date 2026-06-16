@@ -98,8 +98,7 @@ describe('SettingsScreen', () => {
 
     expect(storage.setItem).not.toHaveBeenCalled();
     expect(
-      getByRole('button', { name: 'System' }).props.accessibilityState
-        .selected,
+      getByRole('button', { name: 'System' }).props.accessibilityState.selected,
     ).toBe(true);
   });
 

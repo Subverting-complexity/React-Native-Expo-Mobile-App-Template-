@@ -63,7 +63,12 @@ describe('AppChipGroup', () => {
   it('adds a value to the set in multi-select mode', () => {
     const onChange = jest.fn();
     const { getByLabelText } = renderWithTheme(
-      <AppChipGroup options={OPTIONS} multiple values={['a']} onChange={onChange} />,
+      <AppChipGroup
+        options={OPTIONS}
+        multiple
+        values={['a']}
+        onChange={onChange}
+      />,
     );
     fireEvent.press(getByLabelText('Banana'));
     expect(onChange).toHaveBeenCalledWith(['a', 'b']);
@@ -72,7 +77,12 @@ describe('AppChipGroup', () => {
   it('removes an already-selected value in multi-select mode', () => {
     const onChange = jest.fn();
     const { getByLabelText } = renderWithTheme(
-      <AppChipGroup options={OPTIONS} multiple values={['a', 'b']} onChange={onChange} />,
+      <AppChipGroup
+        options={OPTIONS}
+        multiple
+        values={['a', 'b']}
+        onChange={onChange}
+      />,
     );
     fireEvent.press(getByLabelText('Apple'));
     expect(onChange).toHaveBeenCalledWith(['b']);

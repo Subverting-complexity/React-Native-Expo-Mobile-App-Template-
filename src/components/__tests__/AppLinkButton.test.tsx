@@ -63,17 +63,17 @@ describe('AppLinkButton', () => {
     const { getByText, rerender } = renderWithTheme(
       <AppLinkButton label="Plain" onPress={jest.fn()} />,
     );
-    expect(StyleSheet.flatten(getByText('Plain').props.style).textDecorationLine).not.toBe(
-      'underline',
-    );
+    expect(
+      StyleSheet.flatten(getByText('Plain').props.style).textDecorationLine,
+    ).not.toBe('underline');
     rerender(
       <ThemeProvider storage={makeStorage()}>
         <AppLinkButton label="Plain" onPress={jest.fn()} underline />
       </ThemeProvider>,
     );
-    expect(StyleSheet.flatten(getByText('Plain').props.style).textDecorationLine).toBe(
-      'underline',
-    );
+    expect(
+      StyleSheet.flatten(getByText('Plain').props.style).textDecorationLine,
+    ).toBe('underline');
   });
 
   it('uses the accent (primary) colour by default', async () => {

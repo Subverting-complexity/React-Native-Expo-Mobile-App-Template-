@@ -21,7 +21,9 @@ function renderWithTheme(ui: React.ReactElement, saved: string | null = null) {
 
 describe('AppButton', () => {
   it('renders its label', () => {
-    const { getByText } = renderWithTheme(<AppButton label="Save" onPress={jest.fn()} />);
+    const { getByText } = renderWithTheme(
+      <AppButton label="Save" onPress={jest.fn()} />,
+    );
     expect(getByText('Save')).toBeTruthy();
   });
 
@@ -34,14 +36,20 @@ describe('AppButton', () => {
 
   it('allows overriding the accessibility label', () => {
     const { getByLabelText } = renderWithTheme(
-      <AppButton label="Save" accessibilityLabel="Save document" onPress={jest.fn()} />,
+      <AppButton
+        label="Save"
+        accessibilityLabel="Save document"
+        onPress={jest.fn()}
+      />,
     );
     expect(getByLabelText('Save document')).toBeTruthy();
   });
 
   it('fires onPress when enabled', () => {
     const onPress = jest.fn();
-    const { getByLabelText } = renderWithTheme(<AppButton label="Go" onPress={onPress} />);
+    const { getByLabelText } = renderWithTheme(
+      <AppButton label="Go" onPress={onPress} />,
+    );
     fireEvent.press(getByLabelText('Go'));
     expect(onPress).toHaveBeenCalledTimes(1);
   });
@@ -74,7 +82,9 @@ describe('AppButton', () => {
   });
 
   it('inherits the 44x44 minimum touch target from AppPressable', () => {
-    const { getByLabelText } = renderWithTheme(<AppButton label="Tap" onPress={jest.fn()} />);
+    const { getByLabelText } = renderWithTheme(
+      <AppButton label="Tap" onPress={jest.fn()} />,
+    );
     const flat = StyleSheet.flatten(getByLabelText('Tap').props.style);
     expect(flat.minWidth).toBe(a11y.minTouchTarget);
     expect(flat.minHeight).toBe(a11y.minTouchTarget);

@@ -16,11 +16,7 @@ import type { ColorPalette } from '@/theme';
 export type AppSpinnerSize = 'sm' | 'lg';
 
 /** Semantic colour role for the spinner, resolved against the palette. */
-export type AppSpinnerTone =
-  | 'primary'
-  | 'secondary'
-  | 'inverse'
-  | 'muted';
+export type AppSpinnerTone = 'primary' | 'secondary' | 'inverse' | 'muted';
 
 const SIZE_MAP: Record<AppSpinnerSize, 'small' | 'large'> = {
   sm: 'small',

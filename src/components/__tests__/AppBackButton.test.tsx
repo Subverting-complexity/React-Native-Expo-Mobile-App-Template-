@@ -44,7 +44,9 @@ describe('AppBackButton', () => {
 
   it('fires onPress when enabled', () => {
     const onPress = jest.fn();
-    const { getByLabelText } = renderWithTheme(<AppBackButton onPress={onPress} />);
+    const { getByLabelText } = renderWithTheme(
+      <AppBackButton onPress={onPress} />,
+    );
     fireEvent.press(getByLabelText('Go back'));
     expect(onPress).toHaveBeenCalledTimes(1);
   });
@@ -71,7 +73,10 @@ describe('AppBackButton', () => {
   });
 
   it('tints the default glyph with the accent colour from tokens', async () => {
-    const { getByText } = renderWithTheme(<AppBackButton onPress={jest.fn()} />, 'light');
+    const { getByText } = renderWithTheme(
+      <AppBackButton onPress={jest.fn()} />,
+      'light',
+    );
     await waitFor(() => {
       expect(StyleSheet.flatten(getByText('←').props.style).color).toBe(
         lightColors.primary,

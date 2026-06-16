@@ -62,7 +62,8 @@ module.exports = defineConfig([
       'react-native-a11y/has-valid-accessibility-value': 'error',
       'react-native-a11y/has-valid-accessibility-actions': 'error',
       'react-native-a11y/has-valid-accessibility-descriptors': 'error',
-      'react-native-a11y/has-valid-accessibility-ignores-invert-colors': 'error',
+      'react-native-a11y/has-valid-accessibility-ignores-invert-colors':
+        'error',
       'react-native-a11y/has-valid-accessibility-live-region': 'error',
       'react-native-a11y/has-valid-important-for-accessibility': 'error',
       'react-native-a11y/no-nested-touchables': 'error',

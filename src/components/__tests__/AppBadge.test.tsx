@@ -29,9 +29,9 @@ describe('AppBadge', () => {
       'light',
     );
     await waitFor(() => {
-      expect(StyleSheet.flatten(getByTestId('badge').props.style).backgroundColor).toBe(
-        lightColors.success,
-      );
+      expect(
+        StyleSheet.flatten(getByTestId('badge').props.style).backgroundColor,
+      ).toBe(lightColors.success);
       expect(StyleSheet.flatten(getByText('Active').props.style).color).toBe(
         lightColors.onSuccess,
       );
@@ -44,9 +44,9 @@ describe('AppBadge', () => {
       'light',
     );
     await waitFor(() => {
-      expect(StyleSheet.flatten(getByTestId('badge').props.style).backgroundColor).toBe(
-        lightColors.surfaceVariant,
-      );
+      expect(
+        StyleSheet.flatten(getByTestId('badge').props.style).backgroundColor,
+      ).toBe(lightColors.surfaceVariant);
       expect(StyleSheet.flatten(getByText('Beta').props.style).color).toBe(
         lightColors.info,
       );
@@ -55,7 +55,12 @@ describe('AppBadge', () => {
 
   it('renders the outline variant with a tone border and transparent fill', async () => {
     const { getByTestId } = renderWithTheme(
-      <AppBadge label="Draft" tone="warning" variant="outline" testID="badge" />,
+      <AppBadge
+        label="Draft"
+        tone="warning"
+        variant="outline"
+        testID="badge"
+      />,
       'light',
     );
     await waitFor(() => {

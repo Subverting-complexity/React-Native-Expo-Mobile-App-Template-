@@ -45,7 +45,9 @@ function setFontScale(fontScale: number) {
 beforeEach(() => {
   setFontScale(1);
   dimsSpy.mockImplementation((dim) =>
-    dim === 'window' ? windowDims : { width: 360, height: 640, scale: 2, fontScale: 1 },
+    dim === 'window'
+      ? windowDims
+      : { width: 360, height: 640, scale: 2, fontScale: 1 },
   );
 });
 
@@ -68,7 +70,9 @@ describe('AppText', () => {
   });
 
   it('resolves a heading variant to the bold family and larger size', () => {
-    const { getByText } = renderWithTheme(<AppText variant="heading">Title</AppText>);
+    const { getByText } = renderWithTheme(
+      <AppText variant="heading">Title</AppText>,
+    );
     const flat = styleOf(getByText('Title'));
     expect(flat.fontSize).toBe(typography.sizes['2xl'].fontSize);
     expect(flat.fontFamily).toBe(FONT_FAMILIES.sansBold);

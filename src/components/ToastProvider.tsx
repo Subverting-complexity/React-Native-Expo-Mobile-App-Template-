@@ -67,7 +67,11 @@ export function ToastProvider({ children }: ToastProviderProps) {
       <View style={styles.root}>
         {children}
         {toast ? (
-          <View style={overlayStyle} pointerEvents="box-none" testID="toast-overlay">
+          <View
+            style={overlayStyle}
+            pointerEvents="box-none"
+            testID="toast-overlay"
+          >
             <AppToast
               key={toast.id}
               message={toast.message}

@@ -10,11 +10,15 @@ describe('FONT_FAMILIES', () => {
   });
 
   it('exports a sansItalic token', () => {
-    expect(FONT_FAMILIES.sansItalic).toBe('AtkinsonHyperlegible_400Regular_Italic');
+    expect(FONT_FAMILIES.sansItalic).toBe(
+      'AtkinsonHyperlegible_400Regular_Italic',
+    );
   });
 
   it('exports a sansBoldItalic token', () => {
-    expect(FONT_FAMILIES.sansBoldItalic).toBe('AtkinsonHyperlegible_700Bold_Italic');
+    expect(FONT_FAMILIES.sansBoldItalic).toBe(
+      'AtkinsonHyperlegible_700Bold_Italic',
+    );
   });
 
   it('has exactly four font family tokens', () => {

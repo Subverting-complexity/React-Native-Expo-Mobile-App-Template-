@@ -1,12 +1,14 @@
 import { ScrollView, StyleSheet, Text } from 'react-native';
-import {
-  SafeAreaProvider,
-  type Metrics,
-} from 'react-native-safe-area-context';
+import { SafeAreaProvider, type Metrics } from 'react-native-safe-area-context';
 import { render, waitFor } from '@testing-library/react-native';
 
 import { AppScreenContainer } from '../AppScreenContainer';
-import { ThemeProvider, lightColors, spacing, type StorageAdapter } from '@/theme';
+import {
+  ThemeProvider,
+  lightColors,
+  spacing,
+  type StorageAdapter,
+} from '@/theme';
 
 const METRICS: Metrics = {
   frame: { x: 0, y: 0, width: 390, height: 844 },
@@ -79,7 +81,9 @@ describe('AppScreenContainer', () => {
         <Text>Scrolls</Text>
       </AppScreenContainer>,
     );
-    expect(scrolling.UNSAFE_queryAllByType(ScrollView).length).toBeGreaterThan(0);
+    expect(scrolling.UNSAFE_queryAllByType(ScrollView).length).toBeGreaterThan(
+      0,
+    );
 
     const stat = renderWithTheme(
       <AppScreenContainer>
