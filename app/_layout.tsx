@@ -20,7 +20,9 @@ export default function RootLayout() {
     <ThemeProvider>
       <A11yProvider>
         <ToastProvider>
-          <Stack />
+          {/* The (tabs) group renders its own Tabs header; hide the Stack
+              header so the two do not stack on top of each other. */}
+          <Stack screenOptions={{ headerShown: false }} />
         </ToastProvider>
         <StatusBar style="auto" />
       </A11yProvider>
