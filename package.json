@@ -18,7 +18,8 @@
     "build:preview": "npx eas-cli build --profile preview",
     "build:prod": "npx eas-cli build --profile production",
     "submit:ios": "npx eas-cli submit --platform ios --profile production",
-    "submit:android": "npx eas-cli submit --platform android --profile production"
+    "submit:android": "npx eas-cli submit --platform android --profile production",
+    "check": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/QualityGate.ps1 -Mode ci"
   },
   "dependencies": {
     "@expo-google-fonts/atkinson-hyperlegible": "^0.4.1",
