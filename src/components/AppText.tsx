@@ -100,7 +100,14 @@ export function AppText({
       fontWeight: v.weight,
       color: theme.colors[TONE_COLORS[tone]],
     };
-  }, [theme, variant, tone, fontScale, allowFontScaling, maxFontSizeMultiplier]);
+  }, [
+    theme,
+    variant,
+    tone,
+    fontScale,
+    allowFontScaling,
+    maxFontSizeMultiplier,
+  ]);
 
   return (
     <Text

@@ -63,9 +63,9 @@ describe('AppChip', () => {
       'light',
     );
     await waitFor(() => {
-      expect(StyleSheet.flatten(getByLabelText('On').props.style).backgroundColor).toBe(
-        lightColors.primary,
-      );
+      expect(
+        StyleSheet.flatten(getByLabelText('On').props.style).backgroundColor,
+      ).toBe(lightColors.primary);
     });
   });
 

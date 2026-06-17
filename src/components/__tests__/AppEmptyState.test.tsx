@@ -43,7 +43,11 @@ describe('AppEmptyState', () => {
   it('renders the action button and fires its handler', () => {
     const onAction = jest.fn();
     const { getByLabelText } = renderWithTheme(
-      <AppEmptyState title="Empty" actionLabel="Add item" onAction={onAction} />,
+      <AppEmptyState
+        title="Empty"
+        actionLabel="Add item"
+        onAction={onAction}
+      />,
     );
     const button = getByLabelText('Add item');
     expect(button.props.accessibilityRole).toBe('button');

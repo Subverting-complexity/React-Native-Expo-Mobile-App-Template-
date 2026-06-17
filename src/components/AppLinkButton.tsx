@@ -30,11 +30,10 @@ const SIZE_VARIANT: Record<AppLinkButtonSize, TextVariantName> = {
  * `link` role — reserve this for navigation (in-app route or external URL); use
  * {@link AppButton} for an in-place action.
  */
-export interface AppLinkButtonProps
-  extends Omit<
-    AppPressableProps,
-    'accessibilityRole' | 'accessibilityLabel' | 'children' | 'style'
-  > {
+export interface AppLinkButtonProps extends Omit<
+  AppPressableProps,
+  'accessibilityRole' | 'accessibilityLabel' | 'children' | 'style'
+> {
   /** Visible link text and default screen-reader name. */
   label: string;
   /** Semantic colour role. Defaults to `accent` (the primary brand colour). */

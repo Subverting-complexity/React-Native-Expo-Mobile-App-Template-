@@ -1,4 +1,8 @@
-export { createExampleStore, useExampleStore, EXAMPLE_STORAGE_KEY } from './exampleStore';
+export {
+  createExampleStore,
+  useExampleStore,
+  EXAMPLE_STORAGE_KEY,
+} from './exampleStore';
 export type {
   ExampleState,
   ExampleStatus,

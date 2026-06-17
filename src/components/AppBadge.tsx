@@ -1,5 +1,10 @@
 import { useMemo } from 'react';
-import { View, type StyleProp, type TextStyle, type ViewStyle } from 'react-native';
+import {
+  View,
+  type StyleProp,
+  type TextStyle,
+  type ViewStyle,
+} from 'react-native';
 
 import { AppText } from './AppText';
 import { useTheme, FONT_FAMILIES } from '@/theme';
@@ -80,7 +85,11 @@ function resolveBadge(
   const baseColor = theme.colors[base];
   switch (variant) {
     case 'solid':
-      return { background: baseColor, foreground: theme.colors[on], border: undefined };
+      return {
+        background: baseColor,
+        foreground: theme.colors[on],
+        border: undefined,
+      };
     case 'soft':
       return {
         background: theme.colors.surfaceVariant,
@@ -88,7 +97,11 @@ function resolveBadge(
         border: undefined,
       };
     case 'outline':
-      return { background: 'transparent', foreground: baseColor, border: baseColor };
+      return {
+        background: 'transparent',
+        foreground: baseColor,
+        border: baseColor,
+      };
   }
 }
 

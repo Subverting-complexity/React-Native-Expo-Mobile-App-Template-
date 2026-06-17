@@ -19,7 +19,10 @@ function renderWithProviders(
   return render(
     <ThemeProvider storage={makeStorage()}>
       <A11yContext.Provider
-        value={{ reduceMotion, maxFontSizeMultiplier: MAX_FONT_SIZE_MULTIPLIER }}
+        value={{
+          reduceMotion,
+          maxFontSizeMultiplier: MAX_FONT_SIZE_MULTIPLIER,
+        }}
       >
         {ui}
       </A11yContext.Provider>

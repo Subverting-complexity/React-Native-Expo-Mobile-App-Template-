@@ -23,8 +23,10 @@ import type { ThemeTokens } from '@/theme';
  * required and doubles as the default screen-reader name, so a field is never
  * shipped unannounced.
  */
-export interface AppTextInputProps
-  extends Omit<TextInputProps, 'style' | 'accessibilityLabel'> {
+export interface AppTextInputProps extends Omit<
+  TextInputProps,
+  'style' | 'accessibilityLabel'
+> {
   /** Visible field label and default screen-reader name. */
   label: string;
   /** Optional helper text shown below the field when there is no error. */

@@ -79,7 +79,11 @@ export function AppCard(props: AppCardProps) {
         onPress={props.onPress}
         testID={testID}
         // Reset AppPressable's centering floor so card content lays out top-down.
-        style={[{ alignItems: 'stretch', justifyContent: 'flex-start' }, containerStyle, style]}
+        style={[
+          { alignItems: 'stretch', justifyContent: 'flex-start' },
+          containerStyle,
+          style,
+        ]}
       >
         {children}
       </AppPressable>

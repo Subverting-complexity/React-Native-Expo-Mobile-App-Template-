@@ -43,10 +43,7 @@ export interface AppToastProps {
   testID?: string;
 }
 
-function buildSurfaceStyle(
-  theme: ThemeTokens,
-  background: string,
-): ViewStyle {
+function buildSurfaceStyle(theme: ThemeTokens, background: string): ViewStyle {
   return {
     flexDirection: 'row',
     alignItems: 'center',

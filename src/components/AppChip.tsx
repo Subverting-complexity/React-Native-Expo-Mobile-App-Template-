@@ -34,11 +34,10 @@ const SIZE_SPEC: Record<
  * the announced `selected` accessibility state, so screen-reader users hear the
  * toggle state. `label` doubles as the default spoken name.
  */
-export interface AppChipProps
-  extends Omit<
-    AppPressableProps,
-    'accessibilityRole' | 'accessibilityLabel' | 'children' | 'style'
-  > {
+export interface AppChipProps extends Omit<
+  AppPressableProps,
+  'accessibilityRole' | 'accessibilityLabel' | 'children' | 'style'
+> {
   /** Visible chip text and default screen-reader name. */
   label: string;
   /** Selected (active) state — fills the chip and sets `accessibilityState.selected`. */
@@ -59,12 +58,13 @@ interface ChipColors {
   border: string | undefined;
 }
 
-function resolveColors(
-  theme: ThemeTokens,
-  selected: boolean,
-): ChipColors {
+function resolveColors(theme: ThemeTokens, selected: boolean): ChipColors {
   return selected
-    ? { background: theme.colors.primary, foreground: theme.colors.onPrimary, border: undefined }
+    ? {
+        background: theme.colors.primary,
+        foreground: theme.colors.onPrimary,
+        border: undefined,
+      }
     : {
         background: theme.colors.surfaceVariant,
         foreground: theme.colors.textPrimary,
