@@ -79,3 +79,4 @@ development:
 | `ClaudeProject.md`                         | Project identity, labels, quality gate, branch convention, board config. Read at the start of any workflow command.                                               |
 | `docs/review.config.md`                    | Review label definitions, non-compliance gates, tech-stack review rules. Read when performing or preparing for code review.                                       |
 | `.decisions/mobile-template-2026-06-06.md` | Architecture decisions: Expo SDK version, theme system, a11y requirements, build toolchain, state management. Consult before making cross-cutting design choices. |
+| `.claude/ecosystem.md`                     | Installed Claude Code companion tool cheat-sheet — graphify queries, cost tracking, security scanning, and codebase intelligence.                                  |
