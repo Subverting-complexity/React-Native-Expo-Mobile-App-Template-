@@ -13,12 +13,14 @@ export default ({ config }: ConfigContext) => ({
   ios: {
     supportsTablet: true,
     bundleIdentifier: 'dev.template.expo',
+    buildNumber: '1',
   },
   android: {
     adaptiveIcon: {
       backgroundColor: '#ffffff',
     },
     package: 'dev.template.expo',
+    versionCode: 1,
   },
   web: {
     bundler: 'metro',

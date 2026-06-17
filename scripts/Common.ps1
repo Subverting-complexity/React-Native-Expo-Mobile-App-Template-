@@ -52,3 +52,24 @@ function Invoke-Expo {
         Pop-Location
     }
 }
+
+function Invoke-Eas {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)][string] $RepoRoot,
+        [Parameter(Mandatory = $true)][string[]] $EasArgs
+    )
+
+    Assert-Tooling
+    Push-Location $RepoRoot
+    try {
+        Write-Banner ('npx eas-cli ' + ($EasArgs -join ' '))
+        & npx 'eas-cli' @EasArgs
+        if ($LASTEXITCODE -ne 0) {
+            throw "eas-cli exited with code $LASTEXITCODE."
+        }
+    }
+    finally {
+        Pop-Location
+    }
+}
