@@ -23,6 +23,11 @@ $ErrorActionPreference = 'Stop'
 $RepoRoot = Split-Path -Parent $PSScriptRoot
 . (Join-Path $PSScriptRoot 'Common.ps1')
 
+# Confirm we'll build under the correct Expo account (owner + EXPO_TOKEN) and
+# load .env so eas-cli inherits the token. A dry run reports but won't hard-fail
+# on a missing login.
+Assert-ExpoAccount -RepoRoot $RepoRoot -RequireLogin:(-not $DryRun)
+
 # -- Build --
 $buildArgs = @('build', '--platform', 'android', '--profile', 'production', '--non-interactive')
 if ($Message) {

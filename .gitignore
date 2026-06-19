@@ -24,8 +24,11 @@ web-build/
 .DS_Store
 *.pem
 
-# Local env files
+# Local env files — never commit real tokens. Holds EXPO_TOKEN (per-repo Expo
+# auth); .env.example is the committed, token-less template.
+.env
 .env*.local
+!.env.example
 
 # TypeScript
 *.tsbuildinfo

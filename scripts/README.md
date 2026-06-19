@@ -4,6 +4,15 @@ Windows-first developer tooling for this template. Each PowerShell script
 (`.ps1`) has a matching double-click wrapper (`.cmd`) that runs it with an
 ExecutionPolicy bypass, so nothing here depends on the machine's script policy.
 
+## Expo account
+
+Cloud builds run under a specific Expo account. `VerifyExpoAccount.ps1`
+(`npm run verify:expo`, or double-click `VerifyExpoAccount.cmd`) reports the
+configured `owner`, whether `EXPO_TOKEN` is loaded, and the logged-in EAS
+account. The `DeployiOSTestFlight` / `DeployAndroidPlayStore` scripts run the
+same check (`Assert-ExpoAccount` in `Common.ps1`) automatically before building.
+See [`docs/expo-account.md`](../docs/expo-account.md) for the full setup.
+
 ## Quality gate
 
 `QualityGate.ps1` is the single orchestrator that runs every check the
