@@ -3,24 +3,13 @@ import { SafeAreaProvider, type Metrics } from 'react-native-safe-area-context';
 import { render, waitFor } from '@testing-library/react-native';
 
 import { AppScreenContainer } from '../AppScreenContainer';
-import {
-  ThemeProvider,
-  lightColors,
-  spacing,
-  type StorageAdapter,
-} from '@/theme';
+import { ThemeProvider, lightColors, spacing } from '@/theme';
+import { makeStorage } from '@/test';
 
 const METRICS: Metrics = {
   frame: { x: 0, y: 0, width: 390, height: 844 },
   insets: { top: 47, left: 0, right: 0, bottom: 34 },
 };
-
-function makeStorage(saved: string | null = null): StorageAdapter {
-  return {
-    getItem: jest.fn(async () => saved),
-    setItem: jest.fn(async () => {}),
-  };
-}
 
 // Default to no saved mode so synchronous assertions stay free of act(...)
 // warnings; pass 'light' (with waitFor) only when asserting colour tokens.

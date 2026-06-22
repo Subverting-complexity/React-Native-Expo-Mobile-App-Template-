@@ -1,6 +1,6 @@
-import { AccessibilityInfo } from 'react-native';
 import { render } from '@testing-library/react-native';
 import RootLayout from '../_layout';
+import { mockReduceMotion } from '../../src/test';
 
 jest.mock('expo-router', () => {
   const React = jest.requireActual('react');
@@ -22,14 +22,7 @@ const mockUseAppFonts = jest.requireMock<{ useAppFonts: jest.Mock }>(
 
 describe('RootLayout', () => {
   beforeEach(() => {
-    jest
-      .spyOn(AccessibilityInfo, 'isReduceMotionEnabled')
-      .mockResolvedValue(false);
-    jest
-      .spyOn(AccessibilityInfo, 'addEventListener')
-      .mockReturnValue({ remove: jest.fn() } as ReturnType<
-        typeof AccessibilityInfo.addEventListener
-      >);
+    mockReduceMotion(false);
   });
 
   afterEach(() => {

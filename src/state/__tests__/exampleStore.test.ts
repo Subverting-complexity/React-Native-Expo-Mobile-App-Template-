@@ -1,23 +1,15 @@
-import {
-  createExampleStore,
-  EXAMPLE_STORAGE_KEY,
-  type StorageAdapter,
-} from '../exampleStore';
+import { createExampleStore, EXAMPLE_STORAGE_KEY } from '../exampleStore';
+import { makeStorageWithStore } from '@/test';
 
 // --------------------------------------------------------------------------
 // Helpers — an in-memory StorageAdapter whose methods are jest mocks, so a
 // test can both drive behaviour and assert how the store called storage.
 // --------------------------------------------------------------------------
 
-function makeStorage(initial?: string): StorageAdapter {
-  const store: Record<string, string> = {};
-  if (initial !== undefined) store[EXAMPLE_STORAGE_KEY] = initial;
-  return {
-    getItem: jest.fn(async (key: string) => store[key] ?? null),
-    setItem: jest.fn(async (key: string, value: string) => {
-      store[key] = value;
-    }),
-  };
+function makeStorage(initial?: string) {
+  return makeStorageWithStore(
+    initial !== undefined ? { [EXAMPLE_STORAGE_KEY]: initial } : undefined,
+  );
 }
 
 describe('createExampleStore', () => {
