@@ -11,7 +11,6 @@
 export * from './AppBackButton';
 export * from './AppBadge';
 export * from './AppButton';
-export * from './buttonUtils';
 export * from './AppCard';
 export * from './AppChip';
 export * from './AppChipGroup';
@@ -29,6 +28,7 @@ export * from './AppSpinner';
 export * from './AppText';
 export * from './AppTextInput';
 export * from './AppToast';
+export * from './buttonUtils';
 export * from './ToastContext';
 export * from './ToastProvider';
 export * from './useToast';
