@@ -2,8 +2,10 @@
 #
 # Runs the jest-expo suite with coverage collection. `--passWithNoTests` keeps
 # a fresh template (or a slice that has not added tests yet) from failing the
-# gate purely for having no tests; the 70% coverage *threshold* is wired up
-# separately in story #41 via jest's `coverageThreshold`.
+# gate purely for having no tests. The 70% global coverage *threshold* lives in
+# jest's `coverageThreshold` (package.json), measured against the whole
+# `src`/`app` tree via `collectCoverageFrom`; jest exits non-zero here when
+# coverage drops below it, so this step enforces the gate with no extra logic.
 
 . "$PSScriptRoot\Common.ps1"
 
