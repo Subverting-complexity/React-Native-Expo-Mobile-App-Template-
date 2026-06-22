@@ -53,13 +53,13 @@ const VARIANTS: Record<AppIconButtonVariant, VariantColors> = {
 const SIZE_SPEC: Record<
   AppIconButtonSize,
   {
-    padding: keyof ThemeTokens['spacing'];
+    pad: keyof ThemeTokens['spacing'];
     icon: keyof ThemeTokens['typography']['sizes'];
   }
 > = {
-  sm: { padding: 2, icon: 'lg' },
-  md: { padding: 3, icon: '2xl' },
-  lg: { padding: 4, icon: '3xl' },
+  sm: { pad: 2, icon: 'lg' },
+  md: { pad: 3, icon: '2xl' },
+  lg: { pad: 4, icon: '3xl' },
 };
 
 /** Args passed to an `icon` render function so the glyph matches the button. */
@@ -159,12 +159,12 @@ export function AppIconButton({
     () =>
       buildContainerStyle(
         theme,
-        theme.spacing[spec.padding],
+        theme.spacing[spec.pad],
         radius,
         colors,
         isDisabled,
       ),
-    [theme, spec.padding, radius, colors, isDisabled],
+    [theme, spec.pad, radius, colors, isDisabled],
   );
 
   const renderedIcon =
