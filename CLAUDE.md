@@ -40,8 +40,9 @@ Re-skinning = token edit, not component edit.
 | `scripts/`     | PowerShell (`.ps1`) + double-click `.cmd` wrappers for build, deploy, quality gate |
 | `docs/`        | Project and accessibility documentation                        |
 
-Each `src/` subdirectory has a barrel `index.ts`. Import from the barrel,
-not from individual files.
+Most `src/` subdirectories have a barrel `index.ts` — import from the
+barrel, not from individual files. (`src/hooks/` and `src/build/` do not
+have barrels yet.)
 
 ### Naming
 
