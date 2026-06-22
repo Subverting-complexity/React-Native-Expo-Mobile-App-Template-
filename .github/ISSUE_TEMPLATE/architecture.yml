@@ -1,0 +1,19 @@
+name: Architecture Issue
+description: A structural or design concern
+title: "[ARCH] "
+labels: ["type-arch"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What the architectural issue is and what it affects.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: How the architecture should be restructured.
+    validations:
+      required: false
