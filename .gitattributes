@@ -1,0 +1,6 @@
+* text=auto eol=lf
+
+# Windows batch wrappers must be CRLF: cmd.exe can mis-parse multi-line
+# blocks (if/for) in LF-only .cmd/.bat files.
+*.cmd text eol=crlf
+*.bat text eol=crlf
