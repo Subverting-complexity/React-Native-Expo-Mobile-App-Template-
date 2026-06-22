@@ -9,43 +9,19 @@ import {
 
 import { AppPressable, type AppPressableProps } from './AppPressable';
 import { AppText } from './AppText';
+import {
+  BUTTON_VARIANTS,
+  resolveVariantColors,
+  type ButtonVariant,
+  type ResolvedColors,
+} from './buttonUtils';
 import { A11Y_ROLES } from '@/a11y';
 import { useTheme, FONT_FAMILIES } from '@/theme';
-import type { ColorPalette, ThemeTokens } from '@/theme';
+import type { ThemeTokens } from '@/theme';
 
-export type AppButtonVariant =
-  | 'primary'
-  | 'secondary'
-  | 'outline'
-  | 'ghost'
-  | 'danger';
+export type AppButtonVariant = ButtonVariant;
 
 export type AppButtonSize = 'sm' | 'md' | 'lg';
-
-interface VariantColors {
-  /** Background fill colour token. */
-  background: keyof ColorPalette | 'transparent';
-  /** Foreground (label + spinner) colour token. */
-  foreground: keyof ColorPalette;
-  /** Border colour token, or `null` for no border. */
-  border: keyof ColorPalette | null;
-}
-
-const VARIANTS: Record<AppButtonVariant, VariantColors> = {
-  primary: { background: 'primary', foreground: 'onPrimary', border: null },
-  secondary: {
-    background: 'secondary',
-    foreground: 'onSecondary',
-    border: null,
-  },
-  outline: {
-    background: 'transparent',
-    foreground: 'primary',
-    border: 'primary',
-  },
-  ghost: { background: 'transparent', foreground: 'primary', border: null },
-  danger: { background: 'error', foreground: 'onError', border: null },
-};
 
 /** Spacing-token keys per size, resolved against the theme at render. */
 const SIZE_SPEC: Record<
@@ -82,29 +58,6 @@ export interface AppButtonProps extends Omit<
   /** Override the spoken name when it should differ from `label`. */
   accessibilityLabel?: string;
   style?: StyleProp<ViewStyle>;
-}
-
-/**
- * Theme-driven button. Builds on {@link AppPressable} so it inherits the
- * 44×44 touch-target floor and required accessibility wiring. Every colour,
- * spacing, and radius value comes from `useTheme()` tokens.
- */
-interface ResolvedColors {
-  background: string;
-  foreground: string;
-  border: string | undefined;
-}
-
-/** Maps a variant's colour-token keys to concrete theme colours. */
-function resolveColors(theme: ThemeTokens, v: VariantColors): ResolvedColors {
-  return {
-    background:
-      v.background === 'transparent'
-        ? 'transparent'
-        : theme.colors[v.background],
-    foreground: theme.colors[v.foreground],
-    border: v.border ? theme.colors[v.border] : undefined,
-  };
 }
 
 function buildContainerStyle(
@@ -145,7 +98,7 @@ export function AppButton({
   const isDisabled = disabled || loading;
 
   const spec = SIZE_SPEC[size];
-  const colors = resolveColors(theme, VARIANTS[variant]);
+  const colors = resolveVariantColors(theme, BUTTON_VARIANTS[variant]);
   const textSize = theme.typography.sizes[spec.text];
 
   const containerStyle = useMemo<ViewStyle>(

@@ -3,7 +3,7 @@ import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { AppPressable, type AppPressableProps } from './AppPressable';
 import { AppText, TONE_COLORS, type TextTone } from './AppText';
-import type { AppIcon } from './AppIconButton';
+import type { AppIcon } from './buttonUtils';
 import { A11Y_ROLES } from '@/a11y';
 import { useTheme } from '@/theme';
 import type { TextVariantName, ThemeTokens } from '@/theme';

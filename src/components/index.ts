@@ -11,6 +11,7 @@
 export * from './AppBackButton';
 export * from './AppBadge';
 export * from './AppButton';
+export * from './buttonUtils';
 export * from './AppCard';
 export * from './AppChip';
 export * from './AppChipGroup';
