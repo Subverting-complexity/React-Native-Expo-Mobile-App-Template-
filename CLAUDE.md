@@ -22,6 +22,106 @@ Components are generic and prop-driven (`variant`/`size`/`tone`/`style`),
 read tokens via `useTheme()`, and **never hardcode values**.
 Re-skinning = token edit, not component edit.
 
+## Project Conventions
+
+### Directory Layout
+
+| Directory      | Purpose                                                        |
+| -------------- | -------------------------------------------------------------- |
+| `app/`         | Expo Router file-based routing (`(tabs)/` group, `_layout.tsx` wrappers) |
+| `src/theme/`   | Design tokens — colors, spacing, radii, typography, shadows, z-index, a11y |
+| `src/components/` | Reusable `App*` component library with barrel re-export (`index.ts`) |
+| `src/a11y/`    | Accessibility context, provider, role constants, announcements |
+| `src/state/`   | Zustand stores (dependency-injection factory pattern)          |
+| `src/storage/` | Platform-aware persistence (web `localStorage` / native `AsyncStorage`) |
+| `src/hooks/`   | Shared React hooks                                             |
+| `src/gallery/` | Component showcase screen and per-category demo sections       |
+| `src/build/`   | Build and EAS configuration helpers                            |
+| `scripts/`     | PowerShell (`.ps1`) + double-click `.cmd` wrappers for build, deploy, quality gate |
+| `docs/`        | Project and accessibility documentation                        |
+
+Each `src/` subdirectory has a barrel `index.ts`. Import from the barrel,
+not from individual files.
+
+### Naming
+
+- **Components** use the `App` prefix: `AppButton`, `AppText`,
+  `AppScreenContainer`. Each lives in its own file under
+  `src/components/` and is re-exported alphabetically from the barrel.
+- **Zustand stores** follow the factory pattern: a `createXStore(deps)`
+  function and a default `useXStore` hook export. See
+  `src/state/exampleStore.ts` for the canonical shape.
+- **Scripts** are PowerShell `.ps1` files with a matching `.cmd` wrapper
+  for double-click execution. Shared logic lives in `Common.ps1`.
+
+### Theming & Tokens
+
+All visual values — colors, spacing, radii, typography scales, shadows,
+z-index — are defined once in `src/theme/`. Components consume them
+through `useTheme()`:
+
+```ts
+const { theme } = useTheme();
+// theme.colors, theme.spacing, theme.radii, theme.typography, ...
+```
+
+Raw color strings, pixel literals, and hardcoded spacing are not
+permitted outside the token files. A lint rule to machine-enforce this
+ban is planned (#46); until then, code review is the enforcement
+mechanism.
+
+### Accessibility
+
+WCAG 2.1 Level AA is the baseline:
+
+- **Contrast** — automated ratio checks in `src/theme/contrast.ts`
+  (tested against every foreground/background pairing).
+- **Touch targets** — `AppPressable` enforces a 44x44 minimum and
+  requires an `accessibilityLabel` prop.
+- **Roles & announcements** — managed through `src/a11y/` (`A11yProvider`,
+  `useA11y`, `announce`). Role constants live in `roles.ts`.
+- **Font scaling** — capped at a safe maximum via `maxFontScale.ts` to
+  prevent layout breakage while still allowing user scaling.
+
+### State Management
+
+- **React Context** for cross-cutting concerns: `ThemeProvider` (theme
+  mode + tokens) and `A11yProvider` (reduce-motion, font scale).
+- **Zustand** for domain state, using the injectable-deps factory
+  pattern. Each store declares an interface for its external
+  dependencies (typically a `StorageAdapter`) and accepts them via a
+  `deps` parameter. Production wires real adapters; tests pass mocks.
+  `src/state/exampleStore.ts` is the reference implementation.
+
+### Reusability & Seams
+
+**Single source of truth.** Every visual value lives once in
+`src/theme/`. Changing a color, spacing step, or font size means editing
+one token file — nothing else should need to change.
+
+**Seam contract.** Components are generic and prop-driven (`variant` /
+`size` / `tone` / `style`). They read tokens through `useTheme()` and
+never hardcode visual values. Variant-to-token mappings are declared as
+lookup tables (see `VARIANTS` and `SIZE_SPEC` in `AppButton.tsx` for the
+pattern). Re-skinning the app means editing tokens, not editing
+components.
+
+**New-component recipe:**
+
+1. Create `src/components/AppFoo.tsx` — consume tokens via `useTheme()`,
+   accept a `style` prop for caller overrides.
+2. Add a test in `src/components/__tests__/AppFoo.test.tsx`.
+3. Re-export from the barrel (`src/components/index.ts`, alphabetical).
+4. Add a demo entry in the appropriate `src/gallery/sections/` file.
+
+**Lint escape-hatch.** The planned lint rule (#46) will provide a
+suppression comment for the rare justified raw value (a one-off pixel
+offset for platform alignment, for example). Until that rule ships,
+review catches violations.
+
+For the full rationale behind these rules, see the Design Principles
+section of `.decisions/mobile-template-2026-06-06.md`.
+
 ## Autonomous Execution
 
 Execute the full story workflow end-to-end without pausing for
