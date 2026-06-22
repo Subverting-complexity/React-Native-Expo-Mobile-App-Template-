@@ -7,6 +7,7 @@ const { defineConfig } = require('eslint/config');
 const expoConfig = require('eslint-config-expo/flat');
 const prettierConfig = require('eslint-config-prettier');
 const reactNativeA11y = require('eslint-plugin-react-native-a11y');
+const themeTokens = require('./eslint-plugin-theme-tokens');
 
 module.exports = defineConfig([
   // Paths ESLint should never look at (generated output, deps, coverage).
@@ -28,6 +29,19 @@ module.exports = defineConfig([
       complexity: ['error', 10],
       'max-depth': ['error', 4],
       'max-nested-callbacks': ['error', 3],
+    },
+  },
+
+  // Token-only styling: ban hardcoded colors and visual values in component/
+  // screen code. Raw values belong in src/theme — components read tokens via
+  // useTheme(). Escape hatch: eslint-disable-next-line.
+  {
+    files: ['app/**/*.{ts,tsx}', 'src/**/*.{ts,tsx}'],
+    ignores: ['src/theme/**', '**/__tests__/**', '**/*.test.{ts,tsx}'],
+    plugins: { 'theme-tokens': themeTokens },
+    rules: {
+      'theme-tokens/no-hardcoded-colors': 'error',
+      'theme-tokens/no-hardcoded-styles': 'error',
     },
   },
 

@@ -72,7 +72,8 @@
     ],
     "roots": [
       "<rootDir>/app",
-      "<rootDir>/src"
+      "<rootDir>/src",
+      "<rootDir>/eslint-plugin-theme-tokens"
     ],
     "collectCoverageFrom": [
       "src/**/*.{ts,tsx}",
