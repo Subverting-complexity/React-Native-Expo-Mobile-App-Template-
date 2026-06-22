@@ -1,0 +1,19 @@
+name: Security Issue
+description: A security vulnerability or concern
+title: "[SECURITY] "
+labels: ["type-security"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What the vulnerability is and its potential impact.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: How to reproduce or verify
+      description: Steps to demonstrate the issue, if safe to disclose here.
+    validations:
+      required: false

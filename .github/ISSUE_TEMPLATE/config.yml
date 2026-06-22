@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions & Discussions
+    url: https://github.com/Subverting-complexity/React-Native-Expo-Mobile-App-Template-/discussions
+    about: Use Discussions for questions — Issues are for actionable work items only.

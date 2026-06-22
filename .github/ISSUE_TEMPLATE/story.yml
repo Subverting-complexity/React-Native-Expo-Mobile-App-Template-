@@ -1,0 +1,26 @@
+name: Story
+description: An implementable unit of work
+title: "[STORY] "
+labels: ["story"]
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Why this work is needed and how it fits the project.
+    validations:
+      required: true
+  - type: textarea
+    id: requirements
+    attributes:
+      label: Requirements
+      description: What must be true when this story is complete.
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional notes
+      description: Reference links, design sketches, or constraints.
+    validations:
+      required: false
