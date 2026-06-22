@@ -19,6 +19,7 @@
     "build:prod": "npx eas-cli build --profile production",
     "submit:ios": "npx eas-cli submit --platform ios --profile production",
     "submit:android": "npx eas-cli submit --platform android --profile production",
+    "verify:expo": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/VerifyExpoAccount.ps1",
     "deploy:ios": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/DeployiOSTestFlight.ps1",
     "deploy:android": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/DeployAndroidPlayStore.ps1",
     "bump": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/BumpBuildNumber.ps1",
