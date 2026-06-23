@@ -1,21 +1,8 @@
 import { Text } from 'react-native';
-import { fireEvent, render } from '@testing-library/react-native';
+import { fireEvent } from '@testing-library/react-native';
 
 import { AppEmptyState } from '../AppEmptyState';
-import { ThemeProvider, type StorageAdapter } from '@/theme';
-
-function makeStorage(saved: string | null = null): StorageAdapter {
-  return {
-    getItem: jest.fn(async () => saved),
-    setItem: jest.fn(async () => {}),
-  };
-}
-
-function renderWithTheme(ui: React.ReactElement, saved: string | null = null) {
-  return render(
-    <ThemeProvider storage={makeStorage(saved)}>{ui}</ThemeProvider>,
-  );
-}
+import { renderWithTheme } from '@/test';
 
 describe('AppEmptyState', () => {
   it('renders the title and subtitle', () => {

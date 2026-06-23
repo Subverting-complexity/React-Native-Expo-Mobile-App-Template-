@@ -5,7 +5,8 @@ import {
 } from 'react-native-safe-area-context';
 
 import HomeScreen from '../index';
-import { ThemeProvider, type StorageAdapter } from '@/theme';
+import { ThemeProvider } from '@/theme';
+import { makeStorage } from '../../../src/test';
 
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({
@@ -16,13 +17,6 @@ const METRICS: Metrics = {
   frame: { x: 0, y: 0, width: 390, height: 844 },
   insets: { top: 47, left: 0, right: 0, bottom: 34 },
 };
-
-function makeStorage(): StorageAdapter {
-  return {
-    getItem: jest.fn(async () => null),
-    setItem: jest.fn(async () => {}),
-  };
-}
 
 function Wrapper({ children }: { children: React.ReactNode }) {
   return (

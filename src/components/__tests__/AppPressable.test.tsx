@@ -1,23 +1,9 @@
 import { StyleSheet, Text } from 'react-native';
-import { fireEvent, render } from '@testing-library/react-native';
+import { fireEvent } from '@testing-library/react-native';
 
 import { AppPressable } from '../AppPressable';
-import { ThemeProvider, a11y, type StorageAdapter } from '@/theme';
-
-// --------------------------------------------------------------------------
-// Helpers
-// --------------------------------------------------------------------------
-
-function makeStorage(): StorageAdapter {
-  return {
-    getItem: jest.fn(async () => null),
-    setItem: jest.fn(async () => {}),
-  };
-}
-
-function renderWithTheme(ui: React.ReactElement) {
-  return render(<ThemeProvider storage={makeStorage()}>{ui}</ThemeProvider>);
-}
+import { a11y } from '@/theme';
+import { renderWithTheme } from '@/test';
 
 // --------------------------------------------------------------------------
 // Tests

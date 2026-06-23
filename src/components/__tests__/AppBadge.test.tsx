@@ -1,21 +1,9 @@
 import { StyleSheet } from 'react-native';
-import { render, waitFor } from '@testing-library/react-native';
+import { waitFor } from '@testing-library/react-native';
 
 import { AppBadge } from '../AppBadge';
-import { ThemeProvider, lightColors, type StorageAdapter } from '@/theme';
-
-function makeStorage(saved: string | null = null): StorageAdapter {
-  return {
-    getItem: jest.fn(async () => saved),
-    setItem: jest.fn(async () => {}),
-  };
-}
-
-function renderWithTheme(ui: React.ReactElement, saved: string | null = null) {
-  return render(
-    <ThemeProvider storage={makeStorage(saved)}>{ui}</ThemeProvider>,
-  );
-}
+import { lightColors } from '@/theme';
+import { renderWithTheme } from '@/test';
 
 describe('AppBadge', () => {
   it('renders its label', () => {

@@ -1,28 +1,10 @@
 import { StyleSheet } from 'react-native';
-import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { fireEvent, waitFor } from '@testing-library/react-native';
 
 import { AppIconButton } from '../AppIconButton';
 import { AppText } from '../AppText';
-import {
-  ThemeProvider,
-  a11y,
-  lightColors,
-  typography,
-  type StorageAdapter,
-} from '@/theme';
-
-function makeStorage(saved: string | null = null): StorageAdapter {
-  return {
-    getItem: jest.fn(async () => saved),
-    setItem: jest.fn(async () => {}),
-  };
-}
-
-function renderWithTheme(ui: React.ReactElement, saved: string | null = null) {
-  return render(
-    <ThemeProvider storage={makeStorage(saved)}>{ui}</ThemeProvider>,
-  );
-}
+import { a11y, lightColors, typography } from '@/theme';
+import { renderWithTheme } from '@/test';
 
 const icon = <AppText>★</AppText>;
 

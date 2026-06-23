@@ -4,14 +4,8 @@ import { fireEvent, render } from '@testing-library/react-native';
 import { ToastProvider } from '../ToastProvider';
 import { useToast } from '../useToast';
 import { A11yContext, MAX_FONT_SIZE_MULTIPLIER } from '@/a11y';
-import { ThemeProvider, lightColors, type StorageAdapter } from '@/theme';
-
-function makeStorage(saved: string | null = null): StorageAdapter {
-  return {
-    getItem: jest.fn(async () => saved),
-    setItem: jest.fn(async () => {}),
-  };
-}
+import { ThemeProvider, lightColors } from '@/theme';
+import { makeStorage } from '@/test';
 
 function Harness({ children }: { children: React.ReactNode }) {
   return (

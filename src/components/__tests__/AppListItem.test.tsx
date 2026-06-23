@@ -1,21 +1,9 @@
 import { StyleSheet, Text } from 'react-native';
-import { fireEvent, render } from '@testing-library/react-native';
+import { fireEvent } from '@testing-library/react-native';
 
 import { AppListItem } from '../AppListItem';
-import { ThemeProvider, a11y, type StorageAdapter } from '@/theme';
-
-function makeStorage(saved: string | null = null): StorageAdapter {
-  return {
-    getItem: jest.fn(async () => saved),
-    setItem: jest.fn(async () => {}),
-  };
-}
-
-function renderWithTheme(ui: React.ReactElement, saved: string | null = null) {
-  return render(
-    <ThemeProvider storage={makeStorage(saved)}>{ui}</ThemeProvider>,
-  );
-}
+import { a11y } from '@/theme';
+import { renderWithTheme } from '@/test';
 
 describe('AppListItem', () => {
   it('renders the title and subtitle', () => {

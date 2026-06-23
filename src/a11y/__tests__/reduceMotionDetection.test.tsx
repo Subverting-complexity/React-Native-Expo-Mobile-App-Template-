@@ -1,30 +1,8 @@
 import { AccessibilityInfo } from 'react-native';
-import { renderHook, act, waitFor } from '@testing-library/react-native';
+import { renderHook, waitFor } from '@testing-library/react-native';
 
 import { useReduceMotionDetection } from '../reduceMotionDetection';
-
-type ReduceMotionHandler = (enabled: boolean) => void;
-
-function mockAccessibility(initial: boolean) {
-  const remove = jest.fn();
-  let handler: ReduceMotionHandler = () => {};
-
-  jest
-    .spyOn(AccessibilityInfo, 'isReduceMotionEnabled')
-    .mockResolvedValue(initial);
-  jest
-    .spyOn(AccessibilityInfo, 'addEventListener')
-    .mockImplementation((event, cb) => {
-      if (event === 'reduceMotionChanged') {
-        handler = cb as ReduceMotionHandler;
-      }
-      return { remove } as ReturnType<
-        typeof AccessibilityInfo.addEventListener
-      >;
-    });
-
-  return { remove, emit: (value: boolean) => act(() => handler(value)) };
-}
+import { mockAccessibility } from '@/test';
 
 afterEach(() => {
   jest.restoreAllMocks();

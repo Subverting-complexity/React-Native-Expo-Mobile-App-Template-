@@ -5,22 +5,18 @@ import { render, act, waitFor } from '@testing-library/react-native';
 import { ThemeProvider } from '../ThemeProvider';
 import { useTheme } from '../useTheme';
 import { ThemeContext } from '../ThemeContext';
-import type { StorageAdapter, ColorMode } from '../ThemeContext';
+import type { ColorMode } from '../ThemeContext';
 import { lightTheme, darkTheme } from '../index';
+import { makeStorageWithStore } from '@/test';
 
 // --------------------------------------------------------------------------
 // Helpers
 // --------------------------------------------------------------------------
 
-function makeStorage(initial?: ColorMode): StorageAdapter {
-  const store: Record<string, string> = {};
-  if (initial) store['@theme/colorMode'] = initial;
-  return {
-    getItem: jest.fn(async (key) => store[key] ?? null),
-    setItem: jest.fn(async (key, value) => {
-      store[key] = value;
-    }),
-  };
+function makeStorage(initial?: ColorMode) {
+  return makeStorageWithStore(
+    initial ? { '@theme/colorMode': initial } : undefined,
+  );
 }
 
 let mockColorScheme: 'light' | 'dark' | null = 'dark';

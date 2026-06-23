@@ -1,21 +1,9 @@
 import { StyleSheet } from 'react-native';
-import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { fireEvent, waitFor } from '@testing-library/react-native';
 
 import { AppChip } from '../AppChip';
-import { ThemeProvider, lightColors, type StorageAdapter } from '@/theme';
-
-function makeStorage(saved: string | null = null): StorageAdapter {
-  return {
-    getItem: jest.fn(async () => saved),
-    setItem: jest.fn(async () => {}),
-  };
-}
-
-function renderWithTheme(ui: React.ReactElement, saved: string | null = null) {
-  return render(
-    <ThemeProvider storage={makeStorage(saved)}>{ui}</ThemeProvider>,
-  );
-}
+import { lightColors } from '@/theme';
+import { renderWithTheme } from '@/test';
 
 describe('AppChip', () => {
   it('renders its label with the button role', () => {
