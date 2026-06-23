@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import { AppPressable } from './AppPressable';
+import { A11Y_ROLES } from '@/a11y';
 import { useTheme } from '@/theme';
 import type { ThemeTokens } from '@/theme';
 
@@ -73,7 +74,7 @@ export function AppCard(props: AppCardProps) {
   if (props.onPress) {
     return (
       <AppPressable
-        accessibilityRole={props.accessibilityRole ?? 'button'}
+        accessibilityRole={props.accessibilityRole ?? A11Y_ROLES.button}
         accessibilityLabel={props.accessibilityLabel}
         accessibilityHint={props.accessibilityHint}
         onPress={props.onPress}
