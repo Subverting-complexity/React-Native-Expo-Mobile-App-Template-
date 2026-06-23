@@ -46,7 +46,7 @@ describe('contrast utilities', () => {
 });
 
 /**
- * The contract these tables encode is the WCAG AA audit for issue #22.
+ * The contract these tables encode is the WCAG AA audit.
  * Every pair below is a *deliberate* foreground/background combination the
  * theme promises; a token edit that breaks any of them must fail CI.
  *

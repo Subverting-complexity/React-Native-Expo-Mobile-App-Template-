@@ -142,5 +142,4 @@ Issues should include these sections at minimum:
 
 ## Reference Docs
 
-- `.decisions/mobile-template-2026-06-06.md` — Architecture decisions and locked design choices for this template (Expo SDK, theme, a11y, build toolchain, state management)
 - `docs/review.config.md` — Code review configuration and non-compliance gates

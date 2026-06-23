@@ -7,9 +7,9 @@ import { create, type StoreApi, type UseBoundStore } from 'zustand';
  * to any concrete storage module.
  *
  * NOTE: this intentionally mirrors the `StorageAdapter` in
- * `src/theme/ThemeContext.ts`. Story #32 (platform-aware storage
- * abstraction) will consolidate both into one shared contract; until then
- * the small duplication keeps each module self-contained.
+ * `src/theme/ThemeContext.ts`. A future platform-aware storage abstraction
+ * will consolidate both into one shared contract; until then the small
+ * duplication keeps each module self-contained.
  */
 export interface StorageAdapter {
   getItem(key: string): Promise<string | null>;

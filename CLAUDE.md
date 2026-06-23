@@ -12,9 +12,8 @@ concerns not covered in the issue.
 
 ## Project Context
 
-React Native / Expo mobile app template — project-agnostic scaffold consolidating
-patterns from CadenceReader, Refrain, and VantagePoint. Windows-first toolchain
-(PowerShell scripts + `.cmd` wrappers). See `.decisions/` for locked decisions.
+React Native / Expo mobile app template — project-agnostic scaffold. Windows-first
+toolchain (PowerShell scripts + `.cmd` wrappers).
 
 **Non-negotiable:** Single source of truth + seams. Every visual value
 (colors, font sizes, spacing, radii, shadows) is defined ONCE in `src/theme`.
@@ -68,8 +67,7 @@ const { theme } = useTheme();
 
 Raw color strings, pixel literals, and hardcoded spacing are not
 permitted outside the token files. A lint rule to machine-enforce this
-ban is planned (#46); until then, code review is the enforcement
-mechanism.
+ban is planned; until then, code review is the enforcement mechanism.
 
 ### Accessibility
 
@@ -115,13 +113,10 @@ components.
 3. Re-export from the barrel (`src/components/index.ts`, alphabetical).
 4. Add a demo entry in the appropriate `src/gallery/sections/` file.
 
-**Lint escape-hatch.** The planned lint rule (#46) will provide a
-suppression comment for the rare justified raw value (a one-off pixel
-offset for platform alignment, for example). Until that rule ships,
-review catches violations.
-
-For the full rationale behind these rules, see the Design Principles
-section of `.decisions/mobile-template-2026-06-06.md`.
+**Lint escape-hatch.** The planned lint rule will provide a suppression
+comment for the rare justified raw value (a one-off pixel offset for
+platform alignment, for example). Until that rule ships, review catches
+violations.
 
 ## Autonomous Execution
 
@@ -179,5 +174,4 @@ development:
 | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `ClaudeProject.md`                         | Project identity, labels, quality gate, branch convention, board config. Read at the start of any workflow command.                                               |
 | `docs/review.config.md`                    | Review label definitions, non-compliance gates, tech-stack review rules. Read when performing or preparing for code review.                                       |
-| `.decisions/mobile-template-2026-06-06.md` | Architecture decisions: Expo SDK version, theme system, a11y requirements, build toolchain, state management. Consult before making cross-cutting design choices. |
 | `.claude/ecosystem.md`                     | Installed Claude Code companion tool cheat-sheet — graphify queries, cost tracking, security scanning, and codebase intelligence.                                  |
