@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { useColorScheme } from 'react-native';
 
 import { storage as defaultStorage } from '@/storage';
-import { lightTheme, darkTheme } from './index';
+import { lightTheme, darkTheme } from './themes';
 import {
   ThemeContext,
   type ColorMode,
