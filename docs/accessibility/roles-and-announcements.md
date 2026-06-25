@@ -2,7 +2,7 @@
 
 Two small primitives in `src/a11y` keep screen-reader behaviour consistent and
 free of magic strings. This page documents the conventions; the broader
-theming + a11y guide is tracked separately (#45).
+theming + a11y guide is tracked separately.
 
 ## Semantic role conventions (`A11Y_ROLES`)
 
@@ -55,7 +55,7 @@ having to find and focus it. On Android, also set
 `accessibilityLiveRegion="assertive"`.
 
 ```tsx
-// Pattern for the toast component (#26) and screen flows (#33–35):
+// Pattern for the toast component and screen flows:
 <View accessibilityRole={A11Y_ROLES.alert} accessibilityLiveRegion="assertive">
   <AppText>{message}</AppText>
 </View>;

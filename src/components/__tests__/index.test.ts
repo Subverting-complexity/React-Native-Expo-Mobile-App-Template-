@@ -4,7 +4,7 @@ import { join } from 'path';
 import * as components from '../index';
 
 /**
- * Guard for the public component barrel (#29). Every `App*` component must
+ * Guard for the public component barrel. Every `App*` component must
  * be reachable from the single `@/components` import path. The expected set
  * is derived from the `App*.tsx` files on disk — not a hardcoded list — so a
  * component added without a matching `export *` line in `index.ts` fails this

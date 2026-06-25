@@ -3,7 +3,7 @@
 // Expo Router (web `output: 'static'`) renders this file to the static HTML
 // document that wraps every web route. Native platforms ignore it entirely.
 // The injected <style> sets the page background before React hydrates so there
-// is no white/dark flash on first paint (issue #17).
+// is no white/dark flash on first paint.
 
 import { ScrollViewStyleReset } from 'expo-router/html';
 import type { PropsWithChildren } from 'react';
