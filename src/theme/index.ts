@@ -50,6 +50,7 @@ export {
   contrastRatio,
   meetsAA,
 } from './contrast';
+export { buildPreHydrationBackgroundCss } from './preHydrationTheme';
 
 export type {
   ColorMode,

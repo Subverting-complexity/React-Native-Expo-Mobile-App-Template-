@@ -8,7 +8,7 @@
 import { ScrollViewStyleReset } from 'expo-router/html';
 import type { PropsWithChildren } from 'react';
 
-import { buildPreHydrationBackgroundCss } from '@/theme/preHydrationTheme';
+import { buildPreHydrationBackgroundCss } from '@/theme';
 
 export default function Root({ children }: PropsWithChildren) {
   return (

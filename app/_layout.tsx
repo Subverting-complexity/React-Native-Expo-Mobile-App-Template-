@@ -2,7 +2,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useAppFonts } from '../src/hooks/useAppFonts';
 
-import { ToastProvider } from '@/components/ToastProvider';
+import { ToastProvider } from '@/components';
 import { A11yProvider } from '@/a11y';
 import { ThemeProvider } from '@/theme';
 
