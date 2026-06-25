@@ -41,7 +41,10 @@ describe('the committed eas.json', () => {
 
 describe('validateEasConfig', () => {
   it('accepts a well-formed config', () => {
-    expect(validateEasConfig(validConfig())).toEqual({ valid: true, errors: [] });
+    expect(validateEasConfig(validConfig())).toEqual({
+      valid: true,
+      errors: [],
+    });
   });
 
   it('rejects a non-object', () => {
@@ -68,24 +71,34 @@ describe('validateEasConfig', () => {
 
   it('requires the development profile to ship a dev client', () => {
     const config = validConfig();
-    (config.build as Record<string, Record<string, unknown>>).development.developmentClient =
-      false;
+    (
+      config.build as Record<string, Record<string, unknown>>
+    ).development.developmentClient = false;
     const result = validateEasConfig(config);
-    expect(result.errors).toContain('build.development.developmentClient must be true');
+    expect(result.errors).toContain(
+      'build.development.developmentClient must be true',
+    );
   });
 
   it('requires development and preview to use internal distribution', () => {
     const config = validConfig();
-    (config.build as Record<string, Record<string, unknown>>).preview.distribution = 'store';
+    (
+      config.build as Record<string, Record<string, unknown>>
+    ).preview.distribution = 'store';
     const result = validateEasConfig(config);
-    expect(result.errors).toContain('build.preview.distribution must be "internal"');
+    expect(result.errors).toContain(
+      'build.preview.distribution must be "internal"',
+    );
   });
 
   it('requires production to auto-increment the build number', () => {
     const config = validConfig();
-    delete (config.build as Record<string, Record<string, unknown>>).production.autoIncrement;
+    delete (config.build as Record<string, Record<string, unknown>>).production
+      .autoIncrement;
     const result = validateEasConfig(config);
-    expect(result.errors).toContain('build.production.autoIncrement must be true');
+    expect(result.errors).toContain(
+      'build.production.autoIncrement must be true',
+    );
   });
 
   it('requires cli.appVersionSource to be remote', () => {
@@ -111,7 +124,9 @@ describe('validateEasConfig', () => {
 
 describe('loadEasConfig', () => {
   it('validates JSON produced by the injected reader', () => {
-    const result = loadEasConfig('eas.json', () => JSON.stringify(validConfig()));
+    const result = loadEasConfig('eas.json', () =>
+      JSON.stringify(validConfig()),
+    );
     expect(result).toEqual({ valid: true, errors: [] });
   });
 

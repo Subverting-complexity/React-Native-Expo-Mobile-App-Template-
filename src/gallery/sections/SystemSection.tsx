@@ -43,7 +43,11 @@ export function SystemSection() {
         >
           <Bomb explode={explode} />
         </AppErrorBoundary>
-        <AppButton label="Break it" variant="danger" onPress={() => setExplode(true)} />
+        <AppButton
+          label="Break it"
+          variant="danger"
+          onPress={() => setExplode(true)}
+        />
       </GalleryStack>
     </AppSection>
   );

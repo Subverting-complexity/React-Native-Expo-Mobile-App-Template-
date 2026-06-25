@@ -11,15 +11,15 @@ means editing token files, not editing components.
 The theme is built from seven token modules, each in its own file under
 `src/theme/`:
 
-| Module         | File             | What it defines                                                    |
-| -------------- | ---------------- | ------------------------------------------------------------------ |
-| **Colors**     | `colors.ts`      | Two palettes (`lightColors`, `darkColors`) sharing one `ColorPalette` interface — semantic names like `primary`, `textPrimary`, `surface`, not raw hex values. |
-| **Spacing**    | `spacing.ts`     | A numeric scale from `0.5` (2 px) to `24` (96 px).                |
-| **Radii**      | `radii.ts`       | Corner radius steps from `none` (0) to `full` (9999, pill shape). |
-| **Typography** | `typography.ts`  | Font families, weight names, a size scale (`xs`–`4xl`), and semantic text variants (`body`, `heading`, `caption`, etc.) that map each role to a size, family, and weight. |
-| **Shadows**    | `shadows.ts`     | Platform-aware shadow tokens (`none`–`xl`). iOS uses `shadowOffset` + `shadowOpacity`, Android uses `elevation`, and web uses `boxShadow`. |
-| **Z-index**    | `zIndex.ts`      | Named stacking layers (`base`, `raised`, `dropdown`, `sticky`, `overlay`, `modal`, `toast`). |
-| **A11y**       | `a11y.ts`        | Accessibility design tokens (currently `minTouchTarget: 44`).      |
+| Module         | File            | What it defines                                                                                                                                                           |
+| -------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Colors**     | `colors.ts`     | Two palettes (`lightColors`, `darkColors`) sharing one `ColorPalette` interface — semantic names like `primary`, `textPrimary`, `surface`, not raw hex values.            |
+| **Spacing**    | `spacing.ts`    | A numeric scale from `0.5` (2 px) to `24` (96 px).                                                                                                                        |
+| **Radii**      | `radii.ts`      | Corner radius steps from `none` (0) to `full` (9999, pill shape).                                                                                                         |
+| **Typography** | `typography.ts` | Font families, weight names, a size scale (`xs`–`4xl`), and semantic text variants (`body`, `heading`, `caption`, etc.) that map each role to a size, family, and weight. |
+| **Shadows**    | `shadows.ts`    | Platform-aware shadow tokens (`none`–`xl`). iOS uses `shadowOffset` + `shadowOpacity`, Android uses `elevation`, and web uses `boxShadow`.                                |
+| **Z-index**    | `zIndex.ts`     | Named stacking layers (`base`, `raised`, `dropdown`, `sticky`, `overlay`, `modal`, `toast`).                                                                              |
+| **A11y**       | `a11y.ts`       | Accessibility design tokens (currently `minTouchTarget: 44`).                                                                                                             |
 
 All seven modules are assembled into a single `ThemeTokens` object by the
 `buildTheme` function in `src/theme/index.ts`. Two pre-built instances —
@@ -95,21 +95,21 @@ corresponding fill. `onPrimary` is the text/icon color for a
 A multiplier-based scale where the key is the multiplier and the value is
 the pixel count:
 
-| Key    | Pixels |
-| ------ | ------ |
-| `0.5`  | 2      |
-| `1`    | 4      |
-| `2`    | 8      |
-| `3`    | 12     |
-| `4`    | 16     |
-| `5`    | 20     |
-| `6`    | 24     |
-| `8`    | 32     |
-| `10`   | 40     |
-| `12`   | 48     |
-| `16`   | 64     |
-| `20`   | 80     |
-| `24`   | 96     |
+| Key   | Pixels |
+| ----- | ------ |
+| `0.5` | 2      |
+| `1`   | 4      |
+| `2`   | 8      |
+| `3`   | 12     |
+| `4`   | 16     |
+| `5`   | 20     |
+| `6`   | 24     |
+| `8`   | 32     |
+| `10`  | 40     |
+| `12`  | 48     |
+| `16`  | 64     |
+| `20`  | 80     |
+| `24`  | 96     |
 
 Use `theme.spacing[4]` (16 px) rather than the number `16`.
 
@@ -140,16 +140,16 @@ The typography token has three layers:
    weight into one token. Components reference a variant name rather than
    assembling font properties by hand.
 
-| Variant      | Size  | Weight | Typical use                         |
-| ------------ | ----- | ------ | ----------------------------------- |
-| `display`    | `4xl` | bold   | Hero or splash text                 |
-| `title`      | `3xl` | bold   | Screen title                        |
-| `heading`    | `2xl` | bold   | Section heading                     |
-| `subheading` | `xl`  | bold   | Sub-section heading                 |
-| `body`       | `md`  | regular| Default paragraph text              |
-| `bodySmall`  | `sm`  | regular| Secondary or supporting text        |
-| `label`      | `sm`  | bold   | Button labels, form field labels    |
-| `caption`    | `xs`  | regular| Timestamps, footnotes, fine print   |
+| Variant      | Size  | Weight  | Typical use                       |
+| ------------ | ----- | ------- | --------------------------------- |
+| `display`    | `4xl` | bold    | Hero or splash text               |
+| `title`      | `3xl` | bold    | Screen title                      |
+| `heading`    | `2xl` | bold    | Section heading                   |
+| `subheading` | `xl`  | bold    | Sub-section heading               |
+| `body`       | `md`  | regular | Default paragraph text            |
+| `bodySmall`  | `sm`  | regular | Secondary or supporting text      |
+| `label`      | `sm`  | bold    | Button labels, form field labels  |
+| `caption`    | `xs`  | regular | Timestamps, footnotes, fine print |
 
 ### Shadows
 
@@ -289,9 +289,9 @@ contrast ratios between any two hex colors:
 ```ts
 import { contrastRatio, meetsAA } from '@/theme';
 
-contrastRatio('#212529', '#FFFFFF');   // 16.75
-meetsAA('#212529', '#FFFFFF');         // true (≥ 4.5:1)
-meetsAA('#4263EB', '#F8F9FA', 3);     // true (≥ 3:1, for large text/icons)
+contrastRatio('#212529', '#FFFFFF'); // 16.75
+meetsAA('#212529', '#FFFFFF'); // true (≥ 4.5:1)
+meetsAA('#4263EB', '#F8F9FA', 3); // true (≥ 3:1, for large text/icons)
 ```
 
 The test suite (`src/theme/__tests__/contrast.test.ts`) runs these checks

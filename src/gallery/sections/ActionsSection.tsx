@@ -52,7 +52,12 @@ export function ActionsSection() {
         <AppText variant="label">Button variants</AppText>
         <GalleryRow>
           {BUTTON_VARIANTS.map((variant) => (
-            <AppButton key={variant} label={variant} variant={variant} onPress={noop} />
+            <AppButton
+              key={variant}
+              label={variant}
+              variant={variant}
+              onPress={noop}
+            />
           ))}
         </GalleryRow>
 

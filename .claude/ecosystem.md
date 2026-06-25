@@ -4,6 +4,7 @@
 # Ecosystem Tools
 
 ## Graphify — codebase knowledge graph
+
 **What it is:** Builds a searchable map of how the codebase connects —
 which files, functions, and modules depend on which — so agents answer
 "how does X relate to Y" from the graph instead of guessing from a few
@@ -22,6 +23,7 @@ add a `Stop` hook running `graphify . --update --no-viz` to
 you want it).
 
 ## RTK — terminal output token optimizer
+
 **What it is:** Sits between Claude and the terminal and trims the noise
 from command output — passing-test spam, repeated headers, verbose
 boilerplate — while keeping everything that matters (errors, diffs, stack
@@ -35,6 +37,7 @@ installed — there is a same-named "Rust Type Kit" on crates.io);
 already filtered. No phase calls it directly.
 
 ## Headroom — context compression layer
+
 **What it is:** Compresses what the agent sends the model — tool outputs,
 file contents, retrieved chunks, and conversation history — before the
 model reads it, claiming 60–95% fewer tokens while keeping answers intact.
@@ -50,6 +53,7 @@ nothing to invoke per phase. It overlaps with RTK (terminal output) but
 goes broader (files, history, RAG).
 
 ## ccusage — Claude Code cost history
+
 **What it is:** Reads your local Claude Code session logs and reports
 what you spent, broken down by day, month, session, or project — the
 history the built-in `/cost` (current session only) does not show.
@@ -62,6 +66,7 @@ pace a long autonomous run against the ~100k-per-session budget. No phase
 calls it automatically.
 
 ## ecc-agentshield — Claude Code config security scanner
+
 **What it is:** A static scanner that runs 102 fixed rules over your
 Claude Code config — CLAUDE.md, settings.json, MCP configs, hooks, and
 skills — looking for hardcoded secrets, prompt-injection openings,
@@ -74,6 +79,7 @@ files (CLAUDE.md, `.claude/`, hooks, skills, MCP config), and fold any
 finding into the Security section.
 
 ## Fallow — codebase intelligence (TS/JS)
+
 **What it is:** Analyzes a TypeScript/JavaScript codebase for unused
 exports, duplicated logic, complexity hotspots, and architectural drift —
 the "what connects to what, and what is dead" picture. Free static

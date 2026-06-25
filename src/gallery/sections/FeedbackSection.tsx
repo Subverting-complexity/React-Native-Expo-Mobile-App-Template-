@@ -33,7 +33,12 @@ const BADGE_TONES: AppBadgeTone[] = [
   'info',
 ];
 
-const PROGRESS_TONES: AppProgressTone[] = ['primary', 'success', 'warning', 'error'];
+const PROGRESS_TONES: AppProgressTone[] = [
+  'primary',
+  'success',
+  'warning',
+  'error',
+];
 const SPINNER_SIZES: AppSpinnerSize[] = ['sm', 'lg'];
 const SPINNER_TONES: AppSpinnerTone[] = ['primary', 'secondary', 'muted'];
 const TOAST_TONES: ToastTone[] = ['info', 'success', 'warning', 'error'];
@@ -69,14 +74,31 @@ export function FeedbackSection() {
           </GalleryRow>
         ))}
 
-        <AppText variant="label">Progress ({Math.round(progress * 100)}%)</AppText>
+        <AppText variant="label">
+          Progress ({Math.round(progress * 100)}%)
+        </AppText>
         <AppProgressBar value={progress} accessibilityLabel="Demo progress" />
         <GalleryRow>
-          <AppButton label="Less" size="sm" variant="outline" onPress={() => stepProgress(-PROGRESS_STEP)} />
-          <AppButton label="More" size="sm" variant="outline" onPress={() => stepProgress(PROGRESS_STEP)} />
+          <AppButton
+            label="Less"
+            size="sm"
+            variant="outline"
+            onPress={() => stepProgress(-PROGRESS_STEP)}
+          />
+          <AppButton
+            label="More"
+            size="sm"
+            variant="outline"
+            onPress={() => stepProgress(PROGRESS_STEP)}
+          />
         </GalleryRow>
         {PROGRESS_TONES.map((tone) => (
-          <AppProgressBar key={tone} value={0.6} tone={tone} accessibilityLabel={`${tone} progress`} />
+          <AppProgressBar
+            key={tone}
+            value={0.6}
+            tone={tone}
+            accessibilityLabel={`${tone} progress`}
+          />
         ))}
 
         <AppText variant="label">Spinners</AppText>
@@ -114,7 +136,12 @@ export function FeedbackSection() {
           <AppButton
             label="with action"
             size="sm"
-            onPress={() => show('Item archived', { tone: 'success', action: { label: 'Undo', onPress: noop } })}
+            onPress={() =>
+              show('Item archived', {
+                tone: 'success',
+                action: { label: 'Undo', onPress: noop },
+              })
+            }
           />
         </GalleryRow>
       </GalleryStack>

@@ -45,11 +45,11 @@ not a design decision.
 The rules run on `app/**/*.{ts,tsx}` and `src/**/*.{ts,tsx}`, with three
 exclusions:
 
-| Path | Why excluded |
-|------|--------------|
-| `src/theme/**` | Token definition files — raw values belong here |
-| `**/__tests__/**` | Test files mock styles for assertions |
-| `**/*.test.{ts,tsx}` | Same as above |
+| Path                 | Why excluded                                    |
+| -------------------- | ----------------------------------------------- |
+| `src/theme/**`       | Token definition files — raw values belong here |
+| `**/__tests__/**`    | Test files mock styles for assertions           |
+| `**/*.test.{ts,tsx}` | Same as above                                   |
 
 ## Escape hatch
 

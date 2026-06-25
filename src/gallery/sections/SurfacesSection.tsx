@@ -37,7 +37,10 @@ export function SurfacesSection() {
         </GalleryRow>
 
         <AppText variant="label">Tappable card</AppText>
-        <AppCard onPress={() => setTaps((value) => value + 1)} accessibilityLabel="Tappable card">
+        <AppCard
+          onPress={() => setTaps((value) => value + 1)}
+          accessibilityLabel="Tappable card"
+        >
           <AppText>Tapped {taps} times</AppText>
         </AppCard>
 

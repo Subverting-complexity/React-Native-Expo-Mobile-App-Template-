@@ -13,7 +13,11 @@
  */
 
 /** Build profiles every project copy of eas.json must define. */
-export const REQUIRED_BUILD_PROFILES = ['development', 'preview', 'production'] as const;
+export const REQUIRED_BUILD_PROFILES = [
+  'development',
+  'preview',
+  'production',
+] as const;
 
 export type RequiredBuildProfile = (typeof REQUIRED_BUILD_PROFILES)[number];
 
@@ -103,13 +107,19 @@ export type FileReader = (path: string) => string;
  * `(p) => readFileSync(p, 'utf8')`. Unreadable or non-JSON input is reported
  * as a validation error rather than thrown, keeping the caller's flow flat.
  */
-export function loadEasConfig(path: string, readFile: FileReader): EasConfigValidation {
+export function loadEasConfig(
+  path: string,
+  readFile: FileReader,
+): EasConfigValidation {
   let raw: unknown;
   try {
     raw = JSON.parse(readFile(path));
   } catch (error) {
     const detail = error instanceof Error ? error.message : String(error);
-    return { valid: false, errors: [`eas.json is not readable JSON: ${detail}`] };
+    return {
+      valid: false,
+      errors: [`eas.json is not readable JSON: ${detail}`],
+    };
   }
   return validateEasConfig(raw);
 }

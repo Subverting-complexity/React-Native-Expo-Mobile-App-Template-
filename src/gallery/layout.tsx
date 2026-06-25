@@ -19,7 +19,12 @@ interface LayoutProps {
  * Vertical stack with a token-sourced gap. Used throughout the gallery so the
  * spacing between rows reads from `useTheme()` and never a literal value.
  */
-export function GalleryStack({ children, gap = 3, style, testID }: LayoutProps) {
+export function GalleryStack({
+  children,
+  gap = 3,
+  style,
+  testID,
+}: LayoutProps) {
   const { theme } = useTheme();
   return (
     <View style={[{ gap: theme.spacing[gap] }, style]} testID={testID}>
@@ -37,7 +42,12 @@ export function GalleryRow({ children, gap = 2, style, testID }: LayoutProps) {
   return (
     <View
       style={[
-        { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: theme.spacing[gap] },
+        {
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          gap: theme.spacing[gap],
+        },
         style,
       ]}
       testID={testID}
