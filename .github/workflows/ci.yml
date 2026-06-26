@@ -44,3 +44,30 @@ jobs:
 
       - name: Test with coverage
         run: npm run test -- --coverage --passWithNoTests
+
+      - name: Bundle smoke test (web export)
+        run: npx expo export --platform web --output-dir "${{ runner.temp }}/web-build"
+
+  # Exercises the Windows-first PowerShell toolchain (scripts/) and the bundle
+  # smoke test on a real Windows runner via the same strict gate developers run
+  # locally with `npm run check`. The Linux job above gives fast feedback; this
+  # one guards against regressions in the .ps1 scripts and PowerShell 5.1
+  # compatibility, which the Linux job never touches.
+  windows-toolchain:
+    name: Windows toolchain gate
+    runs-on: windows-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Strict quality gate (PowerShell)
+        run: npm run check

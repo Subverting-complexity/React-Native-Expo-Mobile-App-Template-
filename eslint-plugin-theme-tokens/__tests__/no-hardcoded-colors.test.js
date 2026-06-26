@@ -20,6 +20,12 @@ ruleTester.run('no-hardcoded-colors', rule, {
 
     // Numbers on color properties are fine (not string literals)
     { code: 'const s = { color: 0xff0000 }' },
+
+    // Shorthand string properties with no embedded color are fine
+    { code: "const s = { boxShadow: 'none' }" },
+    { code: "const s = { backgroundImage: 'url(./hero.png)' }" },
+    // Token-driven shorthands (not a literal) are fine
+    { code: 'const s = { boxShadow: theme.shadows.md.boxShadow }' },
   ],
 
   invalid: [
@@ -97,6 +103,37 @@ ruleTester.run('no-hardcoded-colors', rule, {
     {
       code: "const s = { placeholderTextColor: '#aaa' }",
       errors: [{ messageId: 'noHardcodedColor', data: { value: '#aaa' } }],
+    },
+
+    // Color embedded in a boxShadow shorthand (rgba)
+    {
+      code: "const s = { boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }",
+      errors: [
+        {
+          messageId: 'noHardcodedColor',
+          data: { value: 'rgba(0,0,0,0.1)' },
+        },
+      ],
+    },
+    // Hex embedded in a boxShadow shorthand
+    {
+      code: "const s = { boxShadow: '0 1px 2px #00000020' }",
+      errors: [{ messageId: 'noHardcodedColor', data: { value: '#00000020' } }],
+    },
+    // Named color embedded in a textShadow shorthand
+    {
+      code: "const s = { textShadow: '1px 1px 2px black' }",
+      errors: [{ messageId: 'noHardcodedColor', data: { value: 'black' } }],
+    },
+    // Color embedded in a filter shorthand (drop-shadow)
+    {
+      code: "const s = { filter: 'drop-shadow(0 0 4px hsl(0, 0%, 0%))' }",
+      errors: [
+        {
+          messageId: 'noHardcodedColor',
+          data: { value: 'hsl(0, 0%, 0%)' },
+        },
+      ],
     },
   ],
 });

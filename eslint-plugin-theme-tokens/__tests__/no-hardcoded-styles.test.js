@@ -12,7 +12,6 @@ ruleTester.run('no-hardcoded-styles', rule, {
     { code: 'const s = { flex: 1 }' },
     { code: 'const s = { flexGrow: 2 }' },
     { code: 'const s = { flexShrink: 0 }' },
-    { code: 'const s = { zIndex: 10 }' },
     { code: 'const s = { elevation: 4 }' },
     { code: 'const s = { aspectRatio: 1.5 }' },
     { code: 'const s = { borderWidth: 1 }' },
@@ -118,6 +117,17 @@ ruleTester.run('no-hardcoded-styles', rule, {
         {
           messageId: 'noHardcodedStyle',
           data: { value: '4', property: 'borderTopLeftRadius' },
+        },
+      ],
+    },
+
+    // Layering
+    {
+      code: 'const s = { zIndex: 10 }',
+      errors: [
+        {
+          messageId: 'noHardcodedStyle',
+          data: { value: '10', property: 'zIndex' },
         },
       ],
     },

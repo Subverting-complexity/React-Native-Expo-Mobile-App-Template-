@@ -152,8 +152,6 @@ barrel, not from individual files.
   factory) for domain state.
 - **TypeScript strict mode** — no `any`, no `@ts-ignore`.
 
-The full rules live in [`CLAUDE.md`](CLAUDE.md).
-
 ## Documentation
 
 | Doc                                                            | Covers                                               |
