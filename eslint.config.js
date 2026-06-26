@@ -84,6 +84,16 @@ module.exports = defineConfig([
     },
   },
 
+  // Jest setup must use require() inside the jest.mock factory: the factory is
+  // hoisted above imports, so an ESM import there would be a reference error.
+  // require is correct here, so silence the no-require-imports rule for it.
+  {
+    files: ['jest.setup.ts'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
+
   // Disable ESLint rules that conflict with Prettier. Keep last.
   prettierConfig,
 ]);

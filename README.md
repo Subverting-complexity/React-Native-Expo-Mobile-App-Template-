@@ -121,6 +121,7 @@ double-clicking `scripts/QualityGate.cmd`.
 │   ├── (tabs)/           Tab group: index (home) + settings
 │   ├── gallery.tsx       Component showcase route
 │   └── _layout.tsx       Root layout (providers wired here)
+├── assets/               Placeholder icon, adaptive icon, splash, favicon
 ├── src/
 │   ├── theme/            Design tokens — the single source of truth
 │   ├── components/       Generic, prop-driven App* component library
