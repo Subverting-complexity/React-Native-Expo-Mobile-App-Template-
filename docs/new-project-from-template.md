@@ -34,6 +34,23 @@ Then install dependencies:
 npm install
 ```
 
+### Remove the template's own tooling (optional)
+
+This repository carries scaffolding used to **build** the template that is not
+part of your app. Once you have your own copy, you can safely delete:
+
+| Path                    | What it is                                             |
+| ----------------------- | ------------------------------------------------------ |
+| `CLAUDE.md`             | AI-assistant rules for developing the template.        |
+| `ClaudeProject.md`      | Project board / workflow config for the template repo. |
+| `docs/review.config.md` | Internal code-review label config.                     |
+| `docs/GRAPH_REPORT.md`  | A generated codebase-analysis snapshot.                |
+| `.claude/`              | AI-assistant tooling and worktrees.                    |
+| `graphify-out/`         | Generated knowledge-graph artifacts.                   |
+
+None of these are imported by the app, so removing them has no runtime effect.
+Keep them only if you also use the same tooling.
+
 ## 2. Rename the project
 
 Six identifiers tie the project to its name and accounts. Update all of
@@ -175,7 +192,28 @@ contrast test will tell you if any pairing breaks accessibility.
 For a complete reference of the token categories and how to extend them,
 see the [Theming guide](theming.md).
 
-## 6. Verify everything
+## 6. Replace the app icon and splash screen
+
+The template ships **placeholder** icons and a splash image — solid
+brand-colour squares in [`assets/`](../assets) — so the app builds and runs out
+of the box. Replace them with your own artwork before shipping.
+
+| File                       | Used for                          | Recommended size                        |
+| -------------------------- | --------------------------------- | --------------------------------------- |
+| `assets/icon.png`          | App icon (iOS + base).            | 1024×1024, no transparency.             |
+| `assets/adaptive-icon.png` | Android adaptive icon foreground. | 1024×1024; keep art in the centre ~66%. |
+| `assets/splash-icon.png`   | Native splash image.              | 1024×1024 (it is scaled down).          |
+| `assets/favicon.png`       | Web browser tab icon.             | 48×48 (or larger square).               |
+
+The paths and the splash background colour are wired in
+[`app.config.ts`](../app.config.ts) (`icon`, `android.adaptiveIcon`, `web.favicon`,
+and the `expo-splash-screen` plugin). Keep the filenames the same and you only
+need to swap the image files; change a colour or size there if you want.
+
+Expo generates every platform-specific icon size from these source images at
+build time — you do not need to produce the individual resolutions yourself.
+
+## 7. Verify everything
 
 Run the full quality gate to confirm that the renamed, re-skinned project
 compiles, passes lint, and meets the contrast and coverage thresholds:
@@ -197,7 +235,7 @@ Confirm that:
 - Light and dark modes both look correct.
 - The component gallery (if present) shows your updated tokens.
 
-## 7. First cloud build
+## 8. First cloud build
 
 Once local development looks good, trigger a development build through
 EAS:
@@ -217,6 +255,16 @@ These scripts run the Expo account verification automatically before
 building, so a misconfigured account will fail early rather than producing
 a build under the wrong project.
 
+> **Store submission needs credentials (a manual step).** Building an artifact
+> with `build:*` works as soon as your Expo account is wired up. **Submitting**
+> it to the App Store or Play Store (`npm run submit:ios` / `submit:android`,
+> and the submit half of the deploy scripts) needs store credentials that are
+> not in this repo: an App Store Connect API key / app ID for iOS, and a Google
+> Play service-account key for Android. Add them to the `submit.production`
+> profile in [`eas.json`](../eas.json) (or supply them interactively) — see the
+> [EAS Submit docs](https://docs.expo.dev/submit/introduction/). This is a
+> human setup step; the template intentionally ships the profile empty.
+
 ## Quick-reference checklist
 
 - [ ] Cloned or forked the template and ran `npm install`.
@@ -228,5 +276,8 @@ a build under the wrong project.
 - [ ] Ran `npm run verify:expo` to confirm account setup.
 - [ ] Swapped the font (or kept Atkinson Hyperlegible).
 - [ ] Customised the color palettes in `colors.ts`.
+- [ ] Replaced the placeholder icon/splash images in `assets/`.
+- [ ] (If submitting to stores) added store credentials to `eas.json`.
+- [ ] (Optional) removed the template's own tooling files.
 - [ ] Ran `npm run quality` with all checks passing.
 - [ ] Started the dev server and verified the app launches correctly.

@@ -12,6 +12,9 @@ export default ({ config }: ConfigContext) => ({
   owner: 'your-expo-account',
   version: '1.0.0',
   orientation: 'portrait',
+  // Placeholder app icon — a solid brand-colour square. Replace assets/icon.png
+  // (1024x1024) with your real icon before shipping (see docs/new-project-from-template.md).
+  icon: './assets/icon.png',
   scheme: 'expo-template',
   userInterfaceStyle: 'automatic',
   newArchEnabled: true,
@@ -22,6 +25,8 @@ export default ({ config }: ConfigContext) => ({
   },
   android: {
     adaptiveIcon: {
+      // Replace assets/adaptive-icon.png with your real foreground (1024x1024).
+      foregroundImage: './assets/adaptive-icon.png',
       backgroundColor: '#ffffff',
     },
     package: 'dev.template.expo',
@@ -30,8 +35,22 @@ export default ({ config }: ConfigContext) => ({
   web: {
     bundler: 'metro',
     output: 'static',
+    favicon: './assets/favicon.png',
   },
-  plugins: ['expo-router', 'expo-font'],
+  plugins: [
+    'expo-router',
+    'expo-font',
+    // Native splash screen. Replace assets/splash-icon.png with your branding.
+    [
+      'expo-splash-screen',
+      {
+        image: './assets/splash-icon.png',
+        imageWidth: 200,
+        resizeMode: 'contain',
+        backgroundColor: '#ffffff',
+      },
+    ],
+  ],
   experiments: {
     typedRoutes: true,
   },
