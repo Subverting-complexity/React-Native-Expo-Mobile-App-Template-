@@ -13,13 +13,21 @@ export function glyphIcon(glyph: string): AppIcon {
   // Named so the render function reads as a proper component (display name).
   function GlyphIcon({ color, size }: AppIconRenderProps) {
     return (
-      <AppText style={{ color, fontSize: size, lineHeight: size }}>{glyph}</AppText>
+      <AppText style={{ color, fontSize: size, lineHeight: size }}>
+        {glyph}
+      </AppText>
     );
   }
   return GlyphIcon;
 }
 
 /** A plain node for `ReactNode` icon slots (chips, list items, links, empty state). */
-export function GlyphNode({ glyph, tone = 'secondary' }: { glyph: string; tone?: TextTone }) {
+export function GlyphNode({
+  glyph,
+  tone = 'secondary',
+}: {
+  glyph: string;
+  tone?: TextTone;
+}) {
   return <AppText tone={tone}>{glyph}</AppText>;
 }

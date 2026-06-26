@@ -1,7 +1,7 @@
 name: Story
 description: An implementable unit of work
-title: "[STORY] "
-labels: ["story"]
+title: '[STORY] '
+labels: ['story']
 body:
   - type: textarea
     id: context

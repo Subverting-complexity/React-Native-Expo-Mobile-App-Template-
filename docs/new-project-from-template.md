@@ -43,14 +43,14 @@ them before your first build.
 
 Open `app.config.ts` and replace the placeholder values:
 
-| Field                   | Template value                            | Replace with                                                                 |
-| ----------------------- | ----------------------------------------- | ---------------------------------------------------------------------------- |
-| `name`                  | `'ExpoTemplate'`                          | Your app's display name (shown on the home screen).                          |
-| `slug`                  | `'expo-template'`                         | A URL-safe identifier for the Expo project (lowercase, hyphens OK).          |
-| `scheme`                | `'expo-template'`                         | The deep-link scheme (e.g. `'my-app'` for `my-app://` links).               |
-| `owner`                 | `'your-expo-account'`                     | Your Expo account or organisation slug.                                      |
-| `ios.bundleIdentifier`  | `'dev.template.expo'`                     | A reverse-domain bundle ID (e.g. `'com.mycompany.myapp'`).                  |
-| `android.package`       | `'dev.template.expo'`                     | The Android package name — typically matches the bundle ID.                  |
+| Field                  | Template value        | Replace with                                                        |
+| ---------------------- | --------------------- | ------------------------------------------------------------------- |
+| `name`                 | `'ExpoTemplate'`      | Your app's display name (shown on the home screen).                 |
+| `slug`                 | `'expo-template'`     | A URL-safe identifier for the Expo project (lowercase, hyphens OK). |
+| `scheme`               | `'expo-template'`     | The deep-link scheme (e.g. `'my-app'` for `my-app://` links).       |
+| `owner`                | `'your-expo-account'` | Your Expo account or organisation slug.                             |
+| `ios.bundleIdentifier` | `'dev.template.expo'` | A reverse-domain bundle ID (e.g. `'com.mycompany.myapp'`).          |
+| `android.package`      | `'dev.template.expo'` | The Android package name — typically matches the bundle ID.         |
 
 ### package.json
 

@@ -97,13 +97,13 @@ React Native's `accessibilityRole` accepts a wide set of string literals.
 Rather than scattering those strings across the codebase, the template
 defines a set of named role constants in `src/a11y/roles.ts`:
 
-| Constant                  | Value         | Use it for                              |
-| ------------------------- | ------------- | --------------------------------------- |
-| `A11Y_ROLES.header`       | `header`      | Screen or section titles                |
-| `A11Y_ROLES.button`       | `button`      | Actions (submit, toggle, open)          |
-| `A11Y_ROLES.link`         | `link`        | Navigation to another route or URL      |
-| `A11Y_ROLES.alert`        | `alert`       | Messages needing immediate attention    |
-| `A11Y_ROLES.progressbar`  | `progressbar` | Loading or progress indicators          |
+| Constant                 | Value         | Use it for                           |
+| ------------------------ | ------------- | ------------------------------------ |
+| `A11Y_ROLES.header`      | `header`      | Screen or section titles             |
+| `A11Y_ROLES.button`      | `button`      | Actions (submit, toggle, open)       |
+| `A11Y_ROLES.link`        | `link`        | Navigation to another route or URL   |
+| `A11Y_ROLES.alert`       | `alert`       | Messages needing immediate attention |
+| `A11Y_ROLES.progressbar` | `progressbar` | Loading or progress indicators       |
 
 Components reference these constants (`A11Y_ROLES.button`) rather than
 inline strings (`'button'`), so a typo is caught by the compiler instead

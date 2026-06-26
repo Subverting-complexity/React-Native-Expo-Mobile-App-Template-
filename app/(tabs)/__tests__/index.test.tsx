@@ -1,8 +1,5 @@
 import { fireEvent, render } from '@testing-library/react-native';
-import {
-  SafeAreaProvider,
-  type Metrics,
-} from 'react-native-safe-area-context';
+import { SafeAreaProvider, type Metrics } from 'react-native-safe-area-context';
 
 import HomeScreen from '../index';
 import { ThemeProvider } from '@/theme';

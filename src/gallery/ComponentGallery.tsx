@@ -36,8 +36,8 @@ export function ComponentGallery({ onBack }: ComponentGalleryProps) {
         <GalleryStack gap={1}>
           <AppText variant="display">Component Gallery</AppText>
           <AppText variant="body" tone="secondary">
-            Every App* component with its variants — living documentation for the
-            template.
+            Every App* component with its variants — living documentation for
+            the template.
           </AppText>
         </GalleryStack>
         <TypographySection />

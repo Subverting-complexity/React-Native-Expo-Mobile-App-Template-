@@ -1,7 +1,7 @@
 name: Security Issue
 description: A security vulnerability or concern
-title: "[SECURITY] "
-labels: ["type-security"]
+title: '[SECURITY] '
+labels: ['type-security']
 body:
   - type: textarea
     id: description

@@ -31,16 +31,12 @@ ruleTester.run('no-hardcoded-colors', rule, {
     // 6-digit hex
     {
       code: "const s = { backgroundColor: '#FF5733' }",
-      errors: [
-        { messageId: 'noHardcodedColor', data: { value: '#FF5733' } },
-      ],
+      errors: [{ messageId: 'noHardcodedColor', data: { value: '#FF5733' } }],
     },
     // 8-digit hex (with alpha)
     {
       code: "const s = { borderColor: '#FF573380' }",
-      errors: [
-        { messageId: 'noHardcodedColor', data: { value: '#FF573380' } },
-      ],
+      errors: [{ messageId: 'noHardcodedColor', data: { value: '#FF573380' } }],
     },
     // rgb()
     {
@@ -90,23 +86,17 @@ ruleTester.run('no-hardcoded-colors', rule, {
     // Named color on backgroundColor
     {
       code: "const s = { backgroundColor: 'white' }",
-      errors: [
-        { messageId: 'noHardcodedColor', data: { value: 'white' } },
-      ],
+      errors: [{ messageId: 'noHardcodedColor', data: { value: 'white' } }],
     },
     // textDecorationColor
     {
       code: "const s = { textDecorationColor: 'blue' }",
-      errors: [
-        { messageId: 'noHardcodedColor', data: { value: 'blue' } },
-      ],
+      errors: [{ messageId: 'noHardcodedColor', data: { value: 'blue' } }],
     },
     // placeholderTextColor
     {
       code: "const s = { placeholderTextColor: '#aaa' }",
-      errors: [
-        { messageId: 'noHardcodedColor', data: { value: '#aaa' } },
-      ],
+      errors: [{ messageId: 'noHardcodedColor', data: { value: '#aaa' } }],
     },
   ],
 });
