@@ -45,6 +45,11 @@ const VISUAL_PROPERTIES = new Set([
   'borderTopEndRadius',
   'borderBottomStartRadius',
   'borderBottomEndRadius',
+
+  // Layering — z-index is a token category (src/theme/zIndex.ts); raw stacking
+  // values fragment the layering scale. (Layout dimensions like width/height
+  // stay exempt: they are behavioral, not part of the design-token contract.)
+  'zIndex',
 ]);
 
 function getPropertyName(node) {

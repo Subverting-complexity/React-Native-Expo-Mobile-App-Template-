@@ -23,8 +23,30 @@ const COLOR_PROPERTIES = new Set([
   'underlineColorAndroid',
 ]);
 
+// Shorthand properties whose string value can EMBED one or more colors inside a
+// larger value (e.g. `boxShadow: '0 2px 4px rgba(0,0,0,0.1)'`). The exact-match
+// checks below don't see these because the color is not the whole string, so
+// they get a separate "scan anywhere" pass.
+const COLOR_BEARING_STRING_PROPERTIES = new Set([
+  'boxShadow',
+  'textShadow',
+  'filter',
+  'background',
+  'backgroundImage',
+  'outline',
+  'border',
+  'borderTop',
+  'borderRight',
+  'borderBottom',
+  'borderLeft',
+]);
+
 const HEX_RE = /^#[0-9a-f]{3,8}$/i;
 const COLOR_FN_RE = /^(rgb|rgba|hsl|hsla)\s*\(/i;
+
+// Same color shapes, but matched anywhere within a larger string value.
+const EMBEDDED_HEX_RE = /#[0-9a-f]{3,8}\b/i;
+const EMBEDDED_COLOR_FN_RE = /\b(?:rgb|rgba|hsl|hsla)\s*\([^)]*\)/i;
 
 // CSS named colors supported by React Native (excludes 'transparent').
 const NAMED_COLORS = new Set([
@@ -187,6 +209,27 @@ function isColorValue(value) {
   return false;
 }
 
+// A named CSS color appearing as a whole word inside a larger string.
+const EMBEDDED_NAMED_COLOR_RE = new RegExp(
+  `\\b(?:${[...NAMED_COLORS].join('|')})\\b`,
+  'i',
+);
+
+/**
+ * Find the first hardcoded color embedded anywhere in a shorthand string value,
+ * returning the matched color text (for the report) or null if there is none.
+ */
+function findEmbeddedColor(value) {
+  if (typeof value !== 'string') return null;
+  const fn = value.match(EMBEDDED_COLOR_FN_RE);
+  if (fn) return fn[0];
+  const hex = value.match(EMBEDDED_HEX_RE);
+  if (hex) return hex[0];
+  const named = value.match(EMBEDDED_NAMED_COLOR_RE);
+  if (named) return named[0];
+  return null;
+}
+
 function getPropertyName(node) {
   if (node.key.type === 'Identifier') return node.key.name;
   if (node.key.type === 'Literal') return String(node.key.value);
@@ -210,16 +253,33 @@ module.exports = {
     return {
       Property(node) {
         const name = getPropertyName(node);
-        if (!name || !COLOR_PROPERTIES.has(name)) return;
+        if (!name) return;
         if (node.value.type !== 'Literal') return;
 
         const value = node.value.value;
-        if (isColorValue(value)) {
-          context.report({
-            node: node.value,
-            messageId: 'noHardcodedColor',
-            data: { value },
-          });
+
+        // Dedicated color properties: the whole value is expected to be a color.
+        if (COLOR_PROPERTIES.has(name)) {
+          if (isColorValue(value)) {
+            context.report({
+              node: node.value,
+              messageId: 'noHardcodedColor',
+              data: { value },
+            });
+          }
+          return;
+        }
+
+        // Shorthand string properties: a color may be embedded mid-string.
+        if (COLOR_BEARING_STRING_PROPERTIES.has(name)) {
+          const embedded = findEmbeddedColor(value);
+          if (embedded) {
+            context.report({
+              node: node.value,
+              messageId: 'noHardcodedColor',
+              data: { value: embedded },
+            });
+          }
         }
       },
     };

@@ -34,23 +34,6 @@ Then install dependencies:
 npm install
 ```
 
-### Remove the template's own tooling (optional)
-
-This repository carries scaffolding used to **build** the template that is not
-part of your app. Once you have your own copy, you can safely delete:
-
-| Path                    | What it is                                             |
-| ----------------------- | ------------------------------------------------------ |
-| `CLAUDE.md`             | AI-assistant rules for developing the template.        |
-| `ClaudeProject.md`      | Project board / workflow config for the template repo. |
-| `docs/review.config.md` | Internal code-review label config.                     |
-| `docs/GRAPH_REPORT.md`  | A generated codebase-analysis snapshot.                |
-| `.claude/`              | AI-assistant tooling and worktrees.                    |
-| `graphify-out/`         | Generated knowledge-graph artifacts.                   |
-
-None of these are imported by the app, so removing them has no runtime effect.
-Keep them only if you also use the same tooling.
-
 ## 2. Rename the project
 
 Six identifiers tie the project to its name and accounts. Update all of
@@ -278,6 +261,5 @@ a build under the wrong project.
 - [ ] Customised the color palettes in `colors.ts`.
 - [ ] Replaced the placeholder icon/splash images in `assets/`.
 - [ ] (If submitting to stores) added store credentials to `eas.json`.
-- [ ] (Optional) removed the template's own tooling files.
 - [ ] Ran `npm run quality` with all checks passing.
 - [ ] Started the dev server and verified the app launches correctly.
