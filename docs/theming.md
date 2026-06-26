@@ -22,9 +22,12 @@ The theme is built from seven token modules, each in its own file under
 | **A11y**       | `a11y.ts`        | Accessibility design tokens (currently `minTouchTarget: 44`).      |
 
 All seven modules are assembled into a single `ThemeTokens` object by the
-`buildTheme` function in `src/theme/index.ts`. Two pre-built instances —
-`lightTheme` and `darkTheme` — are exported for the provider to switch
-between.
+`buildTheme` function in `src/theme/themes.ts`. Two pre-built instances —
+`lightTheme` and `darkTheme` — are exported from there (and re-exported by
+the `src/theme` barrel) for the provider to switch between. Keeping the
+assembly in its own module lets `ThemeProvider` and `ThemeContext` import
+the themes directly, so the barrel only re-exports and stays free of an
+import cycle.
 
 ### Provider and hook
 
