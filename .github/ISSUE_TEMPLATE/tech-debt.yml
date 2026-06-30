@@ -1,7 +1,7 @@
 name: Tech Debt
 description: Code quality, maintainability, or cleanup work
-title: "[DEBT] "
-labels: ["type-debt"]
+title: '[DEBT] '
+labels: ['type-debt']
 body:
   - type: textarea
     id: description

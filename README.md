@@ -62,27 +62,27 @@ All components use the `App` prefix and consume theme tokens via `useTheme()`. I
 import { AppButton, AppText, AppCard } from '@/components';
 ```
 
-| Component | Purpose |
-|-----------|---------|
-| `AppButton` | Primary action button with `variant`/`size`/`tone` props |
-| `AppText` | Themed text with typography scale support |
-| `AppTextInput` | Styled text input with label and error states |
-| `AppCard` | Content container with shadow and radius tokens |
-| `AppChip` / `AppChipGroup` | Selection chips (single and group) |
-| `AppBadge` | Status/count indicator |
-| `AppIconButton` | Icon-only pressable with a11y label |
-| `AppLinkButton` | Navigation link styled as a button |
-| `AppBackButton` | Navigation back action |
-| `AppPressable` | Base pressable with 44x44 min touch target enforcement |
-| `AppListItem` | List row with consistent padding and separators |
-| `AppSection` | Grouped content section with header |
-| `AppScreenContainer` | Safe-area screen wrapper with scroll support |
-| `AppSpinner` | Loading indicator |
-| `AppProgressBar` | Determinate progress bar |
-| `AppLoadingScreen` | Full-screen loading state |
-| `AppEmptyState` | Empty/zero-data placeholder |
-| `AppToast` | Temporary notification banner |
-| `AppErrorBoundary` | Error boundary with fallback UI |
+| Component                  | Purpose                                                  |
+| -------------------------- | -------------------------------------------------------- |
+| `AppButton`                | Primary action button with `variant`/`size`/`tone` props |
+| `AppText`                  | Themed text with typography scale support                |
+| `AppTextInput`             | Styled text input with label and error states            |
+| `AppCard`                  | Content container with shadow and radius tokens          |
+| `AppChip` / `AppChipGroup` | Selection chips (single and group)                       |
+| `AppBadge`                 | Status/count indicator                                   |
+| `AppIconButton`            | Icon-only pressable with a11y label                      |
+| `AppLinkButton`            | Navigation link styled as a button                       |
+| `AppBackButton`            | Navigation back action                                   |
+| `AppPressable`             | Base pressable with 44x44 min touch target enforcement   |
+| `AppListItem`              | List row with consistent padding and separators          |
+| `AppSection`               | Grouped content section with header                      |
+| `AppScreenContainer`       | Safe-area screen wrapper with scroll support             |
+| `AppSpinner`               | Loading indicator                                        |
+| `AppProgressBar`           | Determinate progress bar                                 |
+| `AppLoadingScreen`         | Full-screen loading state                                |
+| `AppEmptyState`            | Empty/zero-data placeholder                              |
+| `AppToast`                 | Temporary notification banner                            |
+| `AppErrorBoundary`         | Error boundary with fallback UI                          |
 
 ## Theming
 
@@ -92,11 +92,11 @@ All visual values are defined once in `src/theme/` and consumed via the `useThem
 const { theme, mode, setMode } = useTheme();
 
 // Access tokens
-theme.colors.primary        // Color palette
-theme.spacing.md            // Spacing scale
-theme.radii.lg              // Border radii
-theme.typography.body       // Font styles
-theme.shadows.card          // Shadow definitions
+theme.colors.primary; // Color palette
+theme.spacing.md; // Spacing scale
+theme.radii.lg; // Border radii
+theme.typography.body; // Font styles
+theme.shadows.card; // Shadow definitions
 ```
 
 - **Light and dark modes** with automatic system detection
@@ -137,16 +137,16 @@ Production wires real adapters; tests pass mocks. See `src/state/exampleStore.ts
 
 PowerShell scripts with `.cmd` double-click wrappers for Windows:
 
-| Script | npm command | Purpose |
-|--------|-------------|---------|
-| `QualityGate.ps1` | `npm run check` | Lint + typecheck + test + coverage |
-| `BumpBuildNumber.ps1` | `npm run bump` | Increment iOS/Android build numbers |
-| `VerifyExpoAccount.ps1` | `npm run verify:expo` | Confirm EAS account configuration |
-| `DeployiOSTestFlight.ps1` | `npm run deploy:ios` | Build and submit to TestFlight |
-| `DeployAndroidPlayStore.ps1` | `npm run deploy:android` | Build and submit to Play Store |
-| `BuildAndRunIOSDevelopment.ps1` | &mdash; | Dev client build for iOS |
-| `BuildAndDeployDevModeAndroid.ps1` | &mdash; | Dev client build for Android |
-| `LaunchWeb.ps1` | &mdash; | Start web dev server |
+| Script                             | npm command              | Purpose                             |
+| ---------------------------------- | ------------------------ | ----------------------------------- |
+| `QualityGate.ps1`                  | `npm run check`          | Lint + typecheck + test + coverage  |
+| `BumpBuildNumber.ps1`              | `npm run bump`           | Increment iOS/Android build numbers |
+| `VerifyExpoAccount.ps1`            | `npm run verify:expo`    | Confirm EAS account configuration   |
+| `DeployiOSTestFlight.ps1`          | `npm run deploy:ios`     | Build and submit to TestFlight      |
+| `DeployAndroidPlayStore.ps1`       | `npm run deploy:android` | Build and submit to Play Store      |
+| `BuildAndRunIOSDevelopment.ps1`    | &mdash;                  | Dev client build for iOS            |
+| `BuildAndDeployDevModeAndroid.ps1` | &mdash;                  | Dev client build for Android        |
+| `LaunchWeb.ps1`                    | &mdash;                  | Start web dev server                |
 
 ## CI Pipeline
 
@@ -161,28 +161,28 @@ GitHub Actions runs the quality gate on every push to `main` and on pull request
 
 EAS Build profiles in `eas.json`:
 
-| Profile | Purpose |
-|---------|---------|
-| `development` | Dev client with internal distribution |
-| `preview` | Internal testing builds |
-| `production` | Store-ready builds with auto-incrementing version |
+| Profile       | Purpose                                           |
+| ------------- | ------------------------------------------------- |
+| `development` | Dev client with internal distribution             |
+| `preview`     | Internal testing builds                           |
+| `production`  | Store-ready builds with auto-incrementing version |
 
 ## Tech Stack
 
-| Layer | Choice |
-|-------|--------|
-| Framework | Expo SDK 56 (New Architecture) |
-| Language | TypeScript 6 (strict mode) |
-| Navigation | Expo Router (file-based, typed routes) |
-| UI | Custom component library (20 components) |
-| Theming | Design tokens + `useTheme()` hook |
-| State | Zustand 5 (injectable-deps factory) |
-| Storage | Platform-aware (AsyncStorage / localStorage) |
-| Testing | Jest + React Native Testing Library |
-| Linting | ESLint 9 + Prettier + a11y plugin |
-| CI | GitHub Actions |
-| Build | EAS Build + EAS Submit |
-| Font | Atkinson Hyperlegible (Google Fonts) |
+| Layer      | Choice                                       |
+| ---------- | -------------------------------------------- |
+| Framework  | Expo SDK 56 (New Architecture)               |
+| Language   | TypeScript 6 (strict mode)                   |
+| Navigation | Expo Router (file-based, typed routes)       |
+| UI         | Custom component library (20 components)     |
+| Theming    | Design tokens + `useTheme()` hook            |
+| State      | Zustand 5 (injectable-deps factory)          |
+| Storage    | Platform-aware (AsyncStorage / localStorage) |
+| Testing    | Jest + React Native Testing Library          |
+| Linting    | ESLint 9 + Prettier + a11y plugin            |
+| CI         | GitHub Actions                               |
+| Build      | EAS Build + EAS Submit                       |
+| Font       | Atkinson Hyperlegible (Google Fonts)         |
 
 ## License
 

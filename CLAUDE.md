@@ -26,19 +26,19 @@ Re-skinning = token edit, not component edit.
 
 ### Directory Layout
 
-| Directory      | Purpose                                                        |
-| -------------- | -------------------------------------------------------------- |
-| `app/`         | Expo Router file-based routing (`(tabs)/` group, `_layout.tsx` wrappers) |
-| `src/theme/`   | Design tokens — colors, spacing, radii, typography, shadows, z-index, a11y |
-| `src/components/` | Reusable `App*` component library with barrel re-export (`index.ts`) |
-| `src/a11y/`    | Accessibility context, provider, role constants, announcements |
-| `src/state/`   | Zustand stores (dependency-injection factory pattern)          |
-| `src/storage/` | Platform-aware persistence (web `localStorage` / native `AsyncStorage`) |
-| `src/hooks/`   | Shared React hooks                                             |
-| `src/gallery/` | Component showcase screen and per-category demo sections       |
-| `src/build/`   | Build and EAS configuration helpers                            |
-| `scripts/`     | PowerShell (`.ps1`) + double-click `.cmd` wrappers for build, deploy, quality gate |
-| `docs/`        | Project and accessibility documentation                        |
+| Directory         | Purpose                                                                            |
+| ----------------- | ---------------------------------------------------------------------------------- |
+| `app/`            | Expo Router file-based routing (`(tabs)/` group, `_layout.tsx` wrappers)           |
+| `src/theme/`      | Design tokens — colors, spacing, radii, typography, shadows, z-index, a11y         |
+| `src/components/` | Reusable `App*` component library with barrel re-export (`index.ts`)               |
+| `src/a11y/`       | Accessibility context, provider, role constants, announcements                     |
+| `src/state/`      | Zustand stores (dependency-injection factory pattern)                              |
+| `src/storage/`    | Platform-aware persistence (web `localStorage` / native `AsyncStorage`)            |
+| `src/hooks/`      | Shared React hooks                                                                 |
+| `src/gallery/`    | Component showcase screen and per-category demo sections                           |
+| `src/build/`      | Build and EAS configuration helpers                                                |
+| `scripts/`        | PowerShell (`.ps1`) + double-click `.cmd` wrappers for build, deploy, quality gate |
+| `docs/`           | Project and accessibility documentation                                            |
 
 Most `src/` subdirectories have a barrel `index.ts` — import from the
 barrel, not from individual files. (`src/hooks/` and `src/build/` do not
@@ -180,4 +180,4 @@ development:
 | `ClaudeProject.md`                         | Project identity, labels, quality gate, branch convention, board config. Read at the start of any workflow command.                                               |
 | `docs/review.config.md`                    | Review label definitions, non-compliance gates, tech-stack review rules. Read when performing or preparing for code review.                                       |
 | `.decisions/mobile-template-2026-06-06.md` | Architecture decisions: Expo SDK version, theme system, a11y requirements, build toolchain, state management. Consult before making cross-cutting design choices. |
-| `.claude/ecosystem.md`                     | Installed Claude Code companion tool cheat-sheet — graphify queries, cost tracking, security scanning, and codebase intelligence.                                  |
+| `.claude/ecosystem.md`                     | Installed Claude Code companion tool cheat-sheet — graphify queries, cost tracking, security scanning, and codebase intelligence.                                 |

@@ -1,7 +1,7 @@
 name: Architecture Issue
 description: A structural or design concern
-title: "[ARCH] "
-labels: ["type-arch"]
+title: '[ARCH] '
+labels: ['type-arch']
 body:
   - type: textarea
     id: description

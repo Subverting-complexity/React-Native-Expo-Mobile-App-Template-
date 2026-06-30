@@ -1,8 +1,5 @@
 import { fireEvent, render } from '@testing-library/react-native';
-import {
-  SafeAreaProvider,
-  type Metrics,
-} from 'react-native-safe-area-context';
+import { SafeAreaProvider, type Metrics } from 'react-native-safe-area-context';
 
 import { ComponentGallery } from '../ComponentGallery';
 import { A11yProvider } from '@/a11y';
@@ -95,13 +92,17 @@ describe('ComponentGallery', () => {
     const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
     try {
       const { getByLabelText, getByText } = renderGallery();
-      expect(getByText('Component is healthy. Press “Break it” to throw.')).toBeTruthy();
+      expect(
+        getByText('Component is healthy. Press “Break it” to throw.'),
+      ).toBeTruthy();
 
       fireEvent.press(getByLabelText('Break it'));
       expect(getByText('Caught: Demo error from the gallery.')).toBeTruthy();
 
       fireEvent.press(getByLabelText('Reset'));
-      expect(getByText('Component is healthy. Press “Break it” to throw.')).toBeTruthy();
+      expect(
+        getByText('Component is healthy. Press “Break it” to throw.'),
+      ).toBeTruthy();
     } finally {
       spy.mockRestore();
     }

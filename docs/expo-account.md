@@ -15,12 +15,12 @@ before every build.
 Two things decide which Expo account a build runs under, plus one check that
 catches mistakes early:
 
-| Layer                         | Where                                   | Role                                                                                                                        |
-| ----------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| **`owner`**                   | `app.config.ts`                         | The single source of truth for which Expo account/org owns this project. EAS uses it to route the build.                   |
-| **`extra.eas.projectId`**     | `app.config.ts`                         | Pins this project to a specific EAS project under `owner`. Written by `eas init`.                                          |
-| **`EXPO_TOKEN`**              | `.env` (gitignored)                     | Authenticates EAS as a user with access to `owner`, **independent of your global `eas login`** — so other repos are unaffected. |
-| **Account check**             | `scripts/Common.ps1` → `Assert-ExpoAccount` | Loads `.env`, confirms `owner` isn't still a placeholder, and reports who you're logged in as — before a build starts.      |
+| Layer                     | Where                                       | Role                                                                                                                            |
+| ------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| **`owner`**               | `app.config.ts`                             | The single source of truth for which Expo account/org owns this project. EAS uses it to route the build.                        |
+| **`extra.eas.projectId`** | `app.config.ts`                             | Pins this project to a specific EAS project under `owner`. Written by `eas init`.                                               |
+| **`EXPO_TOKEN`**          | `.env` (gitignored)                         | Authenticates EAS as a user with access to `owner`, **independent of your global `eas login`** — so other repos are unaffected. |
+| **Account check**         | `scripts/Common.ps1` → `Assert-ExpoAccount` | Loads `.env`, confirms `owner` isn't still a placeholder, and reports who you're logged in as — before a build starts.          |
 
 The key idea: `owner` lives in version control as the source of truth, and
 `EXPO_TOKEN` lives in a local `.env` so this repo always talks to its own
@@ -90,11 +90,11 @@ honours an already-set `EXPO_TOKEN`, so it works identically locally and in CI.
 
 ## Files involved
 
-| File                            | Purpose                                                            |
-| ------------------------------- | ----------------------------------------------------------------- |
-| `app.config.ts`                 | `owner` + `extra.eas.projectId` — the committed account pins.      |
-| `.env.example`                  | Token-less template; copy to `.env` and add `EXPO_TOKEN`.          |
-| `.env`                          | Your real token (gitignored).                                     |
-| `scripts/Common.ps1`            | `Import-DotEnv`, `Get-ExpoOwner`, `Assert-ExpoAccount` helpers.    |
-| `scripts/VerifyExpoAccount.ps1` | Standalone account check (`npm run verify:expo`).                  |
-| `scripts/DeployiOSTestFlight.ps1` / `DeployAndroidPlayStore.ps1` | Run the check before building. |
+| File                                                             | Purpose                                                         |
+| ---------------------------------------------------------------- | --------------------------------------------------------------- |
+| `app.config.ts`                                                  | `owner` + `extra.eas.projectId` — the committed account pins.   |
+| `.env.example`                                                   | Token-less template; copy to `.env` and add `EXPO_TOKEN`.       |
+| `.env`                                                           | Your real token (gitignored).                                   |
+| `scripts/Common.ps1`                                             | `Import-DotEnv`, `Get-ExpoOwner`, `Assert-ExpoAccount` helpers. |
+| `scripts/VerifyExpoAccount.ps1`                                  | Standalone account check (`npm run verify:expo`).               |
+| `scripts/DeployiOSTestFlight.ps1` / `DeployAndroidPlayStore.ps1` | Run the check before building.                                  |

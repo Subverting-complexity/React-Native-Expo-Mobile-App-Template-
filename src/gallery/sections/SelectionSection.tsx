@@ -32,7 +32,12 @@ export function SelectionSection() {
         <AppChipGroup options={OPTIONS} value={single} onChange={setSingle} />
 
         <AppText variant="label">Multi-select</AppText>
-        <AppChipGroup multiple options={OPTIONS} values={multi} onChange={setMulti} />
+        <AppChipGroup
+          multiple
+          options={OPTIONS}
+          values={multi}
+          onChange={setMulti}
+        />
 
         <AppText variant="label">Standalone chip with leading icon</AppText>
         <AppChip
