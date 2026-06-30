@@ -14,6 +14,8 @@ module.exports = defineConfig([
     ignores: [
       'node_modules/**',
       '.expo/**',
+      '.claude/**',
+      'graphify-out/**',
       'dist/**',
       'web-build/**',
       'coverage/**',
