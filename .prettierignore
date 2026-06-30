@@ -14,3 +14,7 @@ package-lock.json
 
 # Generated type declarations
 expo-env.d.ts
+
+# Generated / tooling output
+graphify-out/
+.claude/
