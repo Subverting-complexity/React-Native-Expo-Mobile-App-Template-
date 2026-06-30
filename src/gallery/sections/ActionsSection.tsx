@@ -1,5 +1,6 @@
 import { GalleryRow, GalleryStack, noop } from '../layout';
 import { GlyphNode, glyphIcon } from '../DemoIcon';
+import { A11Y_ROLES } from '@/a11y';
 import {
   AppBackButton,
   AppButton,
@@ -119,7 +120,7 @@ export function ActionsSection() {
 
         <AppText variant="label">Pressable (foundation)</AppText>
         <AppPressable
-          accessibilityRole="button"
+          accessibilityRole={A11Y_ROLES.button}
           accessibilityLabel="Raw pressable sample"
           onPress={noop}
         >

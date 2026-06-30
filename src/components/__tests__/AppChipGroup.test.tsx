@@ -1,18 +1,7 @@
-import { fireEvent, render } from '@testing-library/react-native';
+import { fireEvent } from '@testing-library/react-native';
 
 import { AppChipGroup, type AppChipOption } from '../AppChipGroup';
-import { ThemeProvider, type StorageAdapter } from '@/theme';
-
-function makeStorage(saved: string | null = null): StorageAdapter {
-  return {
-    getItem: jest.fn(async () => saved),
-    setItem: jest.fn(async () => {}),
-  };
-}
-
-function renderWithTheme(ui: React.ReactElement) {
-  return render(<ThemeProvider storage={makeStorage()}>{ui}</ThemeProvider>);
-}
+import { renderWithTheme } from '@/test';
 
 const OPTIONS: AppChipOption[] = [
   { value: 'a', label: 'Apple' },

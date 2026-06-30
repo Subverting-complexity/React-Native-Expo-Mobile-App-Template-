@@ -31,7 +31,7 @@ the suite, so the audit can never silently drift out of date.
 
 Both the light and dark palettes pass all of the above.
 
-### Adjustments made during the audit (issue #22)
+### Adjustments made during the initial audit
 
 The light palette needed four token changes; the dark palette already passed.
 

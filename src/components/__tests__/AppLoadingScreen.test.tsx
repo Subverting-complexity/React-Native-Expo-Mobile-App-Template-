@@ -1,21 +1,8 @@
 import { StyleSheet } from 'react-native';
-import { render } from '@testing-library/react-native';
 
 import { AppLoadingScreen } from '../AppLoadingScreen';
-import { ThemeProvider, lightColors, type StorageAdapter } from '@/theme';
-
-function makeStorage(saved: string | null = null): StorageAdapter {
-  return {
-    getItem: jest.fn(async () => saved),
-    setItem: jest.fn(async () => {}),
-  };
-}
-
-function renderWithTheme(ui: React.ReactElement, saved: string | null = null) {
-  return render(
-    <ThemeProvider storage={makeStorage(saved)}>{ui}</ThemeProvider>,
-  );
-}
+import { lightColors } from '@/theme';
+import { renderWithTheme } from '@/test';
 
 describe('AppLoadingScreen', () => {
   it('announces a default loading label via a single progressbar element', () => {

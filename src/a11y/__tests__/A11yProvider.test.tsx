@@ -1,20 +1,10 @@
-import { Text, AccessibilityInfo } from 'react-native';
+import { Text } from 'react-native';
 import { render, waitFor } from '@testing-library/react-native';
 
 import { A11yProvider } from '../A11yProvider';
 import { useA11y, useReduceMotion } from '../useA11y';
 import { MAX_FONT_SIZE_MULTIPLIER } from '../maxFontScale';
-
-function mockReduceMotion(enabled: boolean) {
-  jest
-    .spyOn(AccessibilityInfo, 'isReduceMotionEnabled')
-    .mockResolvedValue(enabled);
-  jest
-    .spyOn(AccessibilityInfo, 'addEventListener')
-    .mockReturnValue({ remove: jest.fn() } as ReturnType<
-      typeof AccessibilityInfo.addEventListener
-    >);
-}
+import { mockReduceMotion } from '@/test';
 
 function Consumer() {
   const { reduceMotion, maxFontSizeMultiplier } = useA11y();

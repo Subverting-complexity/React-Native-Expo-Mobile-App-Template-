@@ -17,53 +17,72 @@ export interface WebShadow {
 
 export type ShadowToken = IosShadow | AndroidShadow | WebShadow;
 
-function iosShadow(height: number, radius: number, opacity: number): IosShadow {
-  return {
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height },
-    shadowOpacity: opacity,
-    shadowRadius: radius,
-  };
-}
-
-function androidShadow(elevation: number): AndroidShadow {
-  return { elevation };
-}
-
-function webShadow(value: string): WebShadow {
-  return { boxShadow: value };
-}
-
 export type ShadowLevel = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 export type ShadowScale = Record<ShadowLevel, ShadowToken>;
 
-const iosShadows: ShadowScale = {
-  none: iosShadow(0, 0, 0),
-  xs: iosShadow(1, 2, 0.06),
-  sm: iosShadow(2, 4, 0.08),
-  md: iosShadow(4, 8, 0.1),
-  lg: iosShadow(8, 16, 0.12),
-  xl: iosShadow(16, 24, 0.16),
+/**
+ * Single source of truth for the shadow scale. Each level is described once —
+ * vertical offset, blur radius, and opacity (plus the Android `elevation`,
+ * which the platform renders independently of offset/blur). The iOS, Android,
+ * and web token sets are all derived from these specs, so re-skinning a shadow
+ * is a one-row edit here, not three platform-specific values kept in sync by
+ * hand.
+ */
+interface ShadowSpec {
+  /** Vertical offset (iOS) and the offset half of the web box-shadow, in px. */
+  height: number;
+  /** Blur radius, in px. */
+  blur: number;
+  /** Shadow opacity (0–1), applied to black. */
+  opacity: number;
+  /** Android elevation, rendered without an explicit offset/blur. */
+  elevation: number;
+}
+
+const SHADOW_SPECS: Record<ShadowLevel, ShadowSpec> = {
+  none: { height: 0, blur: 0, opacity: 0, elevation: 0 },
+  xs: { height: 1, blur: 2, opacity: 0.06, elevation: 1 },
+  sm: { height: 2, blur: 4, opacity: 0.08, elevation: 2 },
+  md: { height: 4, blur: 8, opacity: 0.1, elevation: 4 },
+  lg: { height: 8, blur: 16, opacity: 0.12, elevation: 8 },
+  xl: { height: 16, blur: 24, opacity: 0.16, elevation: 16 },
 };
 
-const androidShadows: ShadowScale = {
-  none: androidShadow(0),
-  xs: androidShadow(1),
-  sm: androidShadow(2),
-  md: androidShadow(4),
-  lg: androidShadow(8),
-  xl: androidShadow(16),
-};
+function iosShadow(spec: ShadowSpec): IosShadow {
+  return {
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: spec.height },
+    shadowOpacity: spec.opacity,
+    shadowRadius: spec.blur,
+  };
+}
 
-const webShadows: ShadowScale = {
-  none: webShadow('none'),
-  xs: webShadow('0 1px 2px rgba(0,0,0,0.06)'),
-  sm: webShadow('0 2px 4px rgba(0,0,0,0.08)'),
-  md: webShadow('0 4px 8px rgba(0,0,0,0.10)'),
-  lg: webShadow('0 8px 16px rgba(0,0,0,0.12)'),
-  xl: webShadow('0 16px 24px rgba(0,0,0,0.16)'),
-};
+function androidShadow(spec: ShadowSpec): AndroidShadow {
+  return { elevation: spec.elevation };
+}
+
+function webShadow(spec: ShadowSpec): WebShadow {
+  if (spec.opacity === 0) {
+    return { boxShadow: 'none' };
+  }
+  return {
+    boxShadow: `0 ${spec.height}px ${spec.blur}px rgba(0,0,0,${spec.opacity})`,
+  };
+}
+
+function deriveShadows<T extends ShadowToken>(
+  build: (spec: ShadowSpec) => T,
+): Record<ShadowLevel, T> {
+  const levels = Object.keys(SHADOW_SPECS) as ShadowLevel[];
+  return Object.fromEntries(
+    levels.map((level) => [level, build(SHADOW_SPECS[level])]),
+  ) as Record<ShadowLevel, T>;
+}
+
+const iosShadows: ShadowScale = deriveShadows(iosShadow);
+const androidShadows: ShadowScale = deriveShadows(androidShadow);
+const webShadows: ShadowScale = deriveShadows(webShadow);
 
 export const shadows: ShadowScale =
   Platform.OS === 'ios'

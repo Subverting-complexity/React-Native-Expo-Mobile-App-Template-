@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import type { ThemeTokens } from './index';
+import type { ThemeTokens } from './themes';
 
 // StorageAdapter is defined once in the storage module (the persistence port)
 // and re-exported here so theme consumers keep importing it from `@/theme`.

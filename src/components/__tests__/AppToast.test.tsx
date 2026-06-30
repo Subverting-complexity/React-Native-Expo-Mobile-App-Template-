@@ -1,34 +1,9 @@
 import { AccessibilityInfo, StyleSheet } from 'react-native';
-import { fireEvent, render } from '@testing-library/react-native';
+import { fireEvent } from '@testing-library/react-native';
 
 import { AppToast } from '../AppToast';
-import { A11yContext, MAX_FONT_SIZE_MULTIPLIER } from '@/a11y';
-import { ThemeProvider, lightColors, type StorageAdapter } from '@/theme';
-
-function makeStorage(saved: string | null = null): StorageAdapter {
-  return {
-    getItem: jest.fn(async () => saved),
-    setItem: jest.fn(async () => {}),
-  };
-}
-
-function renderWithProviders(
-  ui: React.ReactElement,
-  { reduceMotion = true }: { reduceMotion?: boolean } = {},
-) {
-  return render(
-    <ThemeProvider storage={makeStorage()}>
-      <A11yContext.Provider
-        value={{
-          reduceMotion,
-          maxFontSizeMultiplier: MAX_FONT_SIZE_MULTIPLIER,
-        }}
-      >
-        {ui}
-      </A11yContext.Provider>
-    </ThemeProvider>,
-  );
-}
+import { lightColors } from '@/theme';
+import { renderWithProviders } from '@/test';
 
 describe('AppToast', () => {
   it('renders the message with the alert role', () => {

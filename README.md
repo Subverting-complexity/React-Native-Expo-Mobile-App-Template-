@@ -1,189 +1,168 @@
-# React Native / Expo Mobile App Template
+# Expo Mobile App Template
 
-A project-agnostic scaffold for React Native apps built on **Expo SDK 56**, **React 19**, and the **New Architecture**. Ships with a design-token theme system, WCAG 2.1 AA accessibility, a 20-component library, Zustand state management, and a Windows-first build toolchain.
+A project-agnostic React Native / Expo starter with a Windows-first
+toolchain. It ships an opinionated design-token system, a generic
+`App*` component library, accessibility baked in to WCAG 2.1 AA, and
+double-click PowerShell scripts for every build, deploy, and quality
+task.
 
-## Quick Start
+The whole app is re-skinnable by editing tokens in [`src/theme/`](src/theme) —
+components never hardcode a color, size, or spacing value. See the
+[theming guide](docs/theming.md) for the full story.
+
+## Prerequisites
+
+| Tool            | Version         | Notes                                                |
+| --------------- | --------------- | ---------------------------------------------------- |
+| **Node.js**     | 20 LTS or newer | Ships with `npm`. Expo SDK 56 needs Node ≥ 20.19.    |
+| **npm**         | 10 or newer     | Bundled with Node.                                   |
+| **Git**         | any recent      | —                                                    |
+| **Expo Go** app | latest          | On a physical device, to run without a native build. |
+| **PowerShell**  | 5.1+ (Windows)  | For the `scripts/` tooling and `.cmd` wrappers.      |
+
+A simulator/emulator is optional — **Xcode** (iOS, macOS only) or
+**Android Studio** (Android). You can also run everything in the
+browser via `npm run web`.
+
+> Cloud builds and store submissions go through **EAS** and require an
+> Expo account. That is a separate, human setup step — see
+> [`docs/expo-account.md`](docs/expo-account.md). You do **not** need it
+> to run the app locally.
+
+## Quickstart
 
 ```bash
-# 1. Clone and install
-git clone https://github.com/Subverting-complexity/React-Native-Expo-Mobile-App-Template-.git my-app
-cd my-app
-npm ci
+# 1. Install dependencies
+npm install
 
-# 2. Configure your Expo account
-#    Edit app.config.ts: set `owner` and `projectId` to your values.
-#    See docs/expo-account.md for details.
-
-# 3. Run
-npm start          # Expo dev server (press i/a/w for platform)
-npm run ios        # iOS simulator
-npm run android    # Android emulator
-npm run web        # Browser
+# 2. Start the dev server (Metro + Expo)
+npm start
 ```
 
-## Start a New Project from This Template
+Then open the app one of these ways:
 
-1. Click **Use this template** on GitHub (or clone manually).
-2. Find-and-replace the placeholder values:
-   - `app.config.ts` &mdash; `owner`, `projectId`, `name`, `slug`, `scheme`, `bundleIdentifier`, `package`
-   - `package.json` &mdash; `name`
-3. Run `npm ci` to install dependencies.
-4. Delete the example store (`src/state/exampleStore.ts`) and gallery sections you don't need.
-5. Start building your screens in `app/`.
+- **Physical device** — scan the QR code in the terminal with the
+  **Expo Go** app (Android) or the Camera app (iOS).
+- **iOS simulator** — press `i` in the terminal, or run `npm run ios`.
+- **Android emulator** — press `a` in the terminal, or run `npm run android`.
+- **Web browser** — press `w`, or run `npm run web`.
 
-## Directory Layout
+That is enough to boot the app. The home screen lives in
+[`app/(tabs)/index.tsx`](<app/(tabs)/index.tsx>); a full component
+showcase is on the **Gallery** route ([`app/gallery.tsx`](app/gallery.tsx)).
 
-```
-app/                    Expo Router file-based routing
-  (tabs)/               Tab navigator group (Home, Settings)
-  _layout.tsx           Root layout with providers
+### Optional: environment variables
 
-src/
-  theme/                Design tokens (colors, spacing, radii, typography, shadows, z-index)
-  components/           Reusable App* component library (barrel: index.ts)
-  a11y/                 Accessibility context, provider, role constants
-  state/                Zustand stores (injectable-deps factory pattern)
-  storage/              Platform-aware persistence (AsyncStorage / localStorage)
-  hooks/                Shared React hooks
-  gallery/              Component showcase screen and demo sections
-  build/                Build and EAS configuration helpers
+Only needed for EAS cloud builds. Copy the example file and fill in a
+token:
 
-scripts/                PowerShell (.ps1) + double-click .cmd wrappers
-docs/                   Project and accessibility documentation
-.decisions/             Locked architecture decisions
-.github/workflows/      CI pipeline
+```bash
+cp .env.example .env   # then set EXPO_TOKEN
 ```
 
-## Component Library
-
-All components use the `App` prefix and consume theme tokens via `useTheme()`. Import from the barrel:
-
-```ts
-import { AppButton, AppText, AppCard } from '@/components';
-```
-
-| Component                  | Purpose                                                  |
-| -------------------------- | -------------------------------------------------------- |
-| `AppButton`                | Primary action button with `variant`/`size`/`tone` props |
-| `AppText`                  | Themed text with typography scale support                |
-| `AppTextInput`             | Styled text input with label and error states            |
-| `AppCard`                  | Content container with shadow and radius tokens          |
-| `AppChip` / `AppChipGroup` | Selection chips (single and group)                       |
-| `AppBadge`                 | Status/count indicator                                   |
-| `AppIconButton`            | Icon-only pressable with a11y label                      |
-| `AppLinkButton`            | Navigation link styled as a button                       |
-| `AppBackButton`            | Navigation back action                                   |
-| `AppPressable`             | Base pressable with 44x44 min touch target enforcement   |
-| `AppListItem`              | List row with consistent padding and separators          |
-| `AppSection`               | Grouped content section with header                      |
-| `AppScreenContainer`       | Safe-area screen wrapper with scroll support             |
-| `AppSpinner`               | Loading indicator                                        |
-| `AppProgressBar`           | Determinate progress bar                                 |
-| `AppLoadingScreen`         | Full-screen loading state                                |
-| `AppEmptyState`            | Empty/zero-data placeholder                              |
-| `AppToast`                 | Temporary notification banner                            |
-| `AppErrorBoundary`         | Error boundary with fallback UI                          |
-
-## Theming
-
-All visual values are defined once in `src/theme/` and consumed via the `useTheme()` hook:
-
-```ts
-const { theme, mode, setMode } = useTheme();
-
-// Access tokens
-theme.colors.primary; // Color palette
-theme.spacing.md; // Spacing scale
-theme.radii.lg; // Border radii
-theme.typography.body; // Font styles
-theme.shadows.card; // Shadow definitions
-```
-
-- **Light and dark modes** with automatic system detection
-- **Atkinson Hyperlegible** font for enhanced readability
-- Automated **contrast ratio checks** tested against every foreground/background pairing
-- Tokens: colors, spacing, radii, typography, shadows, z-index
-
-Re-skinning the app means editing token files, not component files.
-
-## Accessibility
-
-WCAG 2.1 Level AA baseline:
-
-- Automated contrast ratio verification in `src/theme/contrast.ts`
-- 44x44 minimum touch targets enforced by `AppPressable`
-- Roles and announcements via `A11yProvider` and `useA11y()`
-- Font scaling with safe maximum to prevent layout breakage
-- Reduce-motion support
-- ESLint plugin (`eslint-plugin-react-native-a11y`) for static analysis
-
-See [docs/accessibility-checklist.md](docs/accessibility-checklist.md) for the full checklist.
-
-## State Management
-
-- **React Context** for cross-cutting concerns: `ThemeProvider` (theme mode + tokens), `A11yProvider` (reduce-motion, font scale)
-- **Zustand** for domain state using the injectable-deps factory pattern
-
-```ts
-// Stores declare their external dependencies and accept them via `deps`
-const useMyStore = createMyStore({
-  storage: asyncStorageAdapter,
-});
-```
-
-Production wires real adapters; tests pass mocks. See `src/state/exampleStore.ts` for the reference implementation.
+`.env` is gitignored. The deploy/verify scripts load it automatically.
+See [`.env.example`](.env.example) and [`docs/expo-account.md`](docs/expo-account.md).
 
 ## Scripts
 
-PowerShell scripts with `.cmd` double-click wrappers for Windows:
+### npm scripts (cross-platform)
 
-| Script                             | npm command              | Purpose                             |
-| ---------------------------------- | ------------------------ | ----------------------------------- |
-| `QualityGate.ps1`                  | `npm run check`          | Lint + typecheck + test + coverage  |
-| `BumpBuildNumber.ps1`              | `npm run bump`           | Increment iOS/Android build numbers |
-| `VerifyExpoAccount.ps1`            | `npm run verify:expo`    | Confirm EAS account configuration   |
-| `DeployiOSTestFlight.ps1`          | `npm run deploy:ios`     | Build and submit to TestFlight      |
-| `DeployAndroidPlayStore.ps1`       | `npm run deploy:android` | Build and submit to Play Store      |
-| `BuildAndRunIOSDevelopment.ps1`    | &mdash;                  | Dev client build for iOS            |
-| `BuildAndDeployDevModeAndroid.ps1` | &mdash;                  | Dev client build for Android        |
-| `LaunchWeb.ps1`                    | &mdash;                  | Start web dev server                |
+| Command                  | What it does                                                 |
+| ------------------------ | ------------------------------------------------------------ |
+| `npm start`              | Start the Expo dev server (Metro).                           |
+| `npm run android`        | Start and open on an Android emulator/device.                |
+| `npm run ios`            | Start and open on an iOS simulator/device.                   |
+| `npm run web`            | Start and open in the browser.                               |
+| `npm run lint`           | ESLint over the whole project.                               |
+| `npm run format`         | Prettier — rewrite all files.                                |
+| `npm run format:check`   | Prettier — check only, no writes.                            |
+| `npm run typecheck`      | TypeScript `tsc --noEmit` (strict).                          |
+| `npm test`               | Jest test suite.                                             |
+| `npm run quality`        | Lint + typecheck + tests with coverage. The pre-commit gate. |
+| `npm run check`          | Full **strict** quality gate via PowerShell (what CI runs).  |
+| `npm run build:dev`      | EAS build, `development` profile.                            |
+| `npm run build:preview`  | EAS build, `preview` profile.                                |
+| `npm run build:prod`     | EAS build, `production` profile.                             |
+| `npm run submit:ios`     | EAS submit to App Store Connect.                             |
+| `npm run submit:android` | EAS submit to Google Play.                                   |
+| `npm run verify:expo`    | Report the configured Expo account and token state.          |
+| `npm run deploy:ios`     | Build + submit to TestFlight (PowerShell).                   |
+| `npm run deploy:android` | Build + submit to Play Store (PowerShell).                   |
+| `npm run bump`           | Increment the build number (PowerShell).                     |
 
-## CI Pipeline
+### PowerShell scripts (`scripts/`, Windows-first)
 
-GitHub Actions runs the quality gate on every push to `main` and on pull requests:
+Every `.ps1` has a matching `.cmd` wrapper you can **double-click** — it
+runs with an ExecutionPolicy bypass, so nothing depends on the machine's
+script policy. See [`scripts/README.md`](scripts/README.md) for full
+detail; the highlights:
 
-- **Type-check** (`tsc --noEmit`)
-- **Lint** (ESLint with Expo + Prettier + a11y configs)
-- **Format check** (Prettier)
-- **Test with coverage** (Jest + React Native Testing Library, 70% global threshold)
+| Script (`.ps1` / `.cmd`)       | Purpose                                                                |
+| ------------------------------ | ---------------------------------------------------------------------- |
+| `QualityGate`                  | Single orchestrator: format, lint, typecheck, test, bundle smoke test. |
+| `LaunchWeb`                    | Start the app in the browser.                                          |
+| `VerifyExpoAccount`            | Confirm you are building under the correct Expo account.               |
+| `BumpBuildNumber`              | Increment iOS `buildNumber` / Android `versionCode`.                   |
+| `BuildAndRunIOSDevelopment`    | Local iOS development build + run.                                     |
+| `BuildAndDeployDevModeAndroid` | Android development build + deploy to a device.                        |
+| `DeployiOSTestFlight`          | Production build + submit to TestFlight.                               |
+| `DeployAndroidPlayStore`       | Production build + submit to the Play Store.                           |
 
-## Build Profiles
+The quality gate has two modes: **local** (default, auto-fixes
+formatting/lint then verifies) and **ci** (strict, no fixes). Run the
+strict gate with `npm run check`, or the auto-fixing one by
+double-clicking `scripts/QualityGate.cmd`.
 
-EAS Build profiles in `eas.json`:
+## Project structure
 
-| Profile       | Purpose                                           |
-| ------------- | ------------------------------------------------- |
-| `development` | Dev client with internal distribution             |
-| `preview`     | Internal testing builds                           |
-| `production`  | Store-ready builds with auto-incrementing version |
+```
+.
+├── app/                  Expo Router screens (file-based routing)
+│   ├── (tabs)/           Tab group: index (home) + settings
+│   ├── gallery.tsx       Component showcase route
+│   └── _layout.tsx       Root layout (providers wired here)
+├── assets/               Placeholder icon, adaptive icon, splash, favicon
+├── src/
+│   ├── theme/            Design tokens — the single source of truth
+│   ├── components/       Generic, prop-driven App* component library
+│   ├── a11y/             Accessibility context, roles, announcements
+│   ├── state/            Zustand stores (injectable-deps factory pattern)
+│   ├── storage/          Platform-aware persistence (web / native)
+│   ├── hooks/            Shared React hooks
+│   ├── gallery/          Showcase screen + per-category demo sections
+│   └── test/             Test utilities and helpers
+├── scripts/              PowerShell (.ps1) + double-click .cmd wrappers
+│   └── steps/            Single-purpose steps the QualityGate runs
+├── docs/                 Theming, accessibility, EAS, and template guides
+├── eslint-plugin-theme-tokens/   Local lint rule banning raw visual values
+├── app.config.ts         Expo app config (name, owner, EAS projectId)
+└── eas.json              EAS build/submit profiles
+```
 
-## Tech Stack
+Most `src/` subdirectories expose a barrel `index.ts` — import from the
+barrel, not from individual files.
 
-| Layer      | Choice                                       |
-| ---------- | -------------------------------------------- |
-| Framework  | Expo SDK 56 (New Architecture)               |
-| Language   | TypeScript 6 (strict mode)                   |
-| Navigation | Expo Router (file-based, typed routes)       |
-| UI         | Custom component library (20 components)     |
-| Theming    | Design tokens + `useTheme()` hook            |
-| State      | Zustand 5 (injectable-deps factory)          |
-| Storage    | Platform-aware (AsyncStorage / localStorage) |
-| Testing    | Jest + React Native Testing Library          |
-| Linting    | ESLint 9 + Prettier + a11y plugin            |
-| CI         | GitHub Actions                               |
-| Build      | EAS Build + EAS Submit                       |
-| Font       | Atkinson Hyperlegible (Google Fonts)         |
+### Conventions worth knowing
+
+- **Components** use the `App` prefix (`AppButton`, `AppText`, …), read
+  tokens via `useTheme()`, and never hardcode visual values.
+- **Theme** is the single source of truth for every color, spacing,
+  radius, font size, and shadow. Re-skinning = a token edit.
+- **State**: React Context for theme/a11y; Zustand (injectable-deps
+  factory) for domain state.
+- **TypeScript strict mode** — no `any`, no `@ts-ignore`.
+
+## Documentation
+
+| Doc                                                            | Covers                                               |
+| -------------------------------------------------------------- | ---------------------------------------------------- |
+| [Theming](docs/theming.md)                                     | Token system, `useTheme()`, building new components. |
+| [Token-only styling](docs/token-only-styling.md)               | The no-raw-values rule and its lint enforcement.     |
+| [Accessibility](docs/accessibility.md)                         | A11y architecture, roles, announcements, font scale. |
+| [Accessibility checklist](docs/accessibility-checklist.md)     | Per-PR WCAG 2.1 AA checklist.                        |
+| [New project from template](docs/new-project-from-template.md) | Rename, re-skin, and ship a fresh app from this.     |
+| [Expo account & EAS](docs/expo-account.md)                     | Account setup for cloud builds and submissions.      |
 
 ## License
 
-MIT
+See [`LICENSE`](LICENSE).

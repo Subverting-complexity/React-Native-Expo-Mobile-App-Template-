@@ -5,7 +5,7 @@ import { AppButton, AppScreenContainer, AppText } from '@/components';
 /**
  * Home tab. A minimal placeholder for the starter app — it establishes the
  * themed screen shell (`AppScreenContainer`) and token-driven typography
- * (`AppText`), and links out to the Component Gallery (#35).
+ * (`AppText`), and links out to the Component Gallery.
  */
 export default function HomeScreen() {
   const router = useRouter();

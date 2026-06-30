@@ -1,31 +1,10 @@
 import { Dimensions, StyleSheet } from 'react-native';
-import { render, waitFor } from '@testing-library/react-native';
+import { waitFor } from '@testing-library/react-native';
 
 import { AppText } from '../AppText';
 import { MAX_FONT_SIZE_MULTIPLIER } from '@/a11y';
-import {
-  ThemeProvider,
-  lightColors,
-  typography,
-  FONT_FAMILIES,
-  type StorageAdapter,
-} from '@/theme';
-
-function makeStorage(saved: string | null = null): StorageAdapter {
-  return {
-    getItem: jest.fn(async () => saved),
-    setItem: jest.fn(async () => {}),
-  };
-}
-
-// Default to no saved mode: ThemeProvider then performs no post-render state
-// update, so synchronous assertions stay free of act(...) warnings. Pass
-// 'light' (with waitFor) only when asserting colour tokens.
-function renderWithTheme(ui: React.ReactElement, saved: string | null = null) {
-  return render(
-    <ThemeProvider storage={makeStorage(saved)}>{ui}</ThemeProvider>,
-  );
-}
+import { lightColors, typography, FONT_FAMILIES } from '@/theme';
+import { renderWithTheme } from '@/test';
 
 function styleOf(node: { props: { style?: unknown } }) {
   return StyleSheet.flatten(node.props.style);

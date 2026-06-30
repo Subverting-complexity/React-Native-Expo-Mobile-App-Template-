@@ -1,20 +1,6 @@
-import { render } from '@testing-library/react-native';
-
 import { AppSpinner } from '../AppSpinner';
-import { ThemeProvider, lightColors, type StorageAdapter } from '@/theme';
-
-function makeStorage(saved: string | null = null): StorageAdapter {
-  return {
-    getItem: jest.fn(async () => saved),
-    setItem: jest.fn(async () => {}),
-  };
-}
-
-function renderWithTheme(ui: React.ReactElement, saved: string | null = null) {
-  return render(
-    <ThemeProvider storage={makeStorage(saved)}>{ui}</ThemeProvider>,
-  );
-}
+import { lightColors } from '@/theme';
+import { renderWithTheme } from '@/test';
 
 describe('AppSpinner', () => {
   it('exposes the progressbar role with a default loading label', () => {

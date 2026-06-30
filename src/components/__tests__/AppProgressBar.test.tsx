@@ -1,42 +1,8 @@
 import { StyleSheet } from 'react-native';
-import { render } from '@testing-library/react-native';
 
 import { AppProgressBar } from '../AppProgressBar';
-import { A11yContext, MAX_FONT_SIZE_MULTIPLIER } from '@/a11y';
-import {
-  ThemeProvider,
-  lightColors,
-  spacing,
-  type StorageAdapter,
-} from '@/theme';
-
-function makeStorage(saved: string | null = null): StorageAdapter {
-  return {
-    getItem: jest.fn(async () => saved),
-    setItem: jest.fn(async () => {}),
-  };
-}
-
-function renderWithProviders(
-  ui: React.ReactElement,
-  {
-    reduceMotion = true,
-    saved = null,
-  }: { reduceMotion?: boolean; saved?: string | null } = {},
-) {
-  return render(
-    <ThemeProvider storage={makeStorage(saved)}>
-      <A11yContext.Provider
-        value={{
-          reduceMotion,
-          maxFontSizeMultiplier: MAX_FONT_SIZE_MULTIPLIER,
-        }}
-      >
-        {ui}
-      </A11yContext.Provider>
-    </ThemeProvider>,
-  );
-}
+import { lightColors, spacing } from '@/theme';
+import { renderWithProviders } from '@/test';
 
 describe('AppProgressBar', () => {
   it('exposes the progressbar role with a percentage accessibility value', () => {

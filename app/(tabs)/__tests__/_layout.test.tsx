@@ -1,7 +1,8 @@
 import { render } from '@testing-library/react-native';
 
 import TabsLayout from '../_layout';
-import { ThemeProvider, type StorageAdapter } from '@/theme';
+import { ThemeProvider } from '@/theme';
+import { makeStorage } from '../../../src/test';
 
 // Render the Tabs navigator structurally: each Tabs.Screen surfaces its
 // `title` as text and its `tabBarAccessibilityLabel` as the accessibility
@@ -28,13 +29,8 @@ jest.mock('expo-router', () => {
   return { Tabs };
 });
 
-const storage: StorageAdapter = {
-  getItem: jest.fn(async () => null),
-  setItem: jest.fn(async () => {}),
-};
-
 function Wrapper({ children }: { children: React.ReactNode }) {
-  return <ThemeProvider storage={storage}>{children}</ThemeProvider>;
+  return <ThemeProvider storage={makeStorage()}>{children}</ThemeProvider>;
 }
 
 describe('TabsLayout', () => {

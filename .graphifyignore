@@ -1,2 +1,0 @@
-# Skip doc/markdown files (semantic extraction needs an LLM key; code graph does not)
-*.md

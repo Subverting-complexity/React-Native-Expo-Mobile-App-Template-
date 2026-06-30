@@ -2,14 +2,8 @@ import { Text } from 'react-native';
 import { fireEvent, render } from '@testing-library/react-native';
 
 import { AppErrorBoundary, DefaultErrorFallback } from '../AppErrorBoundary';
-import { ThemeProvider, type StorageAdapter } from '@/theme';
-
-function makeStorage(): StorageAdapter {
-  return {
-    getItem: jest.fn(async () => null),
-    setItem: jest.fn(async () => {}),
-  };
-}
+import { ThemeProvider } from '@/theme';
+import { makeStorage } from '@/test';
 
 /** Child that throws on render; `throwError` toggles recovery for reset tests. */
 function Boom({ message = 'kaboom' }: { message?: string }) {

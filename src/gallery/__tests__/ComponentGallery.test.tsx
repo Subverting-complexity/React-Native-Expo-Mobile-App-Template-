@@ -4,19 +4,13 @@ import { SafeAreaProvider, type Metrics } from 'react-native-safe-area-context';
 import { ComponentGallery } from '../ComponentGallery';
 import { A11yProvider } from '@/a11y';
 import { ToastProvider } from '@/components';
-import { ThemeProvider, type StorageAdapter } from '@/theme';
+import { ThemeProvider } from '@/theme';
+import { makeStorage } from '@/test';
 
 const METRICS: Metrics = {
   frame: { x: 0, y: 0, width: 390, height: 844 },
   insets: { top: 47, left: 0, right: 0, bottom: 34 },
 };
-
-function makeStorage(): StorageAdapter {
-  return {
-    getItem: jest.fn(async () => null),
-    setItem: jest.fn(async () => {}),
-  };
-}
 
 function renderGallery(onBack?: () => void) {
   return render(

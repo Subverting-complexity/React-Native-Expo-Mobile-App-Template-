@@ -1,4 +1,4 @@
-import { useMemo, type ReactNode } from 'react';
+import { useMemo } from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -7,71 +7,32 @@ import {
 } from 'react-native';
 
 import { AppPressable, type AppPressableProps } from './AppPressable';
+import {
+  BUTTON_VARIANTS,
+  resolveVariantColors,
+  type AppIcon,
+  type ButtonVariant,
+  type ResolvedColors,
+} from './buttonUtils';
 import { A11Y_ROLES } from '@/a11y';
 import { useTheme } from '@/theme';
-import type { ColorPalette, ThemeTokens } from '@/theme';
+import type { ThemeTokens } from '@/theme';
 
-export type AppIconButtonVariant =
-  | 'primary'
-  | 'secondary'
-  | 'outline'
-  | 'ghost'
-  | 'danger';
+export type AppIconButtonVariant = ButtonVariant;
 
 export type AppIconButtonSize = 'sm' | 'md' | 'lg';
 
-interface VariantColors {
-  /** Background fill colour token. */
-  background: keyof ColorPalette | 'transparent';
-  /** Icon (foreground) colour token. */
-  foreground: keyof ColorPalette;
-  /** Border colour token, or `null` for no border. */
-  border: keyof ColorPalette | null;
-}
-
-const VARIANTS: Record<AppIconButtonVariant, VariantColors> = {
-  primary: { background: 'primary', foreground: 'onPrimary', border: null },
-  secondary: {
-    background: 'secondary',
-    foreground: 'onSecondary',
-    border: null,
-  },
-  outline: {
-    background: 'transparent',
-    foreground: 'primary',
-    border: 'primary',
-  },
-  ghost: { background: 'transparent', foreground: 'primary', border: null },
-  danger: { background: 'error', foreground: 'onError', border: null },
-};
-
-/**
- * Per-size spec. Padding comes from the spacing scale; the icon glyph size
- * tracks the typography size scale so it stays a single-source token rather
- * than a hardcoded pixel value.
- */
 const SIZE_SPEC: Record<
   AppIconButtonSize,
   {
-    padding: keyof ThemeTokens['spacing'];
+    pad: keyof ThemeTokens['spacing'];
     icon: keyof ThemeTokens['typography']['sizes'];
   }
 > = {
-  sm: { padding: 2, icon: 'lg' },
-  md: { padding: 3, icon: '2xl' },
-  lg: { padding: 4, icon: '3xl' },
+  sm: { pad: 2, icon: 'lg' },
+  md: { pad: 3, icon: '2xl' },
+  lg: { pad: 4, icon: '3xl' },
 };
-
-/** Args passed to an `icon` render function so the glyph matches the button. */
-export interface AppIconRenderProps {
-  /** Resolved foreground colour for the current variant. */
-  color: string;
-  /** Resolved glyph size for the current `size`. */
-  size: number;
-}
-
-/** An icon node, or a function that builds one from the resolved colour/size. */
-export type AppIcon = ReactNode | ((props: AppIconRenderProps) => ReactNode);
 
 /**
  * Props for {@link AppIconButton}.
@@ -93,23 +54,6 @@ export interface AppIconButtonProps extends Omit<
   /** Render as a circle (`radii.full`) rather than the default rounded square. */
   round?: boolean;
   style?: StyleProp<ViewStyle>;
-}
-
-interface ResolvedColors {
-  background: string;
-  foreground: string;
-  border: string | undefined;
-}
-
-function resolveColors(theme: ThemeTokens, v: VariantColors): ResolvedColors {
-  return {
-    background:
-      v.background === 'transparent'
-        ? 'transparent'
-        : theme.colors[v.background],
-    foreground: theme.colors[v.foreground],
-    border: v.border ? theme.colors[v.border] : undefined,
-  };
 }
 
 function buildContainerStyle(
@@ -151,7 +95,7 @@ export function AppIconButton({
   const isDisabled = disabled || loading;
 
   const spec = SIZE_SPEC[size];
-  const colors = resolveColors(theme, VARIANTS[variant]);
+  const colors = resolveVariantColors(theme, BUTTON_VARIANTS[variant]);
   const iconSize = theme.typography.sizes[spec.icon].fontSize;
   const radius = round ? theme.radii.full : theme.radii.md;
 
@@ -159,12 +103,12 @@ export function AppIconButton({
     () =>
       buildContainerStyle(
         theme,
-        theme.spacing[spec.padding],
+        theme.spacing[spec.pad],
         radius,
         colors,
         isDisabled,
       ),
-    [theme, spec.padding, radius, colors, isDisabled],
+    [theme, spec.pad, radius, colors, isDisabled],
   );
 
   const renderedIcon =

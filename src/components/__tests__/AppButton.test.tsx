@@ -1,23 +1,9 @@
 import { StyleSheet } from 'react-native';
-import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { fireEvent, waitFor } from '@testing-library/react-native';
 
 import { AppButton } from '../AppButton';
-import { ThemeProvider, a11y, lightColors, type StorageAdapter } from '@/theme';
-
-function makeStorage(saved: string | null = null): StorageAdapter {
-  return {
-    getItem: jest.fn(async () => saved),
-    setItem: jest.fn(async () => {}),
-  };
-}
-
-// Default to no saved mode so synchronous assertions stay free of act(...)
-// warnings; pass 'light' (with waitFor) only when asserting colour tokens.
-function renderWithTheme(ui: React.ReactElement, saved: string | null = null) {
-  return render(
-    <ThemeProvider storage={makeStorage(saved)}>{ui}</ThemeProvider>,
-  );
-}
+import { a11y, lightColors } from '@/theme';
+import { renderWithTheme } from '@/test';
 
 describe('AppButton', () => {
   it('renders its label', () => {

@@ -1,28 +1,9 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create, type StoreApi, type UseBoundStore } from 'zustand';
 
-/**
- * The async key/value contract the store needs to persist itself. Defined
- * locally (rather than imported) so the store has no compile-time coupling
- * to any concrete storage module.
- *
- * NOTE: this intentionally mirrors the `StorageAdapter` in
- * `src/theme/ThemeContext.ts`. Story #32 (platform-aware storage
- * abstraction) will consolidate both into one shared contract; until then
- * the small duplication keeps each module self-contained.
- */
-export interface StorageAdapter {
-  getItem(key: string): Promise<string | null>;
-  setItem(key: string, value: string): Promise<void>;
-}
+import { storage as platformStorage, type StorageAdapter } from '@/storage';
 
-/**
- * External services the store depends on. Injecting them — instead of
- * importing concrete modules inside the store — is what makes the store
- * unit-testable: production wires the real adapters, tests pass mocks.
- * This is the same dependency-injection convention `ThemeProvider` uses
- * for its `storage` prop.
- */
+export type { StorageAdapter };
+
 export interface ExampleStoreDeps {
   storage: StorageAdapter;
 }
@@ -47,8 +28,7 @@ export interface ExampleState {
 /** Storage key under which the example store persists its value. */
 export const EXAMPLE_STORAGE_KEY = '@example/count';
 
-/** Real dependencies used by the default app-wide store instance. */
-const defaultDeps: ExampleStoreDeps = { storage: AsyncStorage };
+const defaultDeps: ExampleStoreDeps = { storage: platformStorage };
 
 /**
  * Build an example Zustand store wired to the given dependencies. Domain
@@ -78,7 +58,7 @@ export function createExampleStore(
 }
 
 /**
- * The default, app-wide example store, wired with the real AsyncStorage
+ * The default, app-wide example store, wired with the platform-aware storage
  * adapter. Components import this hook; tests use `createExampleStore` with
  * injected mocks instead.
  */
