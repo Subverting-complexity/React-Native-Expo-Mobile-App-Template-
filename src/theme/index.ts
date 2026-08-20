@@ -42,6 +42,7 @@ export {
   meetsAA,
 } from './contrast';
 export { buildPreHydrationBackgroundCss } from './preHydrationTheme';
+export { withAlpha } from './withAlpha';
 
 export type {
   ColorMode,
