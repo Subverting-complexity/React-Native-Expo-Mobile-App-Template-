@@ -1,0 +1,15 @@
+Open with one or two sentences about who the app is for and the problem it solves. Write to the reader, not about the product.
+
+Follow with a short paragraph explaining how the app works in plain language: what the user does, what happens next, and what they get out of it.
+
+FEATURES
+
+• First headline feature, stated as what the user can do
+• Second feature — plain verbs, no marketing adjectives
+• Third feature, with a number where a number exists (e.g. "loops from 1–30 seconds")
+• Fourth feature
+• Fifth feature
+
+Close with a privacy sentence if it is true for your app — for example: everything runs on your device; the app collects no data, shows no ads, and requires no account.
+
+One-line call to action.

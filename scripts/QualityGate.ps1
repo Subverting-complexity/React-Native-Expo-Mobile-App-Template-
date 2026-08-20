@@ -23,8 +23,8 @@
 
 .PARAMETER Only
   Run a single named step instead of the whole gate. One of:
-  CheckHealth, VerifyFormatting, RunStaticAnalysis, ValidateQuality,
-  ExecuteTests, TestBuild.
+  CheckHealth, VerifyAssets, VerifyFormatting, RunStaticAnalysis,
+  ValidateQuality, ExecuteTests, TestBuild.
 
 .EXAMPLE
   npm run check
@@ -45,8 +45,8 @@ param(
 
   [switch]$SkipBuild,
 
-  [ValidateSet('CheckHealth', 'VerifyFormatting', 'RunStaticAnalysis',
-    'ValidateQuality', 'ExecuteTests', 'TestBuild')]
+  [ValidateSet('CheckHealth', 'VerifyAssets', 'VerifyFormatting',
+    'RunStaticAnalysis', 'ValidateQuality', 'ExecuteTests', 'TestBuild')]
   [string]$Only
 )
 
@@ -57,6 +57,7 @@ $ErrorActionPreference = 'Stop'
 # own (so they load standalone too); re-running it here is harmless.
 . "$PSScriptRoot\steps\Common.ps1"
 . "$PSScriptRoot\steps\CheckHealth.ps1"
+. "$PSScriptRoot\steps\VerifyAssets.ps1"
 . "$PSScriptRoot\steps\VerifyFormatting.ps1"
 . "$PSScriptRoot\steps\RunStaticAnalysis.ps1"
 . "$PSScriptRoot\steps\ValidateQuality.ps1"
@@ -66,6 +67,7 @@ $ErrorActionPreference = 'Stop'
 # The gate's ordered pipeline. `IsBuild` marks the step local mode may skip.
 $pipeline = @(
   [pscustomobject]@{ Name = 'CheckHealth';       Invoke = { Invoke-CheckHealth -Mode $Mode };       IsBuild = $false }
+  [pscustomobject]@{ Name = 'VerifyAssets';      Invoke = { Invoke-VerifyAssets -Mode $Mode };      IsBuild = $false }
   [pscustomobject]@{ Name = 'VerifyFormatting';  Invoke = { Invoke-VerifyFormatting -Mode $Mode };  IsBuild = $false }
   [pscustomobject]@{ Name = 'RunStaticAnalysis'; Invoke = { Invoke-RunStaticAnalysis -Mode $Mode }; IsBuild = $false }
   [pscustomobject]@{ Name = 'ValidateQuality';   Invoke = { Invoke-ValidateQuality -Mode $Mode };   IsBuild = $false }

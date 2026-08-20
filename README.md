@@ -129,10 +129,14 @@ double-clicking `scripts/QualityGate.cmd`.
 │   ├── state/            Zustand stores (injectable-deps factory pattern)
 │   ├── storage/          Platform-aware persistence (web / native)
 │   ├── hooks/            Shared React hooks
+│   ├── utils/            Small pure helpers (error coercion, formatting)
 │   ├── gallery/          Showcase screen + per-category demo sections
 │   └── test/             Test utilities and helpers
 ├── scripts/              PowerShell (.ps1) + double-click .cmd wrappers
-│   └── steps/            Single-purpose steps the QualityGate runs
+│   ├── steps/            Single-purpose steps the QualityGate runs
+│   └── release/          Release-record tool (branches + outcome tags)
+├── fastlane/             Store listing pipeline: metadata, screenshots,
+│                         privacy declarations (see fastlane/PUBLISHING.md)
 ├── docs/                 Theming, accessibility, EAS, and template guides
 ├── eslint-plugin-theme-tokens/   Local lint rule banning raw visual values
 ├── app.config.ts         Expo app config (name, owner, EAS projectId)
@@ -152,16 +156,38 @@ barrel, not from individual files.
   factory) for domain state.
 - **TypeScript strict mode** — no `any`, no `@ts-ignore`.
 
+## Releasing & store publishing
+
+Two separate pipelines, so a copy edit never requires a build:
+
+- **Binaries** — EAS builds and submits them (`npm run deploy:ios` /
+  `deploy:android`). The marketing version is bumped by hand in
+  `app.config.ts`; build numbers live remotely and auto-increment. Every
+  deploy leaves a `release/{platform}/{stamp}` branch and an annotated
+  outcome tag in git — `git tag -n20 -l "release/*"` is the deployment
+  history. See [releasing](docs/releasing.md) and
+  [release branches](docs/release-branches.md).
+- **Listings** — fastlane pushes store text, keywords, screenshots, and
+  privacy declarations from `fastlane/metadata/`, and
+  `fastlane/creative/render.py` composes on-brand store screenshots from raw
+  device captures. See [store publishing](fastlane/PUBLISHING.md).
+
 ## Documentation
 
-| Doc                                                            | Covers                                               |
-| -------------------------------------------------------------- | ---------------------------------------------------- |
-| [Theming](docs/theming.md)                                     | Token system, `useTheme()`, building new components. |
-| [Token-only styling](docs/token-only-styling.md)               | The no-raw-values rule and its lint enforcement.     |
-| [Accessibility](docs/accessibility.md)                         | A11y architecture, roles, announcements, font scale. |
-| [Accessibility checklist](docs/accessibility-checklist.md)     | Per-PR WCAG 2.1 AA checklist.                        |
-| [New project from template](docs/new-project-from-template.md) | Rename, re-skin, and ship a fresh app from this.     |
-| [Expo account & EAS](docs/expo-account.md)                     | Account setup for cloud builds and submissions.      |
+| Doc                                                            | Covers                                                |
+| -------------------------------------------------------------- | ----------------------------------------------------- |
+| [Theming](docs/theming.md)                                     | Token system, `useTheme()`, building new components.  |
+| [Token-only styling](docs/token-only-styling.md)               | The no-raw-values rule and its lint enforcement.      |
+| [Accessibility](docs/accessibility.md)                         | A11y architecture, roles, announcements, font scale.  |
+| [Accessibility checklist](docs/accessibility-checklist.md)     | Per-PR WCAG 2.1 AA checklist.                         |
+| [New project from template](docs/new-project-from-template.md) | Rename, re-skin, and ship a fresh app from this.      |
+| [Expo account & EAS](docs/expo-account.md)                     | Account setup for cloud builds and submissions.       |
+| [Releasing](docs/releasing.md)                                 | Version ownership, release flow, EAS troubleshooting. |
+| [Release branches](docs/release-branches.md)                   | The git record every store deploy leaves behind.      |
+| [Store publishing](fastlane/PUBLISHING.md)                     | Listings, screenshots, privacy declarations.          |
+| [UI writing style](docs/ui-writing-style.md)                   | House rules for every user-facing string.             |
+| [Decision records](docs/decision-records.md)                   | Writing down design decisions from discussions.       |
+| [Privacy policy template](docs/privacy-policy-template.md)     | Hostable starting point for the required policy URL.  |
 
 ## License
 

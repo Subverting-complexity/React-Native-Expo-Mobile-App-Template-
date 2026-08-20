@@ -22,6 +22,13 @@ export default ({ config }: ConfigContext) => ({
     supportsTablet: true,
     bundleIdentifier: 'dev.template.expo',
     buildNumber: '1',
+    infoPlist: {
+      // Pre-answers Apple's export-compliance question on every submission.
+      // Correct for apps that use only standard OS-level encryption (HTTPS,
+      // at-rest). If you add your own cryptography, revisit this answer —
+      // see docs/releasing.md.
+      ITSAppUsesNonExemptEncryption: false,
+    },
   },
   android: {
     adaptiveIcon: {

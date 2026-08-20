@@ -89,7 +89,7 @@ function Invoke-Tool {
     # this function's output stream. If it leaked into the pipeline it would
     # be returned alongside the success flag, and a failing tool (which prints
     # diagnostics) would make the function return a non-empty array that reads
-    # as truthy — silently turning every failure into a pass. The tool's
+    # as truthy -- silently turning every failure into a pass. The tool's
     # stderr still flows straight to the console (we never redirect it).
     & $FilePath @Arguments | Out-Host
     return ($LASTEXITCODE -eq 0)

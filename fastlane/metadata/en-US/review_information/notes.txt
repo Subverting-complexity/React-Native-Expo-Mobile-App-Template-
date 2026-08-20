@@ -1,0 +1,10 @@
+Notes for the App Review team.
+
+No account or login is required. [Delete this line if untrue, and provide a demo account below instead.]
+
+How to exercise the main features end to end:
+1. Launch the app. [Describe what the reviewer sees first.]
+2. [Step-by-step path through each headline feature — assume the reviewer has never seen the app.]
+3. [Continue until every feature named in the listing has a step.]
+
+All processing happens on-device. The app makes no network requests, collects no data, and shows no ads. [Adjust to match your app — reviewers check these claims against observed behavior.]

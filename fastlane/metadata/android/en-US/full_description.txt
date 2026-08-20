@@ -1,0 +1,15 @@
+Open with one or two sentences about who the app is for and the problem it solves. Mirror the iOS description — one source of truth for the copy, adapted only where a store rule requires it.
+
+Follow with a short paragraph explaining how the app works in plain language.
+
+FEATURES
+
+• First headline feature, stated as what the user can do
+• Second feature — plain verbs, no marketing adjectives
+• Third feature, with a number where a number exists
+• Fourth feature
+• Fifth feature
+
+Close with a privacy sentence if it is true for your app.
+
+One-line call to action.

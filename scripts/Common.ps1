@@ -1,11 +1,11 @@
-# Common.ps1 — shared helpers for the dev build/run launch scripts.
+# Common.ps1 -- shared helpers for the dev build/run launch scripts.
 #
 # Dot-source it from each launch script:
 #   . (Join-Path $PSScriptRoot 'Common.ps1')
 #
 # Single source of truth for the things every launch script needs: a
 # tooling check, a consistent banner, and a repo-root-anchored Expo runner.
-# Windows PowerShell 5.1 compatible — no PS7-only syntax.
+# Windows PowerShell 5.1 compatible -- no PS7-only syntax.
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -186,4 +186,31 @@ function Assert-ExpoAccount {
         return
     }
     Write-Host "  Logged in to EAS as: $whoami" -ForegroundColor Green
+}
+
+# --- Release records ----------------------------------------------------------
+# Every store deploy leaves a record in git: a release/{platform}/{stamp}
+# branch cut before the build and an annotated outcome tag written after it.
+# The rules live in a unit-tested Node tool; PowerShell holds as little logic
+# as possible. See docs/release-branches.md.
+
+# Run the release-branch tool and return its exit code. Never throws: the
+# deploy is the point of the exercise and bookkeeping must not stop it -- the
+# caller decides what a non-zero start (e.g. dirty tree) means.
+function Invoke-ReleaseBranchTool {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)][string] $RepoRoot,
+        [Parameter(Mandatory = $true)][string[]] $ToolArgs
+    )
+
+    Assert-Tooling
+    Push-Location $RepoRoot
+    try {
+        & node (Join-Path $RepoRoot 'scripts/release/release-branch.js') @ToolArgs
+        return $LASTEXITCODE
+    }
+    finally {
+        Pop-Location
+    }
 }
