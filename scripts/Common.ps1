@@ -1,11 +1,11 @@
-# Common.ps1 — shared helpers for the dev build/run launch scripts.
+# Common.ps1 -- shared helpers for the dev build/run launch scripts.
 #
 # Dot-source it from each launch script:
 #   . (Join-Path $PSScriptRoot 'Common.ps1')
 #
 # Single source of truth for the things every launch script needs: a
 # tooling check, a consistent banner, and a repo-root-anchored Expo runner.
-# Windows PowerShell 5.1 compatible — no PS7-only syntax.
+# Windows PowerShell 5.1 compatible -- no PS7-only syntax.
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
