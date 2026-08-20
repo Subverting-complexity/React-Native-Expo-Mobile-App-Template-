@@ -86,6 +86,26 @@ module.exports = defineConfig([
     },
   },
 
+  // Plain-JS test suites (the local tooling under scripts/ and the lint
+  // plugin) run under Jest but sit outside the TypeScript project, so the
+  // Jest globals must be declared here or every `describe` is a no-undef.
+  {
+    files: ['**/__tests__/**/*.js', '**/*.test.js'],
+    languageOptions: {
+      globals: {
+        describe: 'readonly',
+        it: 'readonly',
+        test: 'readonly',
+        expect: 'readonly',
+        jest: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+      },
+    },
+  },
+
   // Jest setup must use require() inside the jest.mock factory: the factory is
   // hoisted above imports, so an ESM import there would be a reference error.
   // require is correct here, so silence the no-require-imports rule for it.

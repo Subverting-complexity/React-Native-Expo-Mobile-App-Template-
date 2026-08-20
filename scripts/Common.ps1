@@ -187,3 +187,30 @@ function Assert-ExpoAccount {
     }
     Write-Host "  Logged in to EAS as: $whoami" -ForegroundColor Green
 }
+
+# --- Release records ----------------------------------------------------------
+# Every store deploy leaves a record in git: a release/{platform}/{stamp}
+# branch cut before the build and an annotated outcome tag written after it.
+# The rules live in a unit-tested Node tool; PowerShell holds as little logic
+# as possible. See docs/release-branches.md.
+
+# Run the release-branch tool and return its exit code. Never throws: the
+# deploy is the point of the exercise and bookkeeping must not stop it -- the
+# caller decides what a non-zero start (e.g. dirty tree) means.
+function Invoke-ReleaseBranchTool {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)][string] $RepoRoot,
+        [Parameter(Mandatory = $true)][string[]] $ToolArgs
+    )
+
+    Assert-Tooling
+    Push-Location $RepoRoot
+    try {
+        & node (Join-Path $RepoRoot 'scripts/release/release-branch.js') @ToolArgs
+        return $LASTEXITCODE
+    }
+    finally {
+        Pop-Location
+    }
+}

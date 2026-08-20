@@ -52,3 +52,8 @@ coverage/
 
 # Python bytecode (from the fastlane screenshot generator)
 __pycache__/
+
+# Release bookkeeping the deploy scripts write between start and finish.
+# Must stay untracked: a tracked file a release writes would make the next
+# release's clean-tree check fail on the previous release's bookkeeping.
+scripts/release/release-state.json
