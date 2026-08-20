@@ -1,5 +1,11 @@
 // Global Jest setup.
 //
+// (The import sits above the jest.mock calls in source order, but babel-jest
+// hoists jest.mock above imports at compile time, so mocks still register
+// first.)
+import { Animated } from 'react-native';
+
+//
 // AsyncStorage (v2, the version Expo SDK 56 bundles) reaches for its native
 // module at import time, which throws under Jest where no native module is
 // linked. The library ships an in-memory mock for exactly this case; register
@@ -20,8 +26,6 @@ jest.mock('@react-native-async-storage/async-storage', () =>
 // final value and invokes the completion callback synchronously, scheduling
 // no frames, so nothing can outlive a test. No suite asserts on animation
 // progression, so this only makes tests deterministic.
-import { Animated } from 'react-native';
-
 jest.spyOn(Animated, 'timing').mockImplementation((value, config) => ({
   start: (callback?: Animated.EndCallback) => {
     if (typeof config.toValue === 'number') {

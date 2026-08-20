@@ -102,6 +102,11 @@ module.exports = defineConfig([
         afterEach: 'readonly',
         beforeAll: 'readonly',
         afterAll: 'readonly',
+        // CommonJS/Node globals these suites use to locate fixture files.
+        __dirname: 'readonly',
+        require: 'readonly',
+        module: 'readonly',
+        process: 'readonly',
       },
     },
   },
