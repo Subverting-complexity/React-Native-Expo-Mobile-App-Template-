@@ -59,9 +59,21 @@ package name (lowercase, no spaces).
 
 ### eas.json
 
-No changes needed — the build profiles (`development`, `preview`,
-`production`) are generic. Customise them later when you set up internal
-distribution or store submissions.
+The build profiles (`development`, `preview`, `production`) are generic —
+no changes needed. The `submit.production` block ships with placeholder
+identities: before your first store submission, fill in `ios.appleId`,
+`ios.ascAppId`, and `ios.appleTeamId` (from App Store Connect), and place
+the Play service-account JSON at the path `android.serviceAccountKeyPath`
+names (`pc-api-key.json`, which is gitignored).
+
+### fastlane (store listing)
+
+If you will publish to the stores, also update `APP_ID` in
+`fastlane/Fastfile` and the identities in `fastlane/Appfile` to match your
+bundle id and team, and work through the placeholder listing content —
+[`fastlane/PUBLISHING.md`](../fastlane/PUBLISHING.md) is the field-by-field
+checklist. This can wait until you are near a release; nothing else depends
+on it.
 
 ## 3. Wire up EAS
 
@@ -260,6 +272,9 @@ a build under the wrong project.
 - [ ] Swapped the font (or kept Atkinson Hyperlegible).
 - [ ] Customised the color palettes in `colors.ts`.
 - [ ] Replaced the placeholder icon/splash images in `assets/`.
-- [ ] (If submitting to stores) added store credentials to `eas.json`.
+- [ ] (If submitting to stores) added store credentials to `eas.json`, and
+      updated the identities in `fastlane/Fastfile` / `fastlane/Appfile`.
+- [ ] (If submitting to stores) rewrote the placeholder listing content in
+      `fastlane/metadata/` — see `fastlane/PUBLISHING.md`.
 - [ ] Ran `npm run quality` with all checks passing.
 - [ ] Started the dev server and verified the app launches correctly.

@@ -19,14 +19,15 @@ See [`docs/expo-account.md`](../docs/expo-account.md) for the full setup.
 project cares about. It calls the small, single-purpose steps in
 [`steps/`](steps) in order and prints a pass/fail summary:
 
-| Step                | What it does                                         |
-| ------------------- | ---------------------------------------------------- |
-| `CheckHealth`       | Verifies Node, npm, and `node_modules` are present.  |
-| `VerifyFormatting`  | Prettier (rewrites in local mode, checks in ci).     |
-| `RunStaticAnalysis` | ESLint (`--fix` in local mode, strict in ci).        |
-| `ValidateQuality`   | TypeScript `tsc --noEmit` against the strict config. |
-| `ExecuteTests`      | Jest with coverage.                                  |
-| `TestBuild`         | Expo web bundle smoke test (heaviest; runs last).    |
+| Step                | What it does                                                                                                               |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `CheckHealth`       | Verifies Node, npm, and `node_modules` are present.                                                                        |
+| `VerifyAssets`      | Every image `app.config.ts` references exists and is non-empty (a missing icon otherwise fails minutes into an EAS build). |
+| `VerifyFormatting`  | Prettier (rewrites in local mode, checks in ci).                                                                           |
+| `RunStaticAnalysis` | ESLint (`--fix` in local mode, strict in ci).                                                                              |
+| `ValidateQuality`   | TypeScript `tsc --noEmit` against the strict config.                                                                       |
+| `ExecuteTests`      | Jest with coverage.                                                                                                        |
+| `TestBuild`         | Expo web bundle smoke test (heaviest; runs last).                                                                          |
 
 ### Two modes
 
@@ -60,3 +61,20 @@ the gate stops there with one clear message instead of a cascade of errors.
 
 > The 70% coverage **threshold** is enforced separately (jest
 > `coverageThreshold`); this gate runs coverage but does not set that limit.
+
+## Release records
+
+The two deploy scripts (`DeployiOSTestFlight`, `DeployAndroidPlayStore`)
+record every store deploy in git: a `release/{platform}/{stamp}` branch cut
+before the build, an annotated outcome tag written after it, and automatic
+pruning of stale failed branches. The rules live in the unit-tested Node
+tool at [`release/`](release); PowerShell only calls `start` and `finish`.
+A dirty working tree refuses the deploy (`-AllowDirty` overrides, and the
+tag records it). Full story: [`docs/release-branches.md`](../docs/release-branches.md).
+
+## Encoding rule
+
+Every `.ps1` here must be pure ASCII (or carry a UTF-8 BOM) — Windows
+PowerShell 5.1 reads BOM-less files as Windows-1252, which can turn one em
+dash into a parse error a hundred lines away. Write `--` instead. A Jest
+test (`scripts/__tests__/powershellScriptsAscii.test.js`) enforces this.
