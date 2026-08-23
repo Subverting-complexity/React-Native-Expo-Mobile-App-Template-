@@ -12,8 +12,11 @@ accessibility, and a Windows-first PowerShell toolchain.
 - `npm run check` — the full strict gate (what CI runs), via PowerShell.
 - `npm test` / `npm run lint` / `npm run typecheck` / `npm run format` —
   the individual checks.
-- `npm run deploy:ios` / `deploy:android` — EAS build + store submit, with a
-  release branch and outcome tag recorded in git.
+- `npm run deploy:ios` / `deploy:android` — EAS build + store submit, with an
+  automatic version bump, a release branch, and an outcome tag recorded in
+  git.
+- `npm run version:bump` — move the release version on by one on its own
+  (the deploy scripts already do this; running both bumps once, not twice).
 
 ## Project structure
 
@@ -27,7 +30,8 @@ accessibility, and a Windows-first PowerShell toolchain.
 - `src/storage/` — platform-aware persistence behind one `StorageAdapter`.
 - `src/utils/` — small pure helpers (error coercion, formatting).
 - `scripts/` — PowerShell tooling (+ `.cmd` double-click wrappers);
-  `scripts/release/` is the Node release-record tool.
+  `scripts/release/` holds the Node release tools (release records and the
+  automatic version bump).
 - `fastlane/` — store listing pipeline (metadata, screenshots, privacy).
 - `eslint-plugin-theme-tokens/` — local lint rules banning raw visual values.
 

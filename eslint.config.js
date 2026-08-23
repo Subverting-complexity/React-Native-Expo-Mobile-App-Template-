@@ -89,8 +89,15 @@ module.exports = defineConfig([
   // Plain-JS test suites (the local tooling under scripts/ and the lint
   // plugin) run under Jest but sit outside the TypeScript project, so the
   // Jest globals must be declared here or every `describe` is a no-undef.
+  // `test-support/` holds helpers those suites import; they live outside
+  // `__tests__/` because everything in there is collected as a suite, and a
+  // helper file with no tests in it would fail the run.
   {
-    files: ['**/__tests__/**/*.js', '**/*.test.js'],
+    files: [
+      '**/__tests__/**/*.js',
+      '**/*.test.js',
+      'scripts/**/test-support/**/*.js',
+    ],
     languageOptions: {
       globals: {
         describe: 'readonly',

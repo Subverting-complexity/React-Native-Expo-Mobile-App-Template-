@@ -7,14 +7,14 @@ separate, build-free pipeline — see [`fastlane/PUBLISHING.md`](../fastlane/PUB
 
 ## The division of labour
 
-| Concern                             | Owner                    | Where                                             |
-| ----------------------------------- | ------------------------ | ------------------------------------------------- |
-| Building the binary                 | EAS cloud builds         | `eas.json` build profiles                         |
-| Submitting the binary to the stores | EAS submit               | `eas.json` submit profile                         |
-| Marketing version (`1.2.0`)         | You, by hand, per semver | `version` in `app.config.ts`                      |
-| Build number / versionCode          | EAS, automatically       | remote (`appVersionSource: "remote"`)             |
-| Store listing (text, screenshots)   | fastlane                 | `fastlane/`                                       |
-| Deploy history                      | release branches + tags  | [`docs/release-branches.md`](release-branches.md) |
+| Concern                             | Owner                             | Where                                             |
+| ----------------------------------- | --------------------------------- | ------------------------------------------------- |
+| Building the binary                 | EAS cloud builds                  | `eas.json` build profiles                         |
+| Submitting the binary to the stores | EAS submit                        | `eas.json` submit profile                         |
+| Marketing version (`1.2.0`)         | The deploy scripts, automatically | `version` in `app.config.ts`                      |
+| Build number / versionCode          | EAS, automatically                | remote (`appVersionSource: "remote"`)             |
+| Store listing (text, screenshots)   | fastlane                          | `fastlane/`                                       |
+| Deploy history                      | release branches + tags           | [`docs/release-branches.md`](release-branches.md) |
 
 ## Authenticating with EAS
 
@@ -49,8 +49,9 @@ Admin token for routine builds.
 Two numbers exist and they are owned by different parties:
 
 - **Marketing version** (`version: '1.0.0'` in `app.config.ts`) — what users
-  see in the store. Bump it by hand, per semver, when you cut a user-facing
-  release. It is the only version number in the repo.
+  see in the store. The deploy scripts move it on for you, once per release
+  cycle; see [Automatic version bump](#automatic-version-bump) below. It is
+  the only version number in the repo.
 - **Build number** (iOS `buildNumber` / Android `versionCode`) — a
   monotonically increasing counter the stores use to order uploads. It is
   deliberately **absent from the repo**: `eas.json` sets
@@ -63,15 +64,84 @@ Two numbers exist and they are owned by different parties:
   ```
 
 Keeping the counter out of the repo means release builds never generate a
-"bump build number" commit, and two branches can never fight over it.
+"bump build number" commit, and two branches can never fight over it. The
+version bump described below never touches it, for the same reason: a local
+copy of a number a remote system owns is either ignored or fought with.
+
+## Automatic version bump
+
+Before a deploy cuts its release branch, it moves `version` in
+`app.config.ts` on by one, commits that to `main` and pushes:
+
+```
+chore(release): bump version to 1.1.0
+```
+
+Default is a **minor** bump. Ask for another level with `-Level`:
+
+```powershell
+./scripts/DeployiOSTestFlight.ps1 -Level patch   # 1.0.3 -> 1.0.4
+./scripts/DeployiOSTestFlight.ps1 -Level major   # 1.0.3 -> 2.0.0
+```
+
+You can also run it on its own, without deploying:
+
+```bash
+npm run version:bump                 # minor
+node scripts/release/version-bump.js bump --level patch
+```
+
+### Why running both deploys does not bump twice
+
+Shipping iOS and Android back to back is two deploy scripts, and a naive
+"bump every time" would put them on different versions. Before it does
+anything else, the tool reads the subject of `HEAD`. If that is already a
+bump commit it wrote, it prints `Already at 1.1.0. Nothing to bump.`, exits
+successfully, and the deploy carries on at that version.
+
+That is the whole mechanism, and it is deliberately not a flag:
+
+- It reads a fact already in shared git history, so it works whichever order
+  the two deploys run in, on one machine or two, minutes or days apart.
+- It resets itself. The moment any real commit lands on `main`, `HEAD` is no
+  longer a bump commit and the next deploy bumps again.
+- Nothing has to be remembered. A `--skip-bump` flag on the second deploy
+  would work right up until the day somebody forgot it.
+
+### What it refuses
+
+The bump commits to `main` automatically, so unlike the release-branch tool
+it has no overrides at all:
+
+| Refusal                                 | Fix                                                           |
+| --------------------------------------- | ------------------------------------------------------------- |
+| Not on `main`                           | `git switch main`                                             |
+| Dirty working tree                      | Commit or stash first — there is no `--allow-dirty` here      |
+| `main` differs from `origin/main`       | `git pull --ff-only origin main`, or push what is local       |
+| A leftover `version-bump/<next>` branch | Check what it holds, then `git branch -D version-bump/<next>` |
+
+The dirty-tree refusal has no escape hatch on purpose. Cutting a release
+branch only points at a commit that already exists; a bump _creates_ one, and
+an override would sweep unrelated local edits into an automatic commit on a
+shared branch. Passing `-AllowDirty` to a deploy script therefore **skips the
+bump entirely** rather than forcing it, and the script says so.
+
+If `origin` cannot be reached at all, the out-of-sync check warns and lets
+the bump through. It is a safety check, not a network dependency.
+
+Adding a second file that has to carry the same version (a `package.json`, a
+constants file) is one entry in `VERSION_FILES` in
+[`scripts/release/lib/version.js`](../scripts/release/lib/version.js); both
+files then move in the same commit and cannot drift.
 
 ## Normal release flow
 
-1. Make sure `main` is green and the working tree is clean — the deploy
-   scripts cut a [release branch](release-branches.md) from exactly what is
-   checked out, and refuse a dirty tree by default.
-2. Bump `version` in `app.config.ts` if this is a user-facing release, and
-   move the `[Unreleased]` notes in `CHANGELOG.md` under the new version.
+1. Make sure you are on `main`, it is green, in sync with `origin/main`, and
+   the working tree is clean. The deploy scripts commit the version bump to
+   `main` and cut a [release branch](release-branches.md) from exactly what
+   is checked out, and refuse a dirty tree by default.
+2. Move the `[Unreleased]` notes in `CHANGELOG.md` under the version this
+   release will carry. The deploy script writes the version number itself.
 3. Run the deploy script for the platform:
 
    ```bash
@@ -79,9 +149,12 @@ Keeping the counter out of the repo means release builds never generate a
    npm run deploy:android    # build + submit to Play Store
    ```
 
-   Each script verifies the Expo account, cuts a `release/{platform}/{stamp}`
-   branch, runs the EAS build and submit, and records the outcome as an
-   annotated git tag — see [`docs/release-branches.md`](release-branches.md).
+   Each script verifies the Expo account, bumps the version and pushes that
+   commit to `main`, cuts a `release/{platform}/{stamp}` branch, runs the EAS
+   build and submit, and records the outcome as an annotated git tag — see
+   [`docs/release-branches.md`](release-branches.md). Running the second
+   platform straight afterwards reuses the same version rather than bumping
+   again.
 
 4. Update the store listing if the copy or screenshots changed:
    `bundle exec fastlane ios listing` / `android listing`.

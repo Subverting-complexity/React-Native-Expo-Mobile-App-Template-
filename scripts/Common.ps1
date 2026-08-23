@@ -214,3 +214,30 @@ function Invoke-ReleaseBranchTool {
         Pop-Location
     }
 }
+
+# --- Version bump -------------------------------------------------------------
+# The release version moves on once per release cycle, before the release
+# branch is cut, so the branch carries the version that is about to be built.
+# The tool detects that the last commit was its own and stops, so calling it
+# from both deploy scripts back to back still bumps once. There is deliberately
+# no skip flag. See docs/releasing.md.
+
+# Run the version-bump tool and return its exit code. Never throws; the caller
+# decides what a refusal (dirty tree, wrong branch, drifted remote) means.
+function Invoke-VersionBumpTool {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)][string] $RepoRoot,
+        [string[]] $ToolArgs = @('bump')
+    )
+
+    Assert-Tooling
+    Push-Location $RepoRoot
+    try {
+        & node (Join-Path $RepoRoot 'scripts/release/version-bump.js') @ToolArgs
+        return $LASTEXITCODE
+    }
+    finally {
+        Pop-Location
+    }
+}
