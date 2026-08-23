@@ -40,6 +40,7 @@ const {
 const { tmpdir } = require('node:os');
 const { join } = require('node:path');
 
+const { retireBranch } = require('./lib/branchRetirement');
 const { UsageError, parseArgs, usage } = require('./lib/options');
 const {
   DEFAULT_KEEP_DAYS,
@@ -48,7 +49,6 @@ const {
   assertPlatform,
   availableBranchName,
   buildTagMessage,
-  parseBranchName,
   selectPrunable,
   tagNameFor,
 } = require('./lib/releaseBranch');
@@ -423,20 +423,27 @@ function prune(options) {
     return 0;
   }
 
-  const context = {
-    repoRoot,
-    remote,
-    branches,
-    dryRun: options.dryRun,
-    current: gitLine(repoRoot, ['rev-parse', '--abbrev-ref', 'HEAD']),
-    unfinished: new Set(plan.unfinished),
-  };
+  const current = gitLine(repoRoot, ['rev-parse', '--abbrev-ref', 'HEAD']);
+  const unfinished = new Set(plan.unfinished);
+  const ops = gitOpsFor(repoRoot, remote, branches);
 
   // Counted from what was actually retired, not from what was listed:
   // `retireBranch` keeps a branch whose tag could not be pushed, and a
   // summary naming the doomed list would report those as pruned.
   let pruned = 0;
-  for (const branch of doomed) if (retireBranch(context, branch)) pruned += 1;
+  for (const branch of doomed) {
+    const retired = retireBranch(
+      {
+        branch,
+        unfinished: unfinished.has(branch),
+        current,
+        remote,
+        dryRun: options.dryRun,
+      },
+      ops,
+    );
+    if (retired) pruned += 1;
+  }
 
   say();
   const kept = doomed.length - pruned;
@@ -448,88 +455,25 @@ function prune(options) {
 }
 
 /**
- * Makes sure a branch's tag is written and on the remote, then deletes the
- * branch. Three things stop a deletion: the checked-out branch is never
- * deleted; neither is a branch whose commit cannot be resolved (a branch
- * this cannot tag is a branch it must not remove); and neither is a branch
- * whose outcome tag could not be pushed, because until the tag is on the
- * remote the branch may be the run's only remote record. A kept branch is a
- * warning rather than a failure, and the next prune tries it again.
+ * The git operations `retireBranch` needs, bound to this repository.
+ *
+ * The decision itself lives in `lib/branchRetirement.js` with no git in it;
+ * this is the half that touches the repository, kept small enough that
+ * reading it tells you exactly what each injected function does.
  */
-function retireBranch(context, branch) {
-  if (branch === context.current) {
-    warn(`${branch} is checked out, so it is being left alone.`);
-    return false;
-  }
-
-  const commit =
-    resolveCommit(context.repoRoot, `refs/heads/${branch}`) ??
-    resolveCommit(context.repoRoot, `refs/remotes/${context.remote}/${branch}`);
-  if (!commit) {
-    warn(`${branch} resolves to no commit, so it is being left alone.`);
-    return false;
-  }
-
-  const isUnfinished = context.unfinished.has(branch);
-  const tag = tagNameFor(branch, isUnfinished ? 'unfinished' : 'failed');
-  if (isUnfinished) writeUnfinishedTag(context, branch, commit, tag);
-
-  // Whichever tag stands in for this branch has to be on the remote before
-  // the branch leaves it, or a failed attempt whose tag never pushed loses
-  // its only remote record at exactly the moment the branch is deleted.
-  // Pushing a tag the remote already has costs one round trip and succeeds.
-  if (context.dryRun || tagExists(context.repoRoot, tag)) {
-    const pushed = pushRef(
-      context.repoRoot,
-      context.remote,
-      `refs/tags/${tag}`,
-      {
-        dryRun: context.dryRun,
-      },
-    );
-    if (!pushed) {
-      warn(
-        `${branch} is being kept until ${tag} can be pushed to ${context.remote}.`,
-      );
-      return false;
-    }
-  }
-
-  if (context.dryRun) {
-    detail(`would delete ${branch}`);
-    return true;
-  }
-
-  deleteBranch(context, branch);
-  return true;
-}
-
-/**
- * Writes the tag that stands in for a run which never reported an outcome,
- * unless an earlier prune already wrote it.
- */
-function writeUnfinishedTag(context, branch, commit, tag) {
-  if (tagExists(context.repoRoot, tag)) return;
-  if (context.dryRun) {
-    detail(`would tag ${tag}`);
-    return;
-  }
-
-  const parsed = parseBranchName(branch);
-  writeAnnotatedTag(
-    context.repoRoot,
-    tag,
-    commit,
-    buildTagMessage({
-      branch,
-      platform: parsed?.platform ?? 'ios',
-      outcome: 'unfinished',
-      commit,
-      notes:
-        'No outcome was ever recorded. The run did not reach its own ending.',
-    }),
-  );
-  ok(`Tagged ${tag} before removing the branch`);
+function gitOpsFor(repoRoot, remote, branches) {
+  return {
+    resolveCommit: (ref) => resolveCommit(repoRoot, ref),
+    tagExists: (tag) => tagExists(repoRoot, tag),
+    writeTag: (tag, commit, message) =>
+      writeAnnotatedTag(repoRoot, tag, commit, message),
+    pushTag: (tag, options = {}) =>
+      pushRef(repoRoot, remote, `refs/tags/${tag}`, options),
+    deleteBranch: (branch) => deleteBranch(repoRoot, remote, branches, branch),
+    warn,
+    ok,
+    note: detail,
+  };
 }
 
 /**
@@ -537,20 +481,15 @@ function writeUnfinishedTag(context, branch, commit, tag) {
  * deletion that fails is a warning: the local one has already happened, and
  * the next prune will try the remote again.
  */
-function deleteBranch(context, branch) {
-  if (context.branches.local.has(branch)) {
-    git(context.repoRoot, ['branch', '-D', branch]);
+function deleteBranch(repoRoot, remote, branches, branch) {
+  if (branches.local.has(branch)) {
+    git(repoRoot, ['branch', '-D', branch]);
   }
-  if (context.branches.remote.has(branch)) {
-    const deleted = git(
-      context.repoRoot,
-      ['push', context.remote, '--delete', branch],
-      {
-        allowFailure: true,
-      },
-    );
-    if (deleted.code !== 0)
-      warn(`Could not delete ${branch} from ${context.remote}.`);
+  if (branches.remote.has(branch)) {
+    const deleted = git(repoRoot, ['push', remote, '--delete', branch], {
+      allowFailure: true,
+    });
+    if (deleted.code !== 0) warn(`Could not delete ${branch} from ${remote}.`);
   }
   ok(`Removed ${branch}`);
 }

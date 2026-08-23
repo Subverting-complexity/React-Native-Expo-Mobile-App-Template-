@@ -72,6 +72,23 @@ tool at [`release/`](release); PowerShell only calls `start` and `finish`.
 A dirty working tree refuses the deploy (`-AllowDirty` overrides, and the
 tag records it). Full story: [`docs/release-branches.md`](../docs/release-branches.md).
 
+## Version bump
+
+Before either deploy script cuts its release branch, it moves `version` in
+`app.config.ts` on by one (minor by default, `-Level patch|major` to choose),
+commits that to `main` and pushes. Running both platforms back to back still
+bumps once: the tool stops when `HEAD` is already a commit it wrote, so both
+stores ship the same version. That check is the whole mechanism -- there is
+no skip flag, because the one that has to be remembered is the one that gets
+forgotten.
+
+It commits to a shared branch, so it has no overrides: it refuses anywhere
+but `main`, refuses a dirty tree, refuses a `main` that has drifted from
+`origin/main`, and refuses to clobber a leftover `version-bump/*` branch.
+`-AllowDirty` on a deploy therefore skips the bump rather than forcing it.
+Run it on its own with `npm run version:bump`. Full story:
+[`docs/releasing.md`](../docs/releasing.md#automatic-version-bump).
+
 ## Encoding rule
 
 Every `.ps1` here must be pure ASCII (or carry a UTF-8 BOM) — Windows

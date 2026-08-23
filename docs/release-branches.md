@@ -9,6 +9,11 @@ The two scripts that produce these records are `scripts/DeployiOSTestFlight.ps1`
 (`npm run deploy:android`). Development builds and dry runs do none of this —
 it is a record of release attempts, not of builds.
 
+A deploy also moves the release version on before it cuts anything, so the
+branch names the commit that carries the version being built. That is a
+separate mechanism with its own rules -- see
+[`docs/releasing.md`](releasing.md#automatic-version-bump).
+
 ## What a release leaves behind
 
 A deploy cuts a branch at the commit it is about to build, named for the

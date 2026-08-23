@@ -30,6 +30,15 @@ House rules for entries, learned from sibling projects:
   outcome tag written after it. Failed and unfinished branches prune after
   30 days; tags and successful branches are kept for good. See
   `docs/release-branches.md`.
+- Store deploys now set the release version themselves. Before the build
+  starts, the deploy script moves `version` in `app.config.ts` on by one
+  (minor by default, `-Level patch` or `-Level major` to choose), commits
+  that to `main` and pushes it, so the release branch carries the version
+  that is actually being built. Shipping iOS and Android back to back bumps
+  once, not twice: the tool recognises its own last commit and stops, and it
+  starts bumping again on its own as soon as any real commit lands on
+  `main`. It refuses to run anywhere but `main`, from a dirty tree, or when
+  `main` has drifted from its remote. See `docs/releasing.md`.
 - New guides: releasing (`docs/releasing.md`), UI writing style
   (`docs/ui-writing-style.md`), decision records
   (`docs/decision-records.md`), and a hostable privacy-policy template

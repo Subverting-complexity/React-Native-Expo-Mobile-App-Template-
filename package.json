@@ -23,6 +23,7 @@
     "deploy:ios": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/DeployiOSTestFlight.ps1",
     "deploy:android": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/DeployAndroidPlayStore.ps1",
     "bump": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/BumpBuildNumber.ps1",
+    "version:bump": "node scripts/release/version-bump.js bump",
     "check": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/QualityGate.ps1 -Mode ci"
   },
   "dependencies": {

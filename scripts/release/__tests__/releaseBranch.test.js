@@ -173,6 +173,20 @@ describe('selectPrunable', () => {
     expect(plan.kept).toEqual([old]);
   });
 
+  it('keeps two platforms with the same stamp from contaminating each other', () => {
+    // iOS and Android deployed in the same minute share a stamp. The success
+    // on one must not save the failure on the other.
+    const ios = 'release/ios/2026-06-01-1000';
+    const android = 'release/android/2026-06-01-1000';
+    const plan = selectPrunable({
+      branches: [ios, android],
+      tags: [`${ios}-success`, `${android}-failed`],
+      now,
+    });
+    expect(plan.kept).toEqual([ios]);
+    expect(plan.failed).toEqual([android]);
+  });
+
   it('never returns a name it does not recognise', () => {
     const plan = selectPrunable({
       branches: ['main', 'feature/x', 'release/web/2026-06-01-1000'],
