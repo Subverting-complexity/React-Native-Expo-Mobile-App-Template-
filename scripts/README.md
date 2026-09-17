@@ -13,6 +13,47 @@ account. The `DeployiOSTestFlight` / `DeployAndroidPlayStore` scripts run the
 same check (`Assert-ExpoAccount` in `Common.ps1`) automatically before building.
 See [`docs/expo-account.md`](../docs/expo-account.md) for the full setup.
 
+## Windows checkout path length, for local Android builds
+
+`BuildAndDeployDevModeAndroid.ps1` runs `expo run:android`, which prebuilds
+the native project and compiles it with Gradle/CMake/ninja. On the sibling
+projects this template is drawn from (CadenceReader, Refrain — both Expo
+apps with the same Android toolchain), that native build fails on Windows
+once the checkout path is long: ninja reports `Filename longer than 260
+characters`, or the more confusing `manifest 'build.ninja' still dirty after
+100 tries`. Both come from the same cause — the codegen sources under
+`node_modules/<library>/android/build/generated/source/codegen/jni/...` are
+deep enough on their own that a long checkout prefix leaves almost no room.
+This template ships no custom native module, so it sits closer to the limit
+than those two projects, but `expo run:android` still triggers the same
+react-native/Expo module codegen, and an agent worktree under
+`.claude/worktrees/<branch>/` (about 116 characters before the repository
+even starts) is exactly the kind of path this breaks on. Not yet confirmed
+as an actual failure in this repository, only carried over as a known risk
+because the mechanism is identical.
+
+There is no automated short-checkout redirect here yet (the sibling projects
+have one: `LaunchAndroid.ps1` mirrors the tree into a short, per-machine
+directory with `robocopy /MIR` before building — see CadenceReader's
+`ClaudeProject.md` → "The checkout has to be somewhere shallow" and
+`tools/README.md` → "Android build directory" for the full recipe, including
+the two workarounds that do **not** work, `subst` and directory junctions).
+Until this template gets the same tooling, the manual fix is a short,
+non-worktree checkout: `git worktree add --detach C:\short\path HEAD`, then
+build from there.
+
+## Keep the EAS build archive small
+
+EAS Build's first step archives the whole checkout it runs from, not just
+what git tracks. CadenceReader hit a 1.4 GB archive from a 23 MB tracked
+project because `.claude/worktrees/` — each a full checkout with its own
+`node_modules` — was not anchored in `.gitignore`
+(`Subverting-complexity/CadenceReader#1745`). Checked here: this template's
+`.gitignore` already has a blanket `.claude/` rule (`.claude/worktrees/`
+included), so this specific gap does not apply — confirmed by `git ls-files`
+returning nothing under `.claude/worktrees/` despite ~500 MB sitting there
+untracked. If that `.gitignore` line ever moves or narrows, re-check this.
+
 ## Quality gate
 
 `QualityGate.ps1` is the single orchestrator that runs every check the
