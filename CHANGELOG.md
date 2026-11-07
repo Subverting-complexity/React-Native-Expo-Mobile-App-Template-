@@ -112,6 +112,11 @@ House rules for entries, learned from sibling projects:
   19 ignores. The limit comes from `AppText` and `AppTextInput`, and lint
   now rejects raw `Text` and `TextInput` in screens and components.
   `applyGlobalFontScaleCap` is removed.
+- A screen reader now reads the subtitle of a tappable list row. The row is
+  read as one item, and its spoken name now has the title and the subtitle,
+  such as "Notifications, 3 unread". Before, it had only the title.
+- The Component Gallery title is a heading for screen readers, because the
+  gallery has no navigation header.
 
 ### Tooling
 

@@ -40,7 +40,7 @@ export function TypographySection() {
   return (
     <AppSection
       title="Typography"
-      description="AppText — semantic type scale and colour tones."
+      description="AppText with the semantic type scale and the colour tones."
     >
       <GalleryStack>
         {VARIANTS.map((variant) => (

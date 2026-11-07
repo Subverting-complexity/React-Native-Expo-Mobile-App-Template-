@@ -33,7 +33,11 @@ interface StaticListItemProps extends BaseProps {
 interface PressableListItemProps extends BaseProps {
   /** When provided the whole row becomes a single tappable surface. */
   onPress: () => void;
-  /** Required once the row is interactive — names it for screen readers. Defaults to `title`. */
+  /**
+   * The spoken name of the row. Defaults to the title and subtitle
+   * ("Notifications, 3 unread"): the row is one accessible element, so a
+   * screen reader reads this label and not the text inside the row.
+   */
   accessibilityLabel?: string;
   accessibilityHint?: string;
   /** Defaults to `button`. */
@@ -83,7 +87,7 @@ function RowContent({
 /**
  * A single row in a list. Static by default; passing `onPress` upgrades it to an
  * {@link AppPressable}, which forces an accessibility label (defaulting to the
- * title) and the 44×44 touch floor. Layout, spacing, and type all come from
+ * title and subtitle) and the 44×44 touch floor. Layout, spacing, and type all come from
  * `useTheme()` tokens.
  */
 export function AppListItem(props: AppListItemProps) {
@@ -104,7 +108,10 @@ export function AppListItem(props: AppListItemProps) {
     return (
       <AppPressable
         accessibilityRole={props.accessibilityRole ?? A11Y_ROLES.button}
-        accessibilityLabel={props.accessibilityLabel ?? title}
+        accessibilityLabel={
+          props.accessibilityLabel ??
+          (subtitle ? `${title}, ${subtitle}` : title)
+        }
         accessibilityHint={props.accessibilityHint}
         disabled={props.disabled}
         onPress={props.onPress}

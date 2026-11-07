@@ -25,7 +25,7 @@ export function SelectionSection() {
   return (
     <AppSection
       title="Selection"
-      description="AppChip and AppChipGroup — controlled single- and multi-select."
+      description="AppChip and AppChipGroup, as controlled single-select and multi-select groups."
     >
       <GalleryStack>
         <AppText variant="label">Single-select (re-tap to clear)</AppText>

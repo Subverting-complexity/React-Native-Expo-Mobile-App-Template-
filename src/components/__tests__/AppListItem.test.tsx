@@ -44,6 +44,22 @@ describe('AppListItem', () => {
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
+  it('includes the subtitle in the default spoken name', async () => {
+    // The pressable row is one accessible element, so a screen reader reads
+    // its label, not the text inside it. A label of the title alone would
+    // hide the subtitle.
+    const { getByLabelText } = await renderWithTheme(
+      <AppListItem
+        title="Notifications"
+        subtitle="3 unread"
+        onPress={jest.fn()}
+      />,
+    );
+    expect(
+      getByLabelText('Notifications, 3 unread').props.accessibilityRole,
+    ).toBe('button');
+  });
+
   it('defaults the accessibility label to the title but allows an override', async () => {
     const { getByLabelText } = await renderWithTheme(
       <AppListItem

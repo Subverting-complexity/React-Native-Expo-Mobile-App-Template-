@@ -6,6 +6,7 @@ import { SelectionSection } from './sections/SelectionSection';
 import { SurfacesSection } from './sections/SurfacesSection';
 import { SystemSection } from './sections/SystemSection';
 import { TypographySection } from './sections/TypographySection';
+import { A11Y_ROLES } from '@/a11y';
 import { AppBackButton, AppScreenContainer, AppText } from '@/components';
 
 export interface ComponentGalleryProps {
@@ -34,10 +35,13 @@ export function ComponentGallery({ onBack }: ComponentGalleryProps) {
           />
         ) : null}
         <GalleryStack gap={1}>
-          <AppText variant="display">Component Gallery</AppText>
+          {/* The gallery has no navigation header, so its title is the heading. */}
+          <AppText variant="display" accessibilityRole={A11Y_ROLES.header}>
+            Component Gallery
+          </AppText>
           <AppText variant="body" tone="secondary">
-            Every App* component with its variants — living documentation for
-            the template.
+            Every App* component with its variants. Use this page as living
+            documentation for the template.
           </AppText>
         </GalleryStack>
         <TypographySection />
