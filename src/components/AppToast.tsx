@@ -5,24 +5,22 @@ import { AppPressable } from './AppPressable';
 import { AppText } from './AppText';
 import type { ToastAction, ToastTone } from './ToastContext';
 import { A11Y_ROLES, announceForAccessibility, useReduceMotion } from '@/a11y';
-import { useTheme } from '@/theme';
-import type { ColorPalette, ThemeTokens } from '@/theme';
+import { INTENT_COLORS, useTheme } from '@/theme';
+import type { ThemeTokens } from '@/theme';
 
 /** Default auto-dismiss delay in ms. */
 export const DEFAULT_TOAST_DURATION_MS = 4000;
 
+/** Auto-dismiss delay in ms for a toast with an action, so the user has time to press it. */
+export const ACTION_TOAST_DURATION_MS = 10000;
+
+/** The auto-dismiss delay a toast gets when the caller does not set one. */
+export function defaultToastDuration(action: ToastAction | undefined): number {
+  return action ? ACTION_TOAST_DURATION_MS : DEFAULT_TOAST_DURATION_MS;
+}
+
 /** Duration of the entrance transition when motion is not reduced. */
 const ENTER_DURATION_MS = 200;
-
-const TONE_STYLES: Record<
-  ToastTone,
-  { background: keyof ColorPalette; foreground: keyof ColorPalette }
-> = {
-  info: { background: 'info', foreground: 'onInfo' },
-  success: { background: 'success', foreground: 'onSuccess' },
-  warning: { background: 'warning', foreground: 'onWarning' },
-  error: { background: 'error', foreground: 'onError' },
-};
 
 export interface AppToastProps {
   /** Message to display and announce. */
@@ -30,8 +28,9 @@ export interface AppToastProps {
   /** Intent / colour. Defaults to `info`. */
   tone?: ToastTone;
   /**
-   * Auto-dismiss delay in ms. Defaults to {@link DEFAULT_TOAST_DURATION_MS}.
-   * Pass `0` to disable auto-dismiss.
+   * Auto-dismiss delay in ms. Defaults to {@link DEFAULT_TOAST_DURATION_MS},
+   * or {@link ACTION_TOAST_DURATION_MS} when there is an `action`. Pass `0`
+   * to disable auto-dismiss.
    */
   duration?: number;
   /** Called when the close button is pressed or the auto-dismiss fires. */
@@ -70,18 +69,17 @@ function buildSurfaceStyle(theme: ThemeTokens, background: string): ViewStyle {
 export function AppToast({
   message,
   tone = 'info',
-  duration = DEFAULT_TOAST_DURATION_MS,
   onDismiss,
   action,
+  duration = defaultToastDuration(action),
   style,
   testID,
 }: AppToastProps) {
   const { theme } = useTheme();
   const reduceMotion = useReduceMotion();
 
-  const toneStyle = TONE_STYLES[tone];
-  const background = theme.colors[toneStyle.background];
-  const foreground = theme.colors[toneStyle.foreground];
+  const background = theme.colors[INTENT_COLORS[tone].base];
+  const foreground = theme.colors[INTENT_COLORS[tone].on];
 
   // Announce on appear and whenever the message changes (the provider keys this
   // component per `show`, so a repeated message still re-mounts and re-speaks).
@@ -126,16 +124,15 @@ export function AppToast({
 
   return (
     <Animated.View style={{ opacity: enter, transform: [{ translateY }] }}>
-      <View
-        style={[surfaceStyle, style]}
-        testID={testID}
-        accessible
-        accessibilityRole={A11Y_ROLES.alert}
-        accessibilityLiveRegion="polite"
-      >
+      {/* The surface is not `accessible`: that would merge the toast into one
+          element, and VoiceOver could not reach the action and Dismiss
+          buttons. The message carries the alert role instead. */}
+      <View style={[surfaceStyle, style]} testID={testID}>
         <AppText
           variant="body"
           style={{ flex: 1, color: foreground }}
+          accessibilityRole={A11Y_ROLES.alert}
+          accessibilityLiveRegion="polite"
           accessibilityLabel={message}
         >
           {message}

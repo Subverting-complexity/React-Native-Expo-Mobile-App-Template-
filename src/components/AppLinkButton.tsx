@@ -1,6 +1,5 @@
 import { useMemo, type ReactNode } from 'react';
 import {
-  StyleSheet,
   View,
   type StyleProp,
   type TextStyle,
@@ -77,7 +76,7 @@ export function AppLinkButton({
       alignItems: 'center',
       gap: theme.spacing[1],
       alignSelf: 'flex-start',
-      opacity: isDisabled ? 0.5 : 1,
+      opacity: isDisabled ? theme.opacity.disabled : 1,
     }),
     [theme, isDisabled],
   );
@@ -95,7 +94,9 @@ export function AppLinkButton({
       disabled={isDisabled}
       style={(state) => [
         containerStyle,
-        state.pressed && !isDisabled ? styles.pressed : null,
+        state.pressed && !isDisabled
+          ? { opacity: theme.opacity.pressedText }
+          : null,
       ]}
       {...rest}
     >
@@ -111,7 +112,3 @@ export function AppLinkButton({
     </AppPressable>
   );
 }
-
-const styles = StyleSheet.create({
-  pressed: { opacity: 0.7 },
-});

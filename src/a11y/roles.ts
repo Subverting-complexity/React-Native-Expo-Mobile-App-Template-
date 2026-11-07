@@ -28,6 +28,8 @@ import type { AccessibilityRole } from 'react-native';
  *   determinate (a fraction complete) or indeterminate (a busy spinner). Pair a
  *   determinate bar with `accessibilityValue` so the percentage is spoken, and
  *   give a standalone spinner an `accessibilityLabel` describing what is loading.
+ * - **`radiogroup`** / **`radio`** — a set of options where exactly one is
+ *   chosen. Each `radio` announces `checked`, and the group gets a label.
  */
 export const A11Y_ROLES = {
   header: 'header',
@@ -35,6 +37,8 @@ export const A11Y_ROLES = {
   link: 'link',
   alert: 'alert',
   progressbar: 'progressbar',
+  radiogroup: 'radiogroup',
+  radio: 'radio',
 } as const satisfies Record<string, AccessibilityRole>;
 
 /** Convention key into {@link A11Y_ROLES} (e.g. `'header' | 'button' | …`). */

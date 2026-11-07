@@ -1,5 +1,11 @@
 'use strict';
 
+const {
+  getAttributeName,
+  getPropertyName,
+  literalValues,
+} = require('../lib/ast');
+
 const COLOR_PROPERTIES = new Set([
   'color',
   'backgroundColor',
@@ -230,17 +236,12 @@ function findEmbeddedColor(value) {
   return null;
 }
 
-function getPropertyName(node) {
-  if (node.key.type === 'Identifier') return node.key.name;
-  if (node.key.type === 'Literal') return String(node.key.value);
-  return null;
-}
-
 module.exports = {
   meta: {
     type: 'problem',
     docs: {
-      description: 'Disallow hardcoded color values in style properties',
+      description:
+        'Disallow hardcoded color values in style properties and color props',
     },
     messages: {
       noHardcodedColor:
@@ -250,36 +251,39 @@ module.exports = {
   },
 
   create(context) {
+    function report(node, value) {
+      context.report({ node, messageId: 'noHardcodedColor', data: { value } });
+    }
+
+    function checkWholeValue(valueNode) {
+      for (const { node, value } of literalValues(valueNode)) {
+        if (isColorValue(value)) report(node, value);
+      }
+    }
+
+    function checkEmbedded(valueNode) {
+      for (const { node, value } of literalValues(valueNode)) {
+        const embedded = findEmbeddedColor(value);
+        if (embedded) report(node, embedded);
+      }
+    }
+
     return {
       Property(node) {
         const name = getPropertyName(node);
-        if (!name) return;
-        if (node.value.type !== 'Literal') return;
-
-        const value = node.value.value;
-
         // Dedicated color properties: the whole value is expected to be a color.
         if (COLOR_PROPERTIES.has(name)) {
-          if (isColorValue(value)) {
-            context.report({
-              node: node.value,
-              messageId: 'noHardcodedColor',
-              data: { value },
-            });
-          }
-          return;
+          checkWholeValue(node.value);
         }
-
         // Shorthand string properties: a color may be embedded mid-string.
         if (COLOR_BEARING_STRING_PROPERTIES.has(name)) {
-          const embedded = findEmbeddedColor(value);
-          if (embedded) {
-            context.report({
-              node: node.value,
-              messageId: 'noHardcodedColor',
-              data: { value: embedded },
-            });
-          }
+          checkEmbedded(node.value);
+        }
+      },
+      // A `color` prop on any element, such as an icon: `<Ionicons color="#fff" />`.
+      JSXAttribute(node) {
+        if (getAttributeName(node) === 'color' && node.value) {
+          checkWholeValue(node.value);
         }
       },
     };

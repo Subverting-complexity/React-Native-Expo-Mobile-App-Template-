@@ -17,6 +17,8 @@ permissions:
   contents: read
 
 jobs:
+  # The same strict gate developers run with `npm run check`, under PowerShell 7
+  # on Linux, for fast feedback. The step list lives in QualityGate.ps1 only.
   quality:
     name: Quality gate
     runs-on: ubuntu-latest
@@ -27,32 +29,18 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Type-check
-        run: npm run typecheck
+      - name: Strict quality gate (PowerShell 7)
+        run: pwsh -NoProfile -File tools/quality/ps/QualityGate.ps1 -Mode ci
 
-      - name: Lint
-        run: npm run lint
-
-      - name: Check formatting
-        run: npm run format:check
-
-      - name: Test with coverage
-        run: npm run test -- --coverage --passWithNoTests
-
-      - name: Bundle smoke test (web export)
-        run: npx expo export --platform web --output-dir "${{ runner.temp }}/web-build"
-
-  # Exercises the Windows-first PowerShell toolchain (scripts/) and the bundle
-  # smoke test on a real Windows runner via the same strict gate developers run
-  # locally with `npm run check`. The Linux job above gives fast feedback; this
-  # one guards against regressions in the .ps1 scripts and PowerShell 5.1
-  # compatibility, which the Linux job never touches.
+  # The same gate again through `npm run check`, which uses Windows PowerShell
+  # 5.1. This guards the .ps1 scripts against PowerShell 5.1 regressions, which
+  # the Linux job cannot catch.
   windows-toolchain:
     name: Windows toolchain gate
     runs-on: windows-latest
@@ -63,11 +51,11 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Strict quality gate (PowerShell)
+      - name: Strict quality gate (Windows PowerShell 5.1)
         run: npm run check

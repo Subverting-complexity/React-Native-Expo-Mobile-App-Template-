@@ -5,31 +5,31 @@ import { AppEmptyState } from '../AppEmptyState';
 import { renderWithTheme } from '@/test';
 
 describe('AppEmptyState', () => {
-  it('renders the title and subtitle', () => {
-    const { getByText } = renderWithTheme(
+  it('renders the title and subtitle', async () => {
+    const { getByText } = await renderWithTheme(
       <AppEmptyState title="No items yet" subtitle="Add your first one" />,
     );
     expect(getByText('No items yet')).toBeTruthy();
     expect(getByText('Add your first one')).toBeTruthy();
   });
 
-  it('renders an optional icon slot', () => {
-    const { getByText } = renderWithTheme(
+  it('renders an optional icon slot', async () => {
+    const { getByText } = await renderWithTheme(
       <AppEmptyState title="Empty" icon={<Text>ICON</Text>} />,
     );
     expect(getByText('ICON')).toBeTruthy();
   });
 
-  it('renders no action button without both label and handler', () => {
-    const { queryByRole } = renderWithTheme(
+  it('renders no action button without both label and handler', async () => {
+    const { queryByRole } = await renderWithTheme(
       <AppEmptyState title="Empty" actionLabel="Add" />,
     );
     expect(queryByRole('button')).toBeNull();
   });
 
-  it('renders the action button and fires its handler', () => {
+  it('renders the action button and fires its handler', async () => {
     const onAction = jest.fn();
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppEmptyState
         title="Empty"
         actionLabel="Add item"

@@ -20,6 +20,30 @@ House rules for entries, learned from sibling projects:
 
 ### Added
 
+- A data layer for a backend API. Screens read an `ApiClient` from
+  `useApi()` and never call `fetch` themselves, so tests and a demo mode can
+  swap the client. The HTTP client sends JSON, times out after 30 seconds,
+  can be cancelled, and turns every failure into an `ApiError` that says
+  whether the API refused the request, answered with something that is not
+  JSON, could not be reached, or did not answer in time. The base URL comes
+  from `API_BASE_URL` at build time, never from a user setting. A release
+  build accepts only `https://`, and an EAS build with no URL fails at once.
+- Themes. `THEMES` is the one list of themes, each with a light and a dark
+  version, and Settings lets the user choose one. The template ships
+  Standard and a new High contrast theme. The choice is saved with the
+  light or dark mode, and every theme must pass the contrast audit.
+- `TABS` is the one list of bottom tabs: order, titles, short labels and
+  icons. Each tab has an icon, filled when active. A test fails when the
+  tab list and the route files in `app/(tabs)/` disagree.
+- A "Coming soon" page (`FeaturePlaceholder`) for a tab whose feature is not
+  built yet. The new Explore tab shows it.
+- Theme tokens for opacity, border widths and icon sizes, and one shared
+  map from each colour intent to its colours. Badges, toasts, buttons,
+  spinners, progress bars and text all read that map.
+- A guide to the app artwork (`docs/app-artwork.md`): every file, its size,
+  and the platform rules for adaptive icons, themed icons and the splash
+  screen.
+
 - A complete store-publishing layer under `fastlane/`: the ios/android
   `listing` lanes push metadata, screenshots, and privacy declarations while
   EAS keeps owning the binaries, and a Pillow-based generator composes
@@ -49,6 +73,19 @@ House rules for entries, learned from sibling projects:
 
 ### Changed
 
+- The app keeps the native splash screen up until the fonts and the saved
+  theme are ready, so the first screen already uses the saved theme. The
+  splash background follows the dark mode of the device, and a test keeps
+  it equal to the theme background.
+- Line heights grow with the device text size, so large text no longer
+  clips. Toasts stay above the tab bar and the safe area, a screen reader
+  can reach their buttons, and a toast with an action stays for 10
+  seconds. Chip groups that must always have a value (such as the colour
+  mode) are radio groups for screen readers.
+- The status bar follows the app's light or dark mode, not the device's.
+- If a screen throws while it renders, the app shows the error screen in
+  its place.
+
 - The quality gate verifies that every image `app.config.ts` references
   exists and is non-empty, so a missing icon fails in seconds locally
   instead of minutes into an EAS cloud build.
@@ -57,6 +94,25 @@ House rules for entries, learned from sibling projects:
   export-compliance question is pre-answered in `app.config.ts`.
 
 ### Tooling
+
+- The developer tools moved from `scripts/` to `tools/`, with one folder
+  for each group: `launch/`, `deploy/`, `quality/`, `shared/` and
+  `release/`. The two store deploy scripts now share one implementation.
+  `tools/README.md` explains how to add a quality gate step.
+- The quality gate reads the image paths from the evaluated app config, so
+  a new image in `app.config.ts` is checked with no list to keep in step.
+- CI runs the same PowerShell quality gate as `npm run check`, under
+  PowerShell 7 on Linux and Windows PowerShell 5.1 on Windows, with the
+  Node version from `.nvmrc`.
+- Lint fails on any warning. Type checking also covers the test files.
+- The token lint rules now also catch raw opacity, border widths, shadow
+  values, font weights and negative numbers, both branches of a condition,
+  and the `color` and `size` props of any element, such as an icon.
+- Tests for the `app/` routes moved to `tests/app/`, because Expo Router
+  loads every file in `app/` as a route. A test fails if a test file is
+  added under `app/` again.
+- `eas-cli` is a pinned development dependency, so every machine builds
+  with the same version.
 
 - PowerShell scripts are guarded by a test that keeps them pure ASCII (or
   UTF-8 with BOM), which Windows PowerShell 5.1 requires to parse them

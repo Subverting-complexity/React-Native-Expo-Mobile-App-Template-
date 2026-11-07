@@ -78,7 +78,8 @@ export function AppPressable({
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
       accessibilityState={mergedState}
-      disabled={disabled}
+      // A control announced as disabled must also ignore presses.
+      disabled={isDisabled}
       style={(state) => [
         floor,
         typeof style === 'function' ? style(state) : style,

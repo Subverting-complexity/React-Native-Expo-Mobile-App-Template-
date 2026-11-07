@@ -1,23 +1,27 @@
 import { AppSpinner } from '../AppSpinner';
-import { lightColors } from '@/theme';
+import { DEFAULT_THEME_NAME, THEMES } from '@/theme';
 import { renderWithTheme } from '@/test';
 
+const lightColors = THEMES[DEFAULT_THEME_NAME].light.colors;
+
 describe('AppSpinner', () => {
-  it('exposes the progressbar role with a default loading label', () => {
-    const { getByRole } = renderWithTheme(<AppSpinner testID="spinner" />);
+  it('exposes the progressbar role with a default loading label', async () => {
+    const { getByRole } = await renderWithTheme(
+      <AppSpinner testID="spinner" />,
+    );
     const el = getByRole('progressbar');
     expect(el.props.accessibilityLabel).toBe('Loading');
   });
 
-  it('uses a custom accessibility label', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('uses a custom accessibility label', async () => {
+    const { getByLabelText } = await renderWithTheme(
       <AppSpinner accessibilityLabel="Fetching results" />,
     );
     expect(getByLabelText('Fetching results')).toBeTruthy();
   });
 
-  it('hides from assistive tech when the label is null', () => {
-    const { queryByRole, getByTestId } = renderWithTheme(
+  it('hides from assistive tech when the label is null', async () => {
+    const { queryByRole, getByTestId } = await renderWithTheme(
       <AppSpinner accessibilityLabel={null} testID="spinner" />,
     );
     expect(queryByRole('progressbar')).toBeNull();
@@ -26,22 +30,24 @@ describe('AppSpinner', () => {
     expect(el.props.accessibilityElementsHidden).toBe(true);
   });
 
-  it('resolves tone to a palette colour token', () => {
-    const { getByTestId } = renderWithTheme(
+  it('resolves tone to a palette colour token', async () => {
+    const { getByTestId } = await renderWithTheme(
       <AppSpinner tone="secondary" testID="spinner" />,
     );
     expect(getByTestId('spinner').props.color).toBe(lightColors.secondary);
   });
 
-  it('maps semantic sizes to ActivityIndicator sizes', () => {
-    const { getByTestId } = renderWithTheme(
+  it('maps semantic sizes to ActivityIndicator sizes', async () => {
+    const { getByTestId } = await renderWithTheme(
       <AppSpinner size="sm" testID="spinner" />,
     );
     expect(getByTestId('spinner').props.size).toBe('small');
   });
 
-  it('defaults to the large size', () => {
-    const { getByTestId } = renderWithTheme(<AppSpinner testID="spinner" />);
+  it('defaults to the large size', async () => {
+    const { getByTestId } = await renderWithTheme(
+      <AppSpinner testID="spinner" />,
+    );
     expect(getByTestId('spinner').props.size).toBe('large');
   });
 });

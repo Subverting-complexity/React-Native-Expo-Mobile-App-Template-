@@ -2,26 +2,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { Animated, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { A11Y_ROLES, useReduceMotion } from '@/a11y';
-import { useTheme } from '@/theme';
-import type { ColorPalette } from '@/theme';
+import { INTENT_COLORS, useTheme } from '@/theme';
+import type { ColorIntent } from '@/theme';
 
 /** Semantic colour role for the filled portion of the bar. */
-export type AppProgressTone =
-  | 'primary'
-  | 'secondary'
-  | 'success'
-  | 'warning'
-  | 'error'
-  | 'info';
-
-const TONE_COLORS: Record<AppProgressTone, keyof ColorPalette> = {
-  primary: 'primary',
-  secondary: 'secondary',
-  success: 'success',
-  warning: 'warning',
-  error: 'error',
-  info: 'info',
-};
+export type AppProgressTone = ColorIntent;
 
 /** Duration of the fill transition when motion is not reduced. */
 const FILL_DURATION_MS = 240;
@@ -102,7 +87,7 @@ export function AppProgressBar({
     [theme, trackHeight],
   );
 
-  const fillColor = theme.colors[TONE_COLORS[tone]];
+  const fillColor = theme.colors[INTENT_COLORS[tone].base];
 
   const width = progress.interpolate({
     inputRange: [0, 1],

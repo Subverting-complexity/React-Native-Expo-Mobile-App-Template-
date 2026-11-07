@@ -6,6 +6,7 @@ export { useReduceMotionDetection } from './reduceMotionDetection';
 export {
   MAX_FONT_SIZE_MULTIPLIER,
   applyGlobalFontScaleCap,
+  fontScaleFactor,
 } from './maxFontScale';
 export { A11Y_ROLES } from './roles';
 export type { A11yRole, A11yRoleName } from './roles';

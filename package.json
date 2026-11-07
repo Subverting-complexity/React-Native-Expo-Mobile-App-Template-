@@ -2,16 +2,17 @@
   "name": "expo-template",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
     "test": "jest",
     "quality": "npm run lint && npm run typecheck && npm run test -- --coverage --passWithNoTests",
     "build:dev": "npx eas-cli build --profile development",
@@ -19,16 +20,17 @@
     "build:prod": "npx eas-cli build --profile production",
     "submit:ios": "npx eas-cli submit --platform ios --profile production",
     "submit:android": "npx eas-cli submit --platform android --profile production",
-    "verify:expo": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/VerifyExpoAccount.ps1",
-    "deploy:ios": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/DeployiOSTestFlight.ps1",
-    "deploy:android": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/DeployAndroidPlayStore.ps1",
-    "bump": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/BumpBuildNumber.ps1",
-    "version:bump": "node scripts/release/version-bump.js bump",
-    "check": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/QualityGate.ps1 -Mode ci"
+    "verify:expo": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/deploy/ps/VerifyExpoAccount.ps1",
+    "deploy:ios": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/deploy/ps/DeployiOSTestFlight.ps1",
+    "deploy:android": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/deploy/ps/DeployAndroidPlayStore.ps1",
+    "bump": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/deploy/ps/BumpBuildNumber.ps1",
+    "version:bump": "node tools/release/version-bump.js bump",
+    "check": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/quality/ps/QualityGate.ps1 -Mode ci"
   },
   "dependencies": {
     "@expo-google-fonts/atkinson-hyperlegible": "^0.4.1",
     "@expo/metro-runtime": "~56.0.14",
+    "@expo/vector-icons": "^15.0.2",
     "@react-native-async-storage/async-storage": "2.2.0",
     "expo": "~56.0.12",
     "expo-constants": "~56.0.17",
@@ -57,6 +59,7 @@
     "@testing-library/react-native": "^13.0.0",
     "@types/jest": "^29.5.0",
     "@types/react": "~19.2.17",
+    "eas-cli": "27.4.0",
     "eslint": "^9.39.4",
     "eslint-config-expo": "^56.0.4",
     "eslint-config-prettier": "^10.1.8",
@@ -74,9 +77,10 @@
     ],
     "roots": [
       "<rootDir>/app",
+      "<rootDir>/tests",
       "<rootDir>/src",
       "<rootDir>/eslint-plugin-theme-tokens",
-      "<rootDir>/scripts"
+      "<rootDir>/tools"
     ],
     "collectCoverageFrom": [
       "src/**/*.{ts,tsx}",

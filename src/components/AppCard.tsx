@@ -62,7 +62,7 @@ export function AppCard(props: AppCardProps) {
       padding: theme.spacing[padding],
     };
     if (variant === 'outlined') {
-      base.borderWidth = 1;
+      base.borderWidth = theme.borderWidths.thin;
       base.borderColor = theme.colors.border;
     }
     if (variant === 'elevated') {

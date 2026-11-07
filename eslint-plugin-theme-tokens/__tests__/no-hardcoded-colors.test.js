@@ -3,7 +3,12 @@
 const { RuleTester } = require('eslint');
 const rule = require('../rules/no-hardcoded-colors');
 
-const ruleTester = new RuleTester({ languageOptions: { ecmaVersion: 2022 } });
+const ruleTester = new RuleTester({
+  languageOptions: {
+    ecmaVersion: 2022,
+    parserOptions: { ecmaFeatures: { jsx: true } },
+  },
+});
 
 ruleTester.run('no-hardcoded-colors', rule, {
   valid: [
@@ -26,6 +31,16 @@ ruleTester.run('no-hardcoded-colors', rule, {
     { code: "const s = { backgroundImage: 'url(./hero.png)' }" },
     // Token-driven shorthands (not a literal) are fine
     { code: 'const s = { boxShadow: theme.shadows.md.boxShadow }' },
+
+    // Token props on JSX elements are fine
+    { code: '<Icon color={theme.colors.primary} />' },
+    {
+      code: '<Icon color={active ? theme.colors.primary : theme.colors.text} />',
+    },
+    // Templates with expressions are not literals
+    { code: 'const s = { color: `${base}` }' },
+    // Other string props on JSX are not colors
+    { code: '<Icon name="red" />' },
   ],
 
   invalid: [
@@ -134,6 +149,34 @@ ruleTester.run('no-hardcoded-colors', rule, {
           data: { value: 'hsl(0, 0%, 0%)' },
         },
       ],
+    },
+
+    // Both branches of a conditional
+    {
+      code: "const s = { color: active ? '#fff' : '#000' }",
+      errors: [
+        { messageId: 'noHardcodedColor', data: { value: '#fff' } },
+        { messageId: 'noHardcodedColor', data: { value: '#000' } },
+      ],
+    },
+    // The fallback of a logical expression
+    {
+      code: "const s = { backgroundColor: custom || 'white' }",
+      errors: [{ messageId: 'noHardcodedColor', data: { value: 'white' } }],
+    },
+    // A template literal with no expressions
+    {
+      code: 'const s = { color: `#abc` }',
+      errors: [{ messageId: 'noHardcodedColor', data: { value: '#abc' } }],
+    },
+    // A color prop on any JSX element, as a string or an expression
+    {
+      code: '<Icon color="#fff" />',
+      errors: [{ messageId: 'noHardcodedColor', data: { value: '#fff' } }],
+    },
+    {
+      code: '<Ionicons name="close" color={\'red\'} />',
+      errors: [{ messageId: 'noHardcodedColor', data: { value: 'red' } }],
     },
   ],
 });

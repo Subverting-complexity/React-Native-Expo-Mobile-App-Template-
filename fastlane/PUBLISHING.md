@@ -3,7 +3,7 @@
 Everything the stores let you automate lives in this folder. Binaries are
 built and submitted by **EAS** (`eas build` / `eas submit` — see
 [`eas.json`](../eas.json), [`docs/releasing.md`](../docs/releasing.md), and the
-deploy scripts in [`scripts/`](../scripts)); fastlane here pushes the **store
+deploy scripts in [`tools/`](../tools)); fastlane here pushes the **store
 listing** — text, keywords, screenshots, and the privacy declarations — which
 EAS does not manage.
 
@@ -71,6 +71,10 @@ a 1-pixel miss is an Apple rejection):
 | Play phone screenshots | 1290×2796 | `metadata/android/en-US/images/phoneScreenshots/` |
 | Play feature graphic   | 1024×500  | `metadata/android/en-US/images/featureGraphic/`   |
 
+The Play listing icon (512×512, `metadata/android/en-US/images/icon.png`) is
+not made by `render.py`. Export it from the same artwork as the app icon. See
+`docs/app-artwork.md`.
+
 ## Before you run anything — fill these in
 
 1. **Identity**: `APP_ID` in the `Fastfile`, and everything in the `Appfile`
@@ -134,7 +138,7 @@ bundle exec fastlane android listing
 
 ## Privacy declarations
 
-The template defaults to a **zero-collection** posture: Apple's label says
+The app defaults to a **zero-collection** posture: Apple's label says
 `DATA_NOT_COLLECTED` and the Play Data Safety answers say "No". If your app
 collects anything, update **both** together:
 

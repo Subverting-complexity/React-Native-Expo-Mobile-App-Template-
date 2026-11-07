@@ -1,17 +1,19 @@
 import { StyleSheet } from 'react-native';
 
 import { AppLoadingScreen } from '../AppLoadingScreen';
-import { lightColors } from '@/theme';
+import { DEFAULT_THEME_NAME, THEMES } from '@/theme';
 import { renderWithTheme } from '@/test';
 
+const lightColors = THEMES[DEFAULT_THEME_NAME].light.colors;
+
 describe('AppLoadingScreen', () => {
-  it('announces a default loading label via a single progressbar element', () => {
-    const { getByRole } = renderWithTheme(<AppLoadingScreen />);
+  it('announces a default loading label via a single progressbar element', async () => {
+    const { getByRole } = await renderWithTheme(<AppLoadingScreen />);
     expect(getByRole('progressbar').props.accessibilityLabel).toBe('Loading');
   });
 
-  it('uses the message as the announced label and shows it visibly', () => {
-    const { getByRole, getByText } = renderWithTheme(
+  it('uses the message as the announced label and shows it visibly', async () => {
+    const { getByRole, getByText } = await renderWithTheme(
       <AppLoadingScreen message="Loading your data" />,
     );
     expect(getByRole('progressbar').props.accessibilityLabel).toBe(
@@ -24,17 +26,17 @@ describe('AppLoadingScreen', () => {
     ).toBeTruthy();
   });
 
-  it('hides the inner spinner from assistive tech to avoid double announcement', () => {
+  it('hides the inner spinner from assistive tech to avoid double announcement', async () => {
     // Exactly one progressbar element is exposed (the screen root), not the
     // nested spinner.
-    const { getAllByRole } = renderWithTheme(
+    const { getAllByRole } = await renderWithTheme(
       <AppLoadingScreen message="Working" />,
     );
     expect(getAllByRole('progressbar')).toHaveLength(1);
   });
 
-  it('paints the themed background', () => {
-    const { getByTestId } = renderWithTheme(
+  it('paints the themed background', async () => {
+    const { getByTestId } = await renderWithTheme(
       <AppLoadingScreen testID="loading" />,
     );
     const flat = StyleSheet.flatten(getByTestId('loading').props.style);

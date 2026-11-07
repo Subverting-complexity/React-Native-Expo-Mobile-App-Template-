@@ -10,8 +10,8 @@ import { renderWithTheme } from '@/test';
 // --------------------------------------------------------------------------
 
 describe('AppPressable', () => {
-  it('renders children', () => {
-    const { getByText } = renderWithTheme(
+  it('renders children', async () => {
+    const { getByText } = await renderWithTheme(
       <AppPressable accessibilityLabel="Save" accessibilityRole="button">
         <Text>Save</Text>
       </AppPressable>,
@@ -19,9 +19,9 @@ describe('AppPressable', () => {
     expect(getByText('Save')).toBeTruthy();
   });
 
-  it('forwards onPress', () => {
+  it('forwards onPress', async () => {
     const onPress = jest.fn();
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppPressable
         accessibilityLabel="Save"
         accessibilityRole="button"
@@ -34,8 +34,24 @@ describe('AppPressable', () => {
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
-  it('applies the accessibility role, label, and hint', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('ignores presses when only accessibilityState marks it disabled', async () => {
+    const onPress = jest.fn();
+    const { getByLabelText } = await renderWithTheme(
+      <AppPressable
+        accessibilityLabel="Save"
+        accessibilityRole="button"
+        accessibilityState={{ disabled: true }}
+        onPress={onPress}
+      >
+        <Text>Save</Text>
+      </AppPressable>,
+    );
+    fireEvent.press(getByLabelText('Save'));
+    expect(onPress).not.toHaveBeenCalled();
+  });
+
+  it('applies the accessibility role, label, and hint', async () => {
+    const { getByLabelText } = await renderWithTheme(
       <AppPressable
         accessibilityLabel="Save"
         accessibilityRole="button"
@@ -49,8 +65,8 @@ describe('AppPressable', () => {
     expect(el.props.accessibilityHint).toBe('Saves your changes');
   });
 
-  it('enforces the minimum 44x44 touch target from the a11y token', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('enforces the minimum 44x44 touch target from the a11y token', async () => {
+    const { getByLabelText } = await renderWithTheme(
       <AppPressable accessibilityLabel="Save" accessibilityRole="button">
         <Text>Save</Text>
       </AppPressable>,
@@ -60,9 +76,9 @@ describe('AppPressable', () => {
     expect(flat.minHeight).toBe(a11y.minTouchTarget);
   });
 
-  it('does not fire onPress when disabled and reports disabled state', () => {
+  it('does not fire onPress when disabled and reports disabled state', async () => {
     const onPress = jest.fn();
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppPressable
         accessibilityLabel="Save"
         accessibilityRole="button"
@@ -80,8 +96,8 @@ describe('AppPressable', () => {
     );
   });
 
-  it('merges caller accessibilityState with the disabled mirror', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('merges caller accessibilityState with the disabled mirror', async () => {
+    const { getByLabelText } = await renderWithTheme(
       <AppPressable
         accessibilityLabel="Toggle"
         accessibilityRole="switch"
@@ -97,8 +113,8 @@ describe('AppPressable', () => {
     });
   });
 
-  it('defaults disabled state to false when not disabled', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('defaults disabled state to false when not disabled', async () => {
+    const { getByLabelText } = await renderWithTheme(
       <AppPressable accessibilityLabel="Save" accessibilityRole="button">
         <Text>Save</Text>
       </AppPressable>,
@@ -108,8 +124,8 @@ describe('AppPressable', () => {
     });
   });
 
-  it('merges a caller style over the touch-target floor', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('merges a caller style over the touch-target floor', async () => {
+    const { getByLabelText } = await renderWithTheme(
       <AppPressable
         accessibilityLabel="Save"
         accessibilityRole="button"
@@ -123,9 +139,9 @@ describe('AppPressable', () => {
     expect(flat.backgroundColor).toBe('rebeccapurple');
   });
 
-  it('supports the function form of style', () => {
+  it('supports the function form of style', async () => {
     const styleFn = jest.fn(() => ({ opacity: 0.5 }));
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppPressable
         accessibilityLabel="Save"
         accessibilityRole="button"
@@ -140,8 +156,8 @@ describe('AppPressable', () => {
     expect(flat.minHeight).toBe(a11y.minTouchTarget);
   });
 
-  it('supports function children', () => {
-    const { getByText } = renderWithTheme(
+  it('supports function children', async () => {
+    const { getByText } = await renderWithTheme(
       <AppPressable accessibilityLabel="Save" accessibilityRole="button">
         {({ pressed }) => <Text>{pressed ? 'Pressing' : 'Idle'}</Text>}
       </AppPressable>,

@@ -1,9 +1,12 @@
-import { lightTheme, lightColors } from '@/theme';
+import { DEFAULT_THEME_NAME, THEMES } from '@/theme';
 import {
   BUTTON_VARIANTS,
   resolveVariantColors,
   type ButtonVariant,
 } from '../buttonUtils';
+
+const lightTheme = THEMES[DEFAULT_THEME_NAME].light;
+const lightColors = THEMES[DEFAULT_THEME_NAME].light.colors;
 
 describe('resolveVariantColors', () => {
   it('resolves the primary variant to concrete theme colours', () => {
