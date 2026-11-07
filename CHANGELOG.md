@@ -28,6 +28,10 @@ House rules for entries, learned from sibling projects:
   JSON, could not be reached, or did not answer in time. The base URL comes
   from `API_BASE_URL` at build time, never from a user setting. A release
   build accepts only `https://`, and an EAS build with no URL fails at once.
+- The HTTP client can add headers, such as an auth token, to every request
+  through a `getHeaders` function. It reads the headers again before each
+  request, so a new token applies at once. The request option and error
+  types are exported from `@/api`, for typed endpoint functions.
 - Themes. `THEMES` is the one list of themes, each with a light and a dark
   version, and Settings lets the user choose one. The template ships
   Standard and a new High contrast theme. The choice is saved with the
@@ -92,6 +96,31 @@ House rules for entries, learned from sibling projects:
 - EAS build profiles are explicit per platform (internal APKs for
   development/preview, `m-medium` iOS builders), and Apple's
   export-compliance question is pre-answered in `app.config.ts`.
+
+### Fixed
+
+- Warning text, and warning badges with a soft or outline style, are now
+  readable in the Standard light theme. The warning colour is a darker
+  amber, and a filled warning label is white. The primary colour is one
+  step darker, so a soft primary badge, such as "Coming soon", also meets
+  the contrast that WCAG asks for text. The contrast test now checks every
+  status and brand colour as text on every surface, so a new palette that
+  is too light for text fails the test.
+- Placeholder text in a text field uses the secondary text colour. Before,
+  it used the disabled colour, which was too faint to read.
+- Tab labels and the error screen no longer clip at large device text
+  sizes. Their line height now grows with the text, and the error screen
+  uses the same text size limit as the rest of the app.
+- The app no longer claims a global text size limit that it did not have.
+  The old limit set a default on React Native's text component, which React
+  19 ignores. The limit comes from `AppText` and `AppTextInput`, and lint
+  now rejects raw `Text` and `TextInput` in screens and components.
+  `applyGlobalFontScaleCap` is removed.
+- A screen reader now reads the subtitle of a tappable list row. The row is
+  read as one item, and its spoken name now has the title and the subtitle,
+  such as "Notifications, 3 unread". Before, it had only the title.
+- The Component Gallery title is a heading for screen readers, because the
+  gallery has no navigation header.
 
 ### Tooling
 

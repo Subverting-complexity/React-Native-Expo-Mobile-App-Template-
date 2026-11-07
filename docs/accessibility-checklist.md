@@ -22,18 +22,24 @@ the suite, so the audit can never silently drift out of date.
 
 ### Pairings verified (light + dark palettes)
 
-| Pairing                                                                                       | Threshold | Use                                                      |
-| --------------------------------------------------------------------------------------------- | --------- | -------------------------------------------------------- |
-| `textPrimary` / `textSecondary` on `background`, `surface`, `surfaceVariant`                  | 4.5:1     | Body and secondary text on every surface                 |
-| `onPrimary` / `onSecondary` on their base + variant                                           | 4.5:1     | Filled primary/secondary button and badge labels         |
-| `onSuccess` / `onWarning` / `onError` / `onInfo` on their base                                | 4.5:1     | Filled status button and badge labels                    |
-| `primary` / `secondary` / `success` / `warning` / `error` / `info` on `background`, `surface` | 3:1       | Semantic colours used as icons, fills, and focus accents |
+| Pairing                                                                                                         | Threshold | Use                                                                                                 |
+| --------------------------------------------------------------------------------------------------------------- | --------- | --------------------------------------------------------------------------------------------------- |
+| `textPrimary` / `textSecondary` on `background`, `surface`, `surfaceVariant`                                    | 4.5:1     | Body and secondary text, and placeholder text, on every surface                                     |
+| `onPrimary` / `onSecondary` on their base + variant                                                             | 4.5:1     | Filled primary/secondary button, chip and badge labels                                              |
+| `onSuccess` / `onWarning` / `onError` / `onInfo` on their base                                                  | 4.5:1     | Filled status button, toast and badge labels                                                        |
+| `textInverse` on `textSecondary`                                                                                | 4.5:1     | The solid neutral badge label                                                                       |
+| `primary` / `secondary` / `success` / `warning` / `error` / `info` on `background`, `surface`, `surfaceVariant` | 4.5:1     | Intent colours drawn as text: text tones, links, outline and ghost buttons, soft and outline badges |
 
-Both the light and dark palettes pass all of the above.
+The intent colours are the `base` colours in `INTENT_COLORS`. They are held to
+the text bar, not only the 3:1 bar for icons and fills, because the components
+also draw them as text. A value that clears 4.5:1 also clears 3:1.
 
-### Adjustments made during the initial audit
+Every theme in `THEMES`, in light and dark mode, passes all of the above.
 
-The light palette needed four token changes; the dark palette already passed.
+### Adjustments made during the audits
+
+The initial audit changed four tokens in the light palette. The dark palette
+already passed.
 
 | Token           | Before    | After     | Reason                                                                                                |
 | --------------- | --------- | --------- | ----------------------------------------------------------------------------------------------------- |
@@ -42,6 +48,16 @@ The light palette needed four token changes; the dark palette already passed.
 | `warning`       | `#E67700` | `#D9760A` | Allows a readable dark label and clears 3:1 as an accent                                              |
 | `onWarning`     | `#FFFFFF` | `#1A1200` | White on amber tops out near 3:1; dark ink on amber is the legible pairing (matches the dark palette) |
 
+A later audit held the intent colours to 4.5:1 as text. It changed four more
+tokens in the Standard light palette.
+
+| Token            | Before    | After     | Reason                                                                                               |
+| ---------------- | --------- | --------- | ---------------------------------------------------------------------------------------------------- |
+| `warning`        | `#D9760A` | `#A85700` | As text it reached only 3.21:1 on `background` and 2.88:1 on `surfaceVariant`; now 5.21:1 and 4.69:1 |
+| `onWarning`      | `#1A1200` | `#FFFFFF` | Dark ink is not readable on the darker amber; white on it is 5.21:1                                  |
+| `primary`        | `#4263EB` | `#3B5BDB` | As text it reached 4.48:1 on `surfaceVariant` (the soft badge); now 5.10:1                           |
+| `primaryVariant` | `#3B5BDB` | `#364FC7` | Keeps the variant one step darker than `primary`                                                     |
+
 ### Intentional exemptions
 
 Two groups of tokens are deliberately **not** held to the contrast bars
@@ -49,7 +65,8 @@ above, in line with WCAG:
 
 - **`textDisabled`** — WCAG 1.4.3 exempts text and images of text that are
   part of an inactive (disabled) UI component. Disabled controls must still be
-  visually distinguishable, but are not required to meet 4.5:1.
+  visually distinguishable, but are not required to meet 4.5:1. Placeholder
+  text is not exempt, so `AppTextInput` draws it in `textSecondary`.
 - **`border` / `borderSubtle`** — these are subtle, decorative dividers and
   container outlines. WCAG 1.4.11 exempts purely decorative elements. A border
   must never be the _sole_ means of identifying or operating a control; the

@@ -20,7 +20,7 @@ export function FormsSection() {
   return (
     <AppSection
       title="Forms"
-      description="AppTextInput — label, hint, error, and read-only states."
+      description="AppTextInput with a label, a hint, an error, and a read-only state."
     >
       <GalleryStack>
         <AppTextInput

@@ -20,6 +20,10 @@ interface TabOptions {
 
 // Each rendered Tabs.Screen records its options here, so tests can read them.
 const mockTabOptions: Record<string, TabOptions> = {};
+// The navigator records its screenOptions here.
+const mockScreenOptions: {
+  current?: { tabBarLabelStyle?: Record<string, unknown> };
+} = {};
 
 // Render the Tabs navigator structurally: each Tabs.Screen surfaces its
 // `title` as text and its `tabBarAccessibilityLabel` as the accessibility
@@ -28,8 +32,16 @@ const mockTabOptions: Record<string, TabOptions> = {};
 jest.mock('expo-router', () => {
   const React = jest.requireActual('react');
   const { Text } = jest.requireActual('react-native');
-  const Tabs = ({ children }: { children: React.ReactNode }) =>
-    React.createElement(React.Fragment, null, children);
+  const Tabs = ({
+    children,
+    screenOptions,
+  }: {
+    children: React.ReactNode;
+    screenOptions?: typeof mockScreenOptions.current;
+  }) => {
+    mockScreenOptions.current = screenOptions;
+    return React.createElement(React.Fragment, null, children);
+  };
   Tabs.displayName = 'Tabs';
   const TabsScreen = ({
     name,
@@ -103,6 +115,14 @@ describe('TabsLayout', () => {
       const tab: TabDefinition = TABS[name];
       expect(optionsOf(name).tabBarLabel).toBe(tab.label ?? tab.title);
     }
+  });
+
+  it('lets the tab label line height grow with the OS text size', async () => {
+    // A fixed lineHeight does not scale with the font, so large labels clip.
+    await renderHydrated(<TabsLayout />, { wrapper: Wrapper });
+    const labelStyle = mockScreenOptions.current?.tabBarLabelStyle;
+    expect(labelStyle).toBeDefined();
+    expect(labelStyle).not.toHaveProperty('lineHeight');
   });
 
   it.each(TAB_NAMES)(

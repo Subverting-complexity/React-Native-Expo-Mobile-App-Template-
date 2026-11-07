@@ -17,27 +17,18 @@ Accessibility is handled by two cooperating systems:
    `useTheme()`.
 
 2. **A11y context** (`src/a11y/`) tracks runtime accessibility state — the
-   user's reduce-motion preference and the global font-scale cap. It
-   provides this state through `useA11y()` and `useReduceMotion()`.
+   user's reduce-motion preference and the font-scale cap. It provides
+   this state through `useA11y()` and `useReduceMotion()`.
 
 Both are mounted at the app root (`<A11yProvider>` alongside
 `<ThemeProvider>`) so every component in the tree has access.
 
 ## A11yProvider
 
-`A11yProvider` (in `src/a11y/A11yProvider.tsx`) does two things when it
-mounts:
-
-1. **Installs the global font-scale cap.** It calls
-   `applyGlobalFontScaleCap()`, which sets
-   `maxFontSizeMultiplier` on React Native's `Text` and `TextInput` as a
-   default prop. The cap is 1.5 — large enough to honour meaningful
-   accessibility scaling, small enough to prevent layout breakage. A
-   component can override this per-instance if it needs to opt out.
-
-2. **Tracks the OS reduce-motion preference.** It subscribes to the
-   `reduceMotionChanged` event and exposes the current value through
-   context.
+`A11yProvider` (in `src/a11y/A11yProvider.tsx`) tracks the OS reduce-motion
+preference. It subscribes to the `reduceMotionChanged` event and exposes the
+current value through context, together with the font-scale cap (see
+[Font scaling](#font-scaling)).
 
 Components consume the context through two hooks:
 
@@ -60,19 +51,26 @@ function FadeIn({ children }) {
 
 ## Font scaling
 
-The template supports Dynamic Type (iOS) and font scaling (Android) up to
-a multiplier of 1.5. This is applied globally through `maxFontScale.ts`,
-which patches `Text.defaultProps.maxFontSizeMultiplier` so every text
-element in the app respects the cap without any per-component wiring.
+The template supports Dynamic Type (iOS) and font scaling (Android and web)
+up to a multiplier of 1.5. `MAX_FONT_SIZE_MULTIPLIER` in `maxFontScale.ts`
+is the single source of truth for the cap. The a11y context also exposes it.
 
-The cap value (`MAX_FONT_SIZE_MULTIPLIER = 1.5`) is the single source of
-truth — it is both applied as the global default and exposed through the
-a11y context so components that need to know the cap can read it without
-importing the constant directly.
+`AppText` and `AppTextInput` apply the cap. They pass it as
+`maxFontSizeMultiplier`, and they multiply the line height by the same
+factor (`fontScaleFactor`). React Native scales the font size but not the
+line height, so without this, large text clips.
 
-A component that needs uncapped scaling (rare — an accessibility-focused
-settings screen, for example) can set `maxFontSizeMultiplier={null}` on
-its own `Text` element to override the global default.
+There is no global cap. React 19 ignores `defaultProps` on function
+components, and React Native's `Text` and `TextInput` are function
+components. So render text through `AppText` and fields through
+`AppTextInput`. ESLint rejects a `Text` or `TextInput` import from
+`react-native` in `app/` and `src/`. The only exceptions are the two
+components themselves and the error fallback, which must render without a
+`ThemeProvider` and so applies the cap itself.
+
+A component that needs uncapped scaling (rare, such as an
+accessibility-focused settings screen) can pass
+`maxFontSizeMultiplier={null}` to its `AppText`.
 
 ## Touch targets
 

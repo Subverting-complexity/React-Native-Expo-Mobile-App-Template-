@@ -88,6 +88,20 @@ Change the Discussions link in `.github/ISSUE_TEMPLATE/config.yml`, and the
 issue links and contact details in `CONTRIBUTING.md` and
 `CODE_OF_CONDUCT.md`.
 
+### Project docs and the Home screen
+
+These files describe the template, not your app:
+
+- `README.md` and `CLAUDE.md`: change the title and the first paragraph to
+  describe your app. Keep the command and convention sections that still
+  apply.
+- `CHANGELOG.md`: keep the header and its rules, and remove the template's
+  entries under `[Unreleased]`.
+- `app/(tabs)/index.tsx`: the Home screen shows the title "Expo Template"
+  and the line "Home tab.". Replace them with your app's first screen.
+- `app/+html.tsx`: the web page sets `lang="en"`. Change it if your app is
+  in another language.
+
 ## 3. Wire up EAS
 
 EAS (Expo Application Services) handles cloud builds and store
@@ -155,10 +169,21 @@ a user setting:
 
 If your app has no backend, leave `API_BASE_URL` blank locally and delete
 the guard at the top of `app.config.ts`. Once real endpoints exist, wrap the
-generic `get` and `post` calls in typed endpoint functions. To add a
-header, such as an auth token, add it in `buildInit` in
-`src/api/httpApiClient.ts`. Tests and a demo mode pass their own client to
-`ApiProvider`.
+generic `get` and `post` calls in typed endpoint functions. The `@/api`
+barrel exports the types they need, such as `ApiRequestOptions` and
+`ApiErrorKind`. To add a header, such as an auth token, pass `getHeaders`
+to `createHttpApiClient` in `src/api/ApiProvider.tsx`. The client calls it
+before each request, so a new token applies at once:
+
+```ts
+createHttpApiClient({
+  getBaseUrl: () => readApiBaseUrl(),
+  fetch: (...args) => fetch(...args),
+  getHeaders: async () => ({ Authorization: `Bearer ${await readToken()}` }),
+});
+```
+
+Tests and a demo mode pass their own client to `ApiProvider`.
 
 ## 5. Set up the tabs
 
@@ -221,7 +246,10 @@ accessibility.
 2. **Pay attention to `on*` tokens.** Each fill colour (`primary`,
    `secondary`, `success`, etc.) has a foreground colour (`onPrimary`,
    `onSecondary`, `onSuccess`) that sits on top of it. These pairings must
-   meet at least 4.5:1 for normal text.
+   meet at least 4.5:1 for normal text. The fill colours must also meet
+   4.5:1 on `background`, `surface` and `surfaceVariant`, because links,
+   text tones and soft badges draw them as text. A bright brand colour
+   often fails this. If it does, use a darker shade for the token.
 
 3. **Choose your themes.** `THEMES` in `src/theme/themes.ts` is the only
    list of themes. The template ships Standard and High contrast. Add your
@@ -239,8 +267,8 @@ accessibility.
    ```
 
    If a contrast test fails, the output shows which pairing broke and by how
-   much. Adjust the colour until the ratio clears the threshold — 4.5:1 for
-   body text, 3:1 for large text and non-text UI.
+   much. Adjust the colour until the ratio clears the threshold: 4.5:1 for
+   text, 3:1 for large text and non-text UI.
 
 ## 8. Replace the app icon and splash screen
 
@@ -319,6 +347,8 @@ a build under the wrong project.
       `package` in `app.config.ts`.
 - [ ] Set `name` (and `license`, if needed) in `package.json`.
 - [ ] Updated the GitHub links and contacts.
+- [ ] Rewrote the template text in `README.md`, `CLAUDE.md`,
+      `CHANGELOG.md` and the Home screen.
 - [ ] Ran `npx eas-cli init` and copied the `projectId` into `app.config.ts`.
 - [ ] Created an `EXPO_TOKEN` and added it to `.env`.
 - [ ] Ran `npm run verify:expo` to confirm account setup.

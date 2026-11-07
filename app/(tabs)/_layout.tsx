@@ -63,10 +63,12 @@ export default function TabsLayout() {
           backgroundColor: theme.colors.surface,
           borderTopColor: theme.colors.border,
         },
+        // No lineHeight: on Android and web the label font grows with the OS
+        // text size, but a fixed lineHeight does not, so large text clips.
+        // (On iOS 13+ the label does not scale; a long press shows it large.)
         tabBarLabelStyle: {
           fontFamily: variants.caption.family,
           fontSize: tabLabel.fontSize,
-          lineHeight: tabLabel.lineHeight,
         },
         headerStyle: { backgroundColor: theme.colors.surface },
         headerTintColor: theme.colors.textPrimary,

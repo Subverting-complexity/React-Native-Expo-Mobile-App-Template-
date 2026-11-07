@@ -27,6 +27,13 @@ function renderGallery(onBack?: () => void) {
 }
 
 describe('ComponentGallery', () => {
+  it('marks its title as a heading, because the route has no header', async () => {
+    const { getByText } = await renderGallery();
+    expect(getByText('Component Gallery').props.accessibilityRole).toBe(
+      'header',
+    );
+  });
+
   it('renders the heading and every section', async () => {
     const { getByText } = await renderGallery();
     getByText('Component Gallery');

@@ -15,6 +15,13 @@ export interface HttpApiClientDeps {
   fetch: typeof fetch;
   /** Milliseconds before a request fails with an `ApiError` of kind `timeout`. */
   timeoutMs?: number;
+  /**
+   * Extra headers for each request, such as an `Authorization` header. Read
+   * on each request, so a new token applies at once. These headers win over
+   * the default `Accept` and `Content-Type`. An error that this function
+   * throws rejects the request as it is, not as an {@link ApiError}.
+   */
+  getHeaders?: () => Record<string, string> | Promise<Record<string, string>>;
 }
 
 interface Request {
@@ -40,10 +47,13 @@ export function createHttpApiClient(deps: HttpApiClientDeps): ApiClient {
     body?: string,
   ): Promise<Answer> {
     const url = buildUrl(deps.getBaseUrl(), request.path, options.query);
+    // Await only when there is a getHeaders, so a client without one starts
+    // its request (and its deadline) in the same tick as the call.
+    const headers = deps.getHeaders ? await deps.getHeaders() : {};
     const deadline = startDeadline(timeoutMs, options.signal);
     try {
       const response = await deps.fetch(url, {
-        ...buildInit(request.method, body),
+        ...buildInit(request.method, body, headers),
         signal: deadline.signal,
       });
       const text = await response.text();
@@ -89,13 +99,24 @@ function buildUrl(
   return search === '' ? `${baseUrl}${path}` : `${baseUrl}${path}?${search}`;
 }
 
-function buildInit(method: ApiMethod, body: string | undefined): RequestInit {
+function buildInit(
+  method: ApiMethod,
+  body: string | undefined,
+  extraHeaders: Record<string, string>,
+): RequestInit {
   if (body === undefined) {
-    return { method, headers: { Accept: 'application/json' } };
+    return {
+      method,
+      headers: { Accept: 'application/json', ...extraHeaders },
+    };
   }
   return {
     method,
-    headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      ...extraHeaders,
+    },
     body,
   };
 }

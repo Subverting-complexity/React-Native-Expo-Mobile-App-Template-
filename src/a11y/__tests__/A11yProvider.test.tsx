@@ -36,7 +36,7 @@ describe('A11yProvider', () => {
     expect(getByTestId('selector').props.children).toBe('true');
   });
 
-  it('exposes the global font-scale cap', () => {
+  it('exposes the font-scale cap', () => {
     mockReduceMotion(false);
     const { getByTestId } = render(
       <A11yProvider>

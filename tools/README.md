@@ -36,9 +36,8 @@ See [`docs/expo-account.md`](../docs/expo-account.md) for the full setup.
 
 `launch/ps/BuildAndDeployDevModeAndroid.ps1` runs `expo run:android`. That
 command prebuilds the native project and compiles it with Gradle, CMake and
-ninja. On sibling Expo projects with the same Android toolchain
-(CadenceReader, Refrain), this native build fails on Windows when the
-checkout path is long. ninja reports `Filename longer than 260 characters`,
+ninja. On other Expo projects with the same Android toolchain, this native
+build fails on Windows when the checkout path is long. ninja reports `Filename longer than 260 characters`,
 or `manifest 'build.ninja' still dirty after 100 tries`. Both errors have the
 same cause. The codegen sources under
 `node_modules/<library>/android/build/generated/source/codegen/jni/...` are
@@ -51,14 +50,11 @@ repository path starts, which is the kind of path that fails. This failure
 is not yet confirmed in this repository. It is a known risk, because the
 mechanism is the same.
 
-This template has no automatic short-checkout redirect yet. The sibling
-projects have one: `LaunchAndroid.ps1` copies the tree into a short
-directory on each machine with `robocopy /MIR` before it builds. See
-CadenceReader's `ClaudeProject.md` ("The checkout has to be somewhere
-shallow") and its `tools/README.md` ("Android build directory") for the full
-recipe. Those pages also explain why `subst` and directory junctions do
-**not** work. Until this template has the same tooling, use a short checkout
-that is not under `.claude/worktrees/`, and build from there:
+This template has no automatic short-checkout redirect yet. One way to add
+it is to copy the tree into a short directory with `robocopy /MIR` before
+the build. Those other projects found that `subst` and directory junctions
+do **not** avoid the error. Until this template has that tooling, use a
+short checkout that is not under `.claude/worktrees/`, and build from there:
 
 ```powershell
 git worktree add --detach C:\short\path HEAD
@@ -68,10 +64,9 @@ git worktree add --detach C:\short\path HEAD
 
 The first step of an EAS build archives the checkout it runs from. This
 includes untracked files that `.gitignore` does not exclude, not only the
-files that git tracks. CadenceReader got a 1.4 GB archive from a 23 MB
+files that git tracks. One Expo project got a 1.4 GB archive from a 23 MB
 tracked project, because `.gitignore` did not exclude `.claude/worktrees/`.
-Each worktree there is a full checkout with its own `node_modules`
-(`Subverting-complexity/CadenceReader#1745`).
+Each worktree there is a full checkout with its own `node_modules`.
 
 This template does not have that problem. Its `.gitignore` excludes all of
 `.claude/`, which includes `.claude/worktrees/`, and `git ls-files .claude`

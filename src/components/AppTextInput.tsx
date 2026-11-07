@@ -142,7 +142,8 @@ export function AppTextInput({
         accessibilityLabel={accessibilityLabel ?? label}
         accessibilityHint={helperText}
         accessibilityState={{ disabled: isDisabled }}
-        placeholderTextColor={theme.colors.textDisabled}
+        // Placeholder text must meet 4.5:1. Only a disabled control is exempt.
+        placeholderTextColor={theme.colors.textSecondary}
         allowFontScaling={allowFontScaling}
         maxFontSizeMultiplier={maxFontSizeMultiplier}
         onFocus={handleFocus}
