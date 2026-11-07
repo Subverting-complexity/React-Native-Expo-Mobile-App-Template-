@@ -3,14 +3,16 @@ import { fireEvent, waitFor } from '@testing-library/react-native';
 
 import { AppIconButton } from '../AppIconButton';
 import { AppText } from '../AppText';
-import { a11y, lightColors, typography } from '@/theme';
+import { a11y, typography, DEFAULT_THEME_NAME, THEMES } from '@/theme';
 import { renderWithTheme } from '@/test';
+
+const lightColors = THEMES[DEFAULT_THEME_NAME].light.colors;
 
 const icon = <AppText>★</AppText>;
 
 describe('AppIconButton', () => {
-  it('requires and exposes an accessibility label and button role', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('requires and exposes an accessibility label and button role', async () => {
+    const { getByLabelText } = await renderWithTheme(
       <AppIconButton
         icon={icon}
         accessibilityLabel="Favourite"
@@ -20,18 +22,18 @@ describe('AppIconButton', () => {
     expect(getByLabelText('Favourite').props.accessibilityRole).toBe('button');
   });
 
-  it('fires onPress when enabled', () => {
+  it('fires onPress when enabled', async () => {
     const onPress = jest.fn();
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppIconButton icon={icon} accessibilityLabel="Add" onPress={onPress} />,
     );
     fireEvent.press(getByLabelText('Add'));
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
-  it('does not fire onPress when disabled and reports disabled state', () => {
+  it('does not fire onPress when disabled and reports disabled state', async () => {
     const onPress = jest.fn();
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppIconButton
         icon={icon}
         accessibilityLabel="Add"
@@ -47,9 +49,9 @@ describe('AppIconButton', () => {
     );
   });
 
-  it('hides the icon, blocks presses, and reports busy when loading', () => {
+  it('hides the icon, blocks presses, and reports busy when loading', async () => {
     const onPress = jest.fn();
-    const { queryByText, getByLabelText } = renderWithTheme(
+    const { queryByText, getByLabelText } = await renderWithTheme(
       <AppIconButton
         icon={icon}
         accessibilityLabel="Add"
@@ -66,8 +68,8 @@ describe('AppIconButton', () => {
     );
   });
 
-  it('inherits the 44x44 minimum touch target from AppPressable', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('inherits the 44x44 minimum touch target from AppPressable', async () => {
+    const { getByLabelText } = await renderWithTheme(
       <AppIconButton
         icon={icon}
         accessibilityLabel="Add"
@@ -80,7 +82,7 @@ describe('AppIconButton', () => {
   });
 
   it('passes the resolved colour and token-derived size to an icon function', async () => {
-    const { getByText } = renderWithTheme(
+    const { getByText } = await renderWithTheme(
       <AppIconButton
         accessibilityLabel="Add"
         onPress={jest.fn()}
@@ -97,7 +99,7 @@ describe('AppIconButton', () => {
   });
 
   it('applies the primary variant background from theme tokens', async () => {
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppIconButton
         icon={icon}
         accessibilityLabel="Add"
@@ -112,7 +114,7 @@ describe('AppIconButton', () => {
   });
 
   it('renders as a circle when round is set', async () => {
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppIconButton
         icon={icon}
         accessibilityLabel="Add"

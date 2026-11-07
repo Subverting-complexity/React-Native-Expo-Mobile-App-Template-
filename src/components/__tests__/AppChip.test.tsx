@@ -2,20 +2,22 @@ import { StyleSheet } from 'react-native';
 import { fireEvent, waitFor } from '@testing-library/react-native';
 
 import { AppChip } from '../AppChip';
-import { lightColors } from '@/theme';
+import { DEFAULT_THEME_NAME, THEMES } from '@/theme';
 import { renderWithTheme } from '@/test';
 
+const lightColors = THEMES[DEFAULT_THEME_NAME].light.colors;
+
 describe('AppChip', () => {
-  it('renders its label with the button role', () => {
-    const { getByText, getByLabelText } = renderWithTheme(
+  it('renders its label with the button role', async () => {
+    const { getByText, getByLabelText } = await renderWithTheme(
       <AppChip label="All" onPress={jest.fn()} />,
     );
     expect(getByText('All')).toBeTruthy();
     expect(getByLabelText('All').props.accessibilityRole).toBe('button');
   });
 
-  it('reports the selected state to assistive tech', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('reports the selected state to assistive tech', async () => {
+    const { getByLabelText } = await renderWithTheme(
       <AppChip label="Active" selected onPress={jest.fn()} />,
     );
     expect(getByLabelText('Active').props.accessibilityState).toEqual(
@@ -23,18 +25,32 @@ describe('AppChip', () => {
     );
   });
 
-  it('fires onPress when enabled', () => {
+  it('reports a radio chip as checked rather than selected', async () => {
+    const { getByRole } = await renderWithTheme(
+      <AppChip
+        label="Active"
+        accessibilityRole="radio"
+        selected
+        onPress={jest.fn()}
+      />,
+    );
+    expect(
+      getByRole('radio', { name: 'Active' }).props.accessibilityState,
+    ).toEqual({ checked: true, disabled: false });
+  });
+
+  it('fires onPress when enabled', async () => {
     const onPress = jest.fn();
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppChip label="Filter" onPress={onPress} />,
     );
     fireEvent.press(getByLabelText('Filter'));
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
-  it('does not fire onPress when disabled and reports disabled state', () => {
+  it('does not fire onPress when disabled and reports disabled state', async () => {
     const onPress = jest.fn();
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppChip label="Filter" onPress={onPress} disabled />,
     );
     const el = getByLabelText('Filter');
@@ -46,7 +62,7 @@ describe('AppChip', () => {
   });
 
   it('fills with the primary token when selected', async () => {
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppChip label="On" selected onPress={jest.fn()} />,
       'light',
     );
@@ -58,7 +74,7 @@ describe('AppChip', () => {
   });
 
   it('uses a bordered surface fill when not selected', async () => {
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppChip label="Off" onPress={jest.fn()} />,
       'light',
     );

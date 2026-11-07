@@ -1,5 +1,5 @@
 import { useMemo, type ReactNode } from 'react';
-import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import { View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { AppPressable, type AppPressableProps } from './AppPressable';
 import { AppText, TONE_COLORS, type TextTone } from './AppText';
@@ -20,6 +20,13 @@ const GLYPH_SIZE: Record<
   lg: '3xl',
 };
 
+/** Icon size key per size, for a custom `icon`. Matches the arrow's size. */
+const ICON_SIZE: Record<AppBackButtonSize, keyof ThemeTokens['iconSizes']> = {
+  sm: 'sm',
+  md: 'md',
+  lg: 'lg',
+};
+
 /** Visible label typography variant per size. */
 const LABEL_VARIANT: Record<AppBackButtonSize, TextVariantName> = {
   sm: 'bodySmall',
@@ -34,11 +41,13 @@ const BACK_GLYPH = '←';
 function resolveBackIcon(
   icon: AppIcon | undefined,
   color: string,
+  glyphSize: keyof ThemeTokens['typography']['sizes'],
   size: number,
 ): ReactNode {
   if (icon == null) {
+    // AppText scales the line height with the OS font size, so the arrow does not clip.
     return (
-      <AppText style={{ fontSize: size, lineHeight: size, color }}>
+      <AppText size={glyphSize} style={{ color }}>
         {BACK_GLYPH}
       </AppText>
     );
@@ -87,7 +96,7 @@ export function AppBackButton({
 }: AppBackButtonProps) {
   const { theme } = useTheme();
   const isDisabled = disabled ?? false;
-  const glyphSize = theme.typography.sizes[GLYPH_SIZE[size]].fontSize;
+  const iconSize = theme.iconSizes[ICON_SIZE[size]];
   const color = theme.colors[TONE_COLORS[isDisabled ? 'disabled' : tone]];
 
   const containerStyle = useMemo<ViewStyle>(
@@ -96,12 +105,12 @@ export function AppBackButton({
       alignItems: 'center',
       gap: theme.spacing[1],
       alignSelf: 'flex-start',
-      opacity: isDisabled ? 0.5 : 1,
+      opacity: isDisabled ? theme.opacity.disabled : 1,
     }),
     [theme, isDisabled],
   );
 
-  const renderedIcon = resolveBackIcon(icon, color, glyphSize);
+  const renderedIcon = resolveBackIcon(icon, color, GLYPH_SIZE[size], iconSize);
 
   return (
     <AppPressable
@@ -111,7 +120,9 @@ export function AppBackButton({
       disabled={isDisabled}
       style={(state) => [
         containerStyle,
-        state.pressed && !isDisabled ? styles.pressed : null,
+        state.pressed && !isDisabled
+          ? { opacity: theme.opacity.pressedText }
+          : null,
       ]}
       {...rest}
     >
@@ -127,7 +138,3 @@ export function AppBackButton({
     </AppPressable>
   );
 }
-
-const styles = StyleSheet.create({
-  pressed: { opacity: 0.7 },
-});

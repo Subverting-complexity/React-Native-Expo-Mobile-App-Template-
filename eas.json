@@ -5,6 +5,7 @@
   },
   "build": {
     "development": {
+      "environment": "development",
       "developmentClient": true,
       "distribution": "internal",
       "ios": {
@@ -15,6 +16,7 @@
       }
     },
     "preview": {
+      "environment": "preview",
       "distribution": "internal",
       "ios": {
         "simulator": false,
@@ -25,6 +27,7 @@
       }
     },
     "production": {
+      "environment": "production",
       "autoIncrement": true,
       "ios": {
         "resourceClass": "m-medium"
@@ -34,9 +37,9 @@
   "submit": {
     "production": {
       "ios": {
-        "appleId": "you@example.com",
-        "ascAppId": "0000000000",
-        "appleTeamId": "XXXXXXXXXX"
+        "appleId": "",
+        "ascAppId": "",
+        "appleTeamId": ""
       },
       "android": {
         "serviceAccountKeyPath": "./pc-api-key.json",

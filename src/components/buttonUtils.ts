@@ -1,5 +1,8 @@
 import type { ReactNode } from 'react';
+import { INTENT_COLORS } from '@/theme';
 import type { ColorPalette, ThemeTokens } from '@/theme';
+
+const { primary, secondary, error } = INTENT_COLORS;
 
 export type ButtonVariant =
   | 'primary'
@@ -15,19 +18,19 @@ export interface VariantColors {
 }
 
 export const BUTTON_VARIANTS: Record<ButtonVariant, VariantColors> = {
-  primary: { background: 'primary', foreground: 'onPrimary', border: null },
+  primary: { background: primary.base, foreground: primary.on, border: null },
   secondary: {
-    background: 'secondary',
-    foreground: 'onSecondary',
+    background: secondary.base,
+    foreground: secondary.on,
     border: null,
   },
   outline: {
     background: 'transparent',
-    foreground: 'primary',
-    border: 'primary',
+    foreground: primary.base,
+    border: primary.base,
   },
-  ghost: { background: 'transparent', foreground: 'primary', border: null },
-  danger: { background: 'error', foreground: 'onError', border: null },
+  ghost: { background: 'transparent', foreground: primary.base, border: null },
+  danger: { background: error.base, foreground: error.on, border: null },
 };
 
 export interface ResolvedColors {

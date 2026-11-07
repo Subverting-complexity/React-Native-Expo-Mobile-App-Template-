@@ -3,12 +3,14 @@ import { fireEvent, waitFor } from '@testing-library/react-native';
 
 import { AppBackButton } from '../AppBackButton';
 import { AppText } from '../AppText';
-import { lightColors } from '@/theme';
+import { DEFAULT_THEME_NAME, THEMES } from '@/theme';
 import { renderWithTheme } from '@/test';
 
+const lightColors = THEMES[DEFAULT_THEME_NAME].light.colors;
+
 describe('AppBackButton', () => {
-  it('defaults to a "Go back" button with the arrow glyph', () => {
-    const { getByLabelText, getByText } = renderWithTheme(
+  it('defaults to a "Go back" button with the arrow glyph', async () => {
+    const { getByLabelText, getByText } = await renderWithTheme(
       <AppBackButton onPress={jest.fn()} />,
     );
     const el = getByLabelText('Go back');
@@ -16,32 +18,32 @@ describe('AppBackButton', () => {
     expect(getByText('←')).toBeTruthy();
   });
 
-  it('renders an optional visible label', () => {
-    const { getByText } = renderWithTheme(
+  it('renders an optional visible label', async () => {
+    const { getByText } = await renderWithTheme(
       <AppBackButton label="Settings" onPress={jest.fn()} />,
     );
     expect(getByText('Settings')).toBeTruthy();
   });
 
-  it('allows overriding the accessibility label', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('allows overriding the accessibility label', async () => {
+    const { getByLabelText } = await renderWithTheme(
       <AppBackButton accessibilityLabel="Back to inbox" onPress={jest.fn()} />,
     );
     expect(getByLabelText('Back to inbox')).toBeTruthy();
   });
 
-  it('fires onPress when enabled', () => {
+  it('fires onPress when enabled', async () => {
     const onPress = jest.fn();
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppBackButton onPress={onPress} />,
     );
     fireEvent.press(getByLabelText('Go back'));
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
-  it('does not fire onPress when disabled and reports disabled state', () => {
+  it('does not fire onPress when disabled and reports disabled state', async () => {
     const onPress = jest.fn();
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppBackButton onPress={onPress} disabled />,
     );
     const el = getByLabelText('Go back');
@@ -52,8 +54,8 @@ describe('AppBackButton', () => {
     );
   });
 
-  it('replaces the default glyph with a custom icon', () => {
-    const { getByText, queryByText } = renderWithTheme(
+  it('replaces the default glyph with a custom icon', async () => {
+    const { getByText, queryByText } = await renderWithTheme(
       <AppBackButton onPress={jest.fn()} icon={<AppText>chevron</AppText>} />,
     );
     expect(getByText('chevron')).toBeTruthy();
@@ -61,7 +63,7 @@ describe('AppBackButton', () => {
   });
 
   it('tints the default glyph with the accent colour from tokens', async () => {
-    const { getByText } = renderWithTheme(
+    const { getByText } = await renderWithTheme(
       <AppBackButton onPress={jest.fn()} />,
       'light',
     );

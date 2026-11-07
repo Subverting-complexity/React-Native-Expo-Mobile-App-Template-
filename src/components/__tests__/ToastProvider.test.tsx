@@ -1,11 +1,15 @@
 import { StyleSheet, Text } from 'react-native';
 import { fireEvent, render } from '@testing-library/react-native';
 
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
+
 import { ToastProvider } from '../ToastProvider';
 import { useToast } from '../useToast';
 import { A11yContext, MAX_FONT_SIZE_MULTIPLIER } from '@/a11y';
-import { ThemeProvider, lightColors } from '@/theme';
-import { makeStorage } from '@/test';
+import { ThemeProvider, DEFAULT_THEME_NAME, THEMES } from '@/theme';
+import { makeStorage, renderHydrated } from '@/test';
+
+const lightColors = THEMES[DEFAULT_THEME_NAME].light.colors;
 
 function Harness({ children }: { children: React.ReactNode }) {
   return (
@@ -57,8 +61,8 @@ describe('useToast', () => {
 });
 
 describe('ToastProvider', () => {
-  it('shows nothing until show() is called', () => {
-    const { queryByTestId } = render(
+  it('shows nothing until show() is called', async () => {
+    const { queryByTestId } = await renderHydrated(
       <Harness>
         <Trigger />
       </Harness>,
@@ -66,8 +70,8 @@ describe('ToastProvider', () => {
     expect(queryByTestId('toast')).toBeNull();
   });
 
-  it('shows a toast with the given message', () => {
-    const { getByTestId, getByText } = render(
+  it('shows a toast with the given message', async () => {
+    const { getByTestId, getByText } = await renderHydrated(
       <Harness>
         <Trigger />
       </Harness>,
@@ -77,8 +81,8 @@ describe('ToastProvider', () => {
     expect(getByText('First message')).toBeTruthy();
   });
 
-  it('passes the tone through to the toast surface', () => {
-    const { getByTestId } = render(
+  it('passes the tone through to the toast surface', async () => {
+    const { getByTestId } = await renderHydrated(
       <Harness>
         <Trigger />
       </Harness>,
@@ -88,8 +92,8 @@ describe('ToastProvider', () => {
     expect(surface.backgroundColor).toBe(lightColors.success);
   });
 
-  it('replaces the current toast when show() is called again', () => {
-    const { getByTestId, getByText, queryByText } = render(
+  it('replaces the current toast when show() is called again', async () => {
+    const { getByTestId, getByText, queryByText } = await renderHydrated(
       <Harness>
         <Trigger />
       </Harness>,
@@ -101,8 +105,8 @@ describe('ToastProvider', () => {
     expect(getByText('Second message')).toBeTruthy();
   });
 
-  it('dismiss() removes the active toast', () => {
-    const { getByTestId, queryByTestId } = render(
+  it('dismiss() removes the active toast', async () => {
+    const { getByTestId, queryByTestId } = await renderHydrated(
       <Harness>
         <Trigger />
       </Harness>,
@@ -113,8 +117,8 @@ describe('ToastProvider', () => {
     expect(queryByTestId('toast')).toBeNull();
   });
 
-  it('dismisses the toast via its close button', () => {
-    const { getByTestId, queryByTestId } = render(
+  it('dismisses the toast via its close button', async () => {
+    const { getByTestId, queryByTestId } = await renderHydrated(
       <Harness>
         <Trigger />
       </Harness>,
@@ -122,5 +126,32 @@ describe('ToastProvider', () => {
     fireEvent.press(getByTestId('show-info'));
     fireEvent.press(getByTestId('toast-dismiss'));
     expect(queryByTestId('toast')).toBeNull();
+  });
+
+  it('sits above the bottom safe area and the bottom offset', async () => {
+    const insets = { top: 0, right: 0, bottom: 34, left: 0 };
+    const { getByTestId } = await renderHydrated(
+      <ThemeProvider storage={makeStorage()}>
+        <A11yContext.Provider
+          value={{
+            reduceMotion: true,
+            maxFontSizeMultiplier: MAX_FONT_SIZE_MULTIPLIER,
+          }}
+        >
+          <SafeAreaInsetsContext.Provider value={insets}>
+            <ToastProvider bottomOffset={64}>
+              <Trigger />
+            </ToastProvider>
+          </SafeAreaInsetsContext.Provider>
+        </A11yContext.Provider>
+      </ThemeProvider>,
+    );
+    fireEvent.press(getByTestId('show-info'));
+    const overlay = StyleSheet.flatten(
+      getByTestId('toast-overlay').props.style,
+    );
+    expect(overlay.bottom).toBe(
+      34 + 64 + THEMES[DEFAULT_THEME_NAME].light.spacing[4],
+    );
   });
 });

@@ -1,5 +1,5 @@
 import type { ColorPalette } from '../colors';
-import { lightColors, darkColors } from '../colors';
+import { THEMES, THEME_NAMES } from '../themes';
 import {
   AA_NORMAL_TEXT,
   AA_NON_TEXT,
@@ -122,5 +122,9 @@ function runPaletteAudit(name: string, palette: ColorPalette): void {
   });
 }
 
-runPaletteAudit('light', lightColors);
-runPaletteAudit('dark', darkColors);
+// Every registered theme is audited, so a new theme cannot skip the audit.
+for (const name of THEME_NAMES) {
+  const { label, light, dark } = THEMES[name];
+  runPaletteAudit(`${label} light`, light.colors);
+  runPaletteAudit(`${label} dark`, dark.colors);
+}

@@ -26,11 +26,27 @@ accessibility, and a Windows-first PowerShell toolchain.
   value.
 - `src/components/` — generic, prop-driven `App*` components.
 - `src/a11y/` — accessibility context, roles, announcements.
+- `src/api/` — the data layer. Every API call goes through the `ApiClient`
+  from `useApi()`; screens never call `fetch`. Tests and a demo mode swap
+  the client through `ApiProvider`. The base URL comes from the build
+  (`API_BASE_URL`), never from a user setting.
+- `src/navigation/` — `TABS`, the one list of bottom tabs (order, titles,
+  labels, icons). A new tab is a route file in `app/(tabs)/` plus an entry
+  here; a test fails when the two disagree.
+- `src/placeholders/` — the "Coming soon" page a tab shows until its feature
+  is built.
 - `src/state/` — Zustand stores (injectable-deps factory pattern).
 - `src/storage/` — platform-aware persistence behind one `StorageAdapter`.
+- `src/hooks/` — shared React hooks, exported from `src/hooks/index.ts`.
 - `src/utils/` — small pure helpers (error coercion, formatting).
-- `scripts/` — PowerShell tooling (+ `.cmd` double-click wrappers);
-  `scripts/release/` holds the Node release tools (release records and the
+- `src/gallery/` — the Component Gallery showcase (route `app/gallery.tsx`).
+- `tests/` — tests for the `app/` routes. expo-router reads every file in
+  `app/` as a route, so these tests cannot sit next to the screens.
+- `tools/` — developer tooling, 1 folder per group (`launch/`, `deploy/`,
+  `quality/`). Each group folder holds the `.cmd` double-click wrappers, and
+  its `ps/` subfolder holds the PowerShell scripts; `tools/shared/ps/` holds
+  the helpers the launch and deploy scripts share;
+  `tools/release/` holds the Node release tools (release records and the
   automatic version bump).
 - `fastlane/` — store listing pipeline (metadata, screenshots, privacy).
 - `eslint-plugin-theme-tokens/` — local lint rules banning raw visual values.
@@ -44,8 +60,9 @@ accessibility, and a Windows-first PowerShell toolchain.
   components require them at the type level), 44pt minimum touch target
   (`theme.a11y.minTouchTarget`).
 - **TypeScript strict; no `any`, no `@ts-ignore`.**
-- **Stores are factories taking `deps`** so tests inject fakes and never
-  share state (`src/state/exampleStore.ts` is the pattern).
+- **Clients, services and stores are factories taking `deps`** so tests
+  inject fakes and never share state (`src/api/httpApiClient.ts` and
+  `src/state/exampleStore.ts` are the pattern).
 - **Barrels**: import from a directory's `index.ts`, not deep paths.
 - **User-facing strings** follow `docs/ui-writing-style.md`. Changelog
   entries are reader-facing prose (`CHANGELOG.md` header has the rules).
@@ -54,10 +71,13 @@ accessibility, and a Windows-first PowerShell toolchain.
 
 ## Quality gate
 
-CI runs typecheck, lint (`--max-warnings` clean), Prettier check, Jest with
-coverage (70% floor), a web-export bundle smoke test, and the PowerShell
-gate on a Windows runner. The local gate (`scripts/QualityGate.cmd`)
-auto-fixes formatting/lint first; ci mode fixes nothing.
+CI runs the strict PowerShell gate (`tools/quality/ps/QualityGate.ps1 -Mode
+ci`) twice: under PowerShell 7 on Linux and under Windows PowerShell 5.1 on
+Windows. The gate checks the app artwork, Prettier, lint (`--max-warnings
+0`), typecheck, Jest with coverage (70% floor) and a web-export bundle smoke
+test. The local gate (`tools/quality/QualityGate.cmd`) auto-fixes
+formatting/lint first; ci mode fixes nothing. To add a step, see
+`tools/README.md`.
 
 ## Supplementary files
 
@@ -75,5 +95,6 @@ Consult on demand — no need to read them all every session:
 | `fastlane/PUBLISHING.md`            | Store listings, screenshots, privacy declarations      |
 | `docs/expo-account.md`              | EXPO_TOKEN setup, building under the right account     |
 | `docs/new-project-from-template.md` | Turning the template into a real app                   |
+| `docs/app-artwork.md`               | The app icon, splash and store icon, and their rules   |
 | `docs/decision-records.md`          | Writing down design decisions from a discussion        |
-| `scripts/README.md`                 | The PowerShell toolchain and quality gate              |
+| `tools/README.md`                   | The PowerShell toolchain and quality gate              |

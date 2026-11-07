@@ -2,26 +2,28 @@ import { StyleSheet } from 'react-native';
 import { fireEvent, waitFor } from '@testing-library/react-native';
 
 import { AppButton } from '../AppButton';
-import { a11y, lightColors } from '@/theme';
+import { a11y, DEFAULT_THEME_NAME, THEMES } from '@/theme';
 import { renderWithTheme } from '@/test';
 
+const lightColors = THEMES[DEFAULT_THEME_NAME].light.colors;
+
 describe('AppButton', () => {
-  it('renders its label', () => {
-    const { getByText } = renderWithTheme(
+  it('renders its label', async () => {
+    const { getByText } = await renderWithTheme(
       <AppButton label="Save" onPress={jest.fn()} />,
     );
     expect(getByText('Save')).toBeTruthy();
   });
 
-  it('uses the label as the default accessibility name and button role', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('uses the label as the default accessibility name and button role', async () => {
+    const { getByLabelText } = await renderWithTheme(
       <AppButton label="Save" onPress={jest.fn()} />,
     );
     expect(getByLabelText('Save').props.accessibilityRole).toBe('button');
   });
 
-  it('allows overriding the accessibility label', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('allows overriding the accessibility label', async () => {
+    const { getByLabelText } = await renderWithTheme(
       <AppButton
         label="Save"
         accessibilityLabel="Save document"
@@ -31,18 +33,18 @@ describe('AppButton', () => {
     expect(getByLabelText('Save document')).toBeTruthy();
   });
 
-  it('fires onPress when enabled', () => {
+  it('fires onPress when enabled', async () => {
     const onPress = jest.fn();
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppButton label="Go" onPress={onPress} />,
     );
     fireEvent.press(getByLabelText('Go'));
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
-  it('does not fire onPress when disabled and reports disabled state', () => {
+  it('does not fire onPress when disabled and reports disabled state', async () => {
     const onPress = jest.fn();
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppButton label="Go" onPress={onPress} disabled />,
     );
     const el = getByLabelText('Go');
@@ -53,9 +55,9 @@ describe('AppButton', () => {
     );
   });
 
-  it('shows a spinner, hides the label, and reports busy when loading', () => {
+  it('shows a spinner, hides the label, and reports busy when loading', async () => {
     const onPress = jest.fn();
-    const { queryByText, getByLabelText } = renderWithTheme(
+    const { queryByText, getByLabelText } = await renderWithTheme(
       <AppButton label="Submit" onPress={onPress} loading />,
     );
     expect(queryByText('Submit')).toBeNull();
@@ -67,8 +69,8 @@ describe('AppButton', () => {
     );
   });
 
-  it('inherits the 44x44 minimum touch target from AppPressable', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('inherits the 44x44 minimum touch target from AppPressable', async () => {
+    const { getByLabelText } = await renderWithTheme(
       <AppButton label="Tap" onPress={jest.fn()} />,
     );
     const flat = StyleSheet.flatten(getByLabelText('Tap').props.style);
@@ -77,7 +79,7 @@ describe('AppButton', () => {
   });
 
   it('applies the primary variant background from theme tokens', async () => {
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppButton label="Primary" onPress={jest.fn()} />,
       'light',
     );
@@ -88,7 +90,7 @@ describe('AppButton', () => {
   });
 
   it('renders the outline variant with a border and transparent fill', async () => {
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppButton label="Outline" variant="outline" onPress={jest.fn()} />,
       'light',
     );

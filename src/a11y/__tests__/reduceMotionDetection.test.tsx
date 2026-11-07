@@ -44,7 +44,7 @@ describe('useReduceMotionDetection', () => {
       .mockRejectedValue(new Error('unsupported'));
     jest
       .spyOn(AccessibilityInfo, 'addEventListener')
-      .mockReturnValue({ remove } as ReturnType<
+      .mockReturnValue({ remove } as unknown as ReturnType<
         typeof AccessibilityInfo.addEventListener
       >);
 

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import {
   TextInput,
   View,
+  useWindowDimensions,
   type StyleProp,
   type TextInputProps,
   type TextStyle,
@@ -9,7 +10,7 @@ import {
 } from 'react-native';
 
 import { AppText } from './AppText';
-import { MAX_FONT_SIZE_MULTIPLIER } from '@/a11y';
+import { MAX_FONT_SIZE_MULTIPLIER, fontScaleFactor } from '@/a11y';
 import { useTheme } from '@/theme';
 import type { ThemeTokens } from '@/theme';
 
@@ -82,15 +83,18 @@ export function AppTextInput({
   ...rest
 }: AppTextInputProps) {
   const { theme } = useTheme();
+  const { fontScale } = useWindowDimensions();
   const [focused, setFocused] = useState(false);
 
   const hasError = errorText != null && errorText.length > 0;
   const isDisabled = editable === false;
   const helperText = hasError ? errorText : hint;
 
-  const fieldStyle = useMemo<TextStyle>(
-    () => ({
-      borderWidth: 1,
+  const fieldStyle = useMemo<TextStyle>(() => {
+    const body = theme.typography.variants.body;
+    const size = theme.typography.sizes[body.size];
+    return {
+      borderWidth: theme.borderWidths.thin,
       borderColor: borderColorFor(theme, hasError, focused, isDisabled),
       borderRadius: theme.radii.md,
       backgroundColor: isDisabled
@@ -99,13 +103,23 @@ export function AppTextInput({
       paddingVertical: theme.spacing[3],
       paddingHorizontal: theme.spacing[4],
       color: isDisabled ? theme.colors.textDisabled : theme.colors.textPrimary,
-      fontFamily: theme.typography.families.sans,
-      fontSize: theme.typography.sizes.md.fontSize,
-      lineHeight: theme.typography.sizes.md.lineHeight,
+      fontFamily: body.family,
+      fontSize: size.fontSize,
+      // TextInput scales fontSize with the OS setting but not lineHeight.
+      lineHeight:
+        size.lineHeight *
+        fontScaleFactor(fontScale, allowFontScaling, maxFontSizeMultiplier),
       minHeight: theme.a11y.minTouchTarget,
-    }),
-    [theme, hasError, focused, isDisabled],
-  );
+    };
+  }, [
+    theme,
+    hasError,
+    focused,
+    isDisabled,
+    fontScale,
+    allowFontScaling,
+    maxFontSizeMultiplier,
+  ]);
 
   const handleFocus: NonNullable<TextInputProps['onFocus']> = (e) => {
     setFocused(true);

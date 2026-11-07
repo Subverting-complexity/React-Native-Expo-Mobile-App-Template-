@@ -51,7 +51,7 @@ describe('AppErrorBoundary', () => {
     );
     expect(getByTestId('app-error-boundary-fallback')).toBeTruthy();
     expect(getByText('Something went wrong')).toBeTruthy();
-    expect(getByText('explode')).toBeTruthy();
+    expect(getByText(/explode/)).toBeTruthy();
   });
 
   it('renders the fallback safely outside a ThemeProvider', () => {
@@ -124,7 +124,7 @@ describe('AppErrorBoundary', () => {
     const { getByText, getByLabelText } = render(
       <DefaultErrorFallback error={new Error('standalone')} reset={reset} />,
     );
-    expect(getByText('standalone')).toBeTruthy();
+    expect(getByText(/standalone/)).toBeTruthy();
     fireEvent.press(getByLabelText('Try again'));
     expect(reset).toHaveBeenCalledTimes(1);
   });

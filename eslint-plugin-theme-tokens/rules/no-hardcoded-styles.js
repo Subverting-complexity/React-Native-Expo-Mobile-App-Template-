@@ -1,5 +1,11 @@
 'use strict';
 
+const {
+  getAttributeName,
+  getPropertyName,
+  literalValues,
+} = require('../lib/ast');
+
 const VISUAL_PROPERTIES = new Set([
   // Typography
   'fontSize',
@@ -46,17 +52,26 @@ const VISUAL_PROPERTIES = new Set([
   'borderBottomStartRadius',
   'borderBottomEndRadius',
 
+  // Border widths (src/theme/borderWidths.ts)
+  'borderWidth',
+  'borderTopWidth',
+  'borderRightWidth',
+  'borderBottomWidth',
+  'borderLeftWidth',
+  'borderStartWidth',
+  'borderEndWidth',
+
+  // Opacity (src/theme/opacity.ts). 1 (fully visible) is allowed, like 0.
+  'opacity',
+
+  // Shadows (src/theme/shadows.ts). shadowOffset is an object, checked below.
+  'shadowRadius',
+
   // Layering — z-index is a token category (src/theme/zIndex.ts); raw stacking
   // values fragment the layering scale. (Layout dimensions like width/height
   // stay exempt: they are behavioral, not part of the design-token contract.)
   'zIndex',
 ]);
-
-function getPropertyName(node) {
-  if (node.key.type === 'Identifier') return node.key.name;
-  if (node.key.type === 'Literal') return String(node.key.value);
-  return null;
-}
 
 module.exports = {
   meta: {
@@ -73,19 +88,52 @@ module.exports = {
   },
 
   create(context) {
+    function report(node, value, property) {
+      context.report({
+        node,
+        messageId: 'noHardcodedStyle',
+        data: { value: String(value), property },
+      });
+    }
+
+    function checkNumbers(valueNode, property) {
+      for (const { node, value } of literalValues(valueNode)) {
+        const neutral = value === 0 || (property === 'opacity' && value === 1);
+        if (typeof value === 'number' && !neutral) {
+          report(node, value, property);
+        }
+      }
+    }
+
+    // Weights come from the type variants (theme.typography.variants), so any literal is raw.
+    function checkFontWeight(valueNode) {
+      for (const { node, value } of literalValues(valueNode)) {
+        if (typeof value === 'number' || typeof value === 'string') {
+          report(node, value, 'fontWeight');
+        }
+      }
+    }
+
+    function checkShadowOffset(valueNode) {
+      if (valueNode.type !== 'ObjectExpression') return;
+      for (const axis of valueNode.properties) {
+        if (axis.type !== 'Property') continue;
+        checkNumbers(axis.value, `shadowOffset.${getPropertyName(axis)}`);
+      }
+    }
+
     return {
       Property(node) {
         const name = getPropertyName(node);
-        if (!name || !VISUAL_PROPERTIES.has(name)) return;
-        if (node.value.type !== 'Literal') return;
-        if (typeof node.value.value !== 'number') return;
-        if (node.value.value === 0) return;
-
-        context.report({
-          node: node.value,
-          messageId: 'noHardcodedStyle',
-          data: { value: String(node.value.value), property: name },
-        });
+        if (name === 'fontWeight') checkFontWeight(node.value);
+        if (name === 'shadowOffset') checkShadowOffset(node.value);
+        if (VISUAL_PROPERTIES.has(name)) checkNumbers(node.value, name);
+      },
+      // A `size` prop on any element, such as an icon: `<Ionicons size={24} />`.
+      JSXAttribute(node) {
+        if (getAttributeName(node) === 'size' && node.value) {
+          checkNumbers(node.value, 'size');
+        }
       },
     };
   },

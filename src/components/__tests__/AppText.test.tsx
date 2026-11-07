@@ -1,12 +1,19 @@
-import { Dimensions, StyleSheet } from 'react-native';
+import {
+  Dimensions,
+  StyleSheet,
+  type StyleProp,
+  type TextStyle,
+} from 'react-native';
 import { waitFor } from '@testing-library/react-native';
 
 import { AppText } from '../AppText';
 import { MAX_FONT_SIZE_MULTIPLIER } from '@/a11y';
-import { lightColors, typography, FONT_FAMILIES } from '@/theme';
+import { typography, FONT_FAMILIES, DEFAULT_THEME_NAME, THEMES } from '@/theme';
 import { renderWithTheme } from '@/test';
 
-function styleOf(node: { props: { style?: unknown } }) {
+const lightColors = THEMES[DEFAULT_THEME_NAME].light.colors;
+
+function styleOf(node: { props: { style?: StyleProp<TextStyle> } }) {
   return StyleSheet.flatten(node.props.style);
 }
 
@@ -35,21 +42,21 @@ afterAll(() => {
 });
 
 describe('AppText', () => {
-  it('renders its children', () => {
-    const { getByText } = renderWithTheme(<AppText>Hello</AppText>);
+  it('renders its children', async () => {
+    const { getByText } = await renderWithTheme(<AppText>Hello</AppText>);
     expect(getByText('Hello')).toBeTruthy();
   });
 
-  it('defaults to the body variant size from typography tokens', () => {
-    const { getByText } = renderWithTheme(<AppText>Body</AppText>);
+  it('defaults to the body variant size from typography tokens', async () => {
+    const { getByText } = await renderWithTheme(<AppText>Body</AppText>);
     const flat = styleOf(getByText('Body'));
     expect(flat.fontSize).toBe(typography.sizes.md.fontSize);
     expect(flat.lineHeight).toBe(typography.sizes.md.lineHeight);
     expect(flat.fontFamily).toBe(FONT_FAMILIES.sans);
   });
 
-  it('resolves a heading variant to the bold family and larger size', () => {
-    const { getByText } = renderWithTheme(
+  it('resolves a heading variant to the bold family and larger size', async () => {
+    const { getByText } = await renderWithTheme(
       <AppText variant="heading">Title</AppText>,
     );
     const flat = styleOf(getByText('Title'));
@@ -59,7 +66,7 @@ describe('AppText', () => {
   });
 
   it('maps tone to a palette colour token', async () => {
-    const { getByText } = renderWithTheme(
+    const { getByText } = await renderWithTheme(
       <AppText tone="secondary">Muted</AppText>,
       'light',
     );
@@ -69,7 +76,7 @@ describe('AppText', () => {
   });
 
   it('maps the accent tone to the primary colour', async () => {
-    const { getByText } = renderWithTheme(
+    const { getByText } = await renderWithTheme(
       <AppText tone="accent">Link</AppText>,
       'light',
     );
@@ -78,8 +85,8 @@ describe('AppText', () => {
     });
   });
 
-  it('merges a caller style last so overrides win', () => {
-    const { getByText } = renderWithTheme(
+  it('merges a caller style last so overrides win', async () => {
+    const { getByText } = await renderWithTheme(
       <AppText style={{ fontSize: 99, color: 'rebeccapurple' }}>X</AppText>,
     );
     const flat = styleOf(getByText('X'));
@@ -87,8 +94,8 @@ describe('AppText', () => {
     expect(flat.color).toBe('rebeccapurple');
   });
 
-  it('passes through standard Text props', () => {
-    const { getByText } = renderWithTheme(
+  it('passes through standard Text props', async () => {
+    const { getByText } = await renderWithTheme(
       <AppText numberOfLines={2}>Long</AppText>,
     );
     expect(getByText('Long').props.numberOfLines).toBe(2);
@@ -97,30 +104,30 @@ describe('AppText', () => {
   describe('Dynamic Type scaling', () => {
     const base = typography.sizes.md.lineHeight;
 
-    it('scales lineHeight with the OS font scale up to the cap', () => {
+    it('scales lineHeight with the OS font scale up to the cap', async () => {
       setFontScale(1.3);
-      const { getByText } = renderWithTheme(<AppText>Body</AppText>);
+      const { getByText } = await renderWithTheme(<AppText>Body</AppText>);
       expect(styleOf(getByText('Body')).lineHeight).toBeCloseTo(base * 1.3);
     });
 
-    it('clamps lineHeight scaling at the default cap', () => {
+    it('clamps lineHeight scaling at the default cap', async () => {
       setFontScale(3);
-      const { getByText } = renderWithTheme(<AppText>Body</AppText>);
+      const { getByText } = await renderWithTheme(<AppText>Body</AppText>);
       expect(styleOf(getByText('Body')).lineHeight).toBeCloseTo(
         base * MAX_FONT_SIZE_MULTIPLIER,
       );
     });
 
-    it('applies the default cap to the underlying Text node', () => {
-      const { getByText } = renderWithTheme(<AppText>Body</AppText>);
+    it('applies the default cap to the underlying Text node', async () => {
+      const { getByText } = await renderWithTheme(<AppText>Body</AppText>);
       expect(getByText('Body').props.maxFontSizeMultiplier).toBe(
         MAX_FONT_SIZE_MULTIPLIER,
       );
     });
 
-    it('honors a per-instance maxFontSizeMultiplier override', () => {
+    it('honors a per-instance maxFontSizeMultiplier override', async () => {
       setFontScale(3);
-      const { getByText } = renderWithTheme(
+      const { getByText } = await renderWithTheme(
         <AppText maxFontSizeMultiplier={2}>Body</AppText>,
       );
       const node = getByText('Body');
@@ -128,9 +135,9 @@ describe('AppText', () => {
       expect(node.props.maxFontSizeMultiplier).toBe(2);
     });
 
-    it('opts out of the cap when maxFontSizeMultiplier is null', () => {
+    it('opts out of the cap when maxFontSizeMultiplier is null', async () => {
       setFontScale(3);
-      const { getByText } = renderWithTheme(
+      const { getByText } = await renderWithTheme(
         <AppText maxFontSizeMultiplier={null}>Body</AppText>,
       );
       const node = getByText('Body');
@@ -138,9 +145,22 @@ describe('AppText', () => {
       expect(node.props.maxFontSizeMultiplier).toBeNull();
     });
 
-    it('freezes scaling when allowFontScaling is false', () => {
+    it('scales the lineHeight of a size override, and keeps the variant font', async () => {
+      setFontScale(1.3);
+      const { getByText } = await renderWithTheme(
+        <AppText variant="label" size="lg">
+          Label
+        </AppText>,
+      );
+      const flat = styleOf(getByText('Label'));
+      expect(flat.fontSize).toBe(typography.sizes.lg.fontSize);
+      expect(flat.lineHeight).toBeCloseTo(typography.sizes.lg.lineHeight * 1.3);
+      expect(flat.fontFamily).toBe(FONT_FAMILIES.sansBold);
+    });
+
+    it('freezes scaling when allowFontScaling is false', async () => {
       setFontScale(3);
-      const { getByText } = renderWithTheme(
+      const { getByText } = await renderWithTheme(
         <AppText allowFontScaling={false}>Body</AppText>,
       );
       const node = getByText('Body');

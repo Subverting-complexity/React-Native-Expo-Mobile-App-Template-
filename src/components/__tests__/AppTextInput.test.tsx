@@ -2,29 +2,33 @@ import { StyleSheet } from 'react-native';
 import { fireEvent, waitFor } from '@testing-library/react-native';
 
 import { AppTextInput } from '../AppTextInput';
-import { a11y, lightColors, radii } from '@/theme';
+import { a11y, radii, DEFAULT_THEME_NAME, THEMES } from '@/theme';
 import { renderWithTheme } from '@/test';
 
+const lightColors = THEMES[DEFAULT_THEME_NAME].light.colors;
+
 describe('AppTextInput', () => {
-  it('renders the visible label', () => {
-    const { getByText } = renderWithTheme(<AppTextInput label="Email" />);
+  it('renders the visible label', async () => {
+    const { getByText } = await renderWithTheme(<AppTextInput label="Email" />);
     expect(getByText('Email')).toBeTruthy();
   });
 
-  it('names the field with the label for screen readers by default', () => {
-    const { getByLabelText } = renderWithTheme(<AppTextInput label="Email" />);
+  it('names the field with the label for screen readers by default', async () => {
+    const { getByLabelText } = await renderWithTheme(
+      <AppTextInput label="Email" />,
+    );
     expect(getByLabelText('Email')).toBeTruthy();
   });
 
-  it('lets accessibilityLabel override the spoken name', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('lets accessibilityLabel override the spoken name', async () => {
+    const { getByLabelText } = await renderWithTheme(
       <AppTextInput label="Email" accessibilityLabel="Work email address" />,
     );
     expect(getByLabelText('Work email address')).toBeTruthy();
   });
 
-  it('shows the hint as helper text and as the field hint', () => {
-    const { getByText, getByTestId } = renderWithTheme(
+  it('shows the hint as helper text and as the field hint', async () => {
+    const { getByText, getByTestId } = await renderWithTheme(
       <AppTextInput label="Email" hint="We never share it" testID="field" />,
     );
     expect(getByText('We never share it')).toBeTruthy();
@@ -33,8 +37,8 @@ describe('AppTextInput', () => {
     );
   });
 
-  it('renders the error message and prefers it over the hint', () => {
-    const { getByText, queryByText, getByTestId } = renderWithTheme(
+  it('renders the error message and prefers it over the hint', async () => {
+    const { getByText, queryByText, getByTestId } = await renderWithTheme(
       <AppTextInput
         label="Email"
         hint="We never share it"
@@ -50,7 +54,7 @@ describe('AppTextInput', () => {
   });
 
   it('applies the error border colour when in the error state', async () => {
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId } = await renderWithTheme(
       <AppTextInput label="Email" errorText="Required" testID="field" />,
       'light',
     );
@@ -61,7 +65,7 @@ describe('AppTextInput', () => {
   });
 
   it('highlights the border with the primary colour on focus', async () => {
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId } = await renderWithTheme(
       <AppTextInput label="Email" testID="field" />,
       'light',
     );
@@ -72,15 +76,15 @@ describe('AppTextInput', () => {
     });
   });
 
-  it('marks the field disabled when not editable', () => {
-    const { getByTestId } = renderWithTheme(
+  it('marks the field disabled when not editable', async () => {
+    const { getByTestId } = await renderWithTheme(
       <AppTextInput label="Email" editable={false} testID="field" />,
     );
     expect(getByTestId('field').props.accessibilityState.disabled).toBe(true);
   });
 
-  it('applies the token radius and the 44px minimum height', () => {
-    const { getByTestId } = renderWithTheme(
+  it('applies the token radius and the 44px minimum height', async () => {
+    const { getByTestId } = await renderWithTheme(
       <AppTextInput label="Email" testID="field" />,
     );
     const flat = StyleSheet.flatten(getByTestId('field').props.style);

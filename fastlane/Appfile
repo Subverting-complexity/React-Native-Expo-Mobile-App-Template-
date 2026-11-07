@@ -1,7 +1,7 @@
 # Fastlane Appfile — app + team identity.
 #
 # App identity is shared across platforms (same reverse-DNS id). Replace every
-# placeholder below before running any lane; keep the id in sync with
+# placeholder or blank value below before running any lane; keep the id in sync with
 # app.config.ts (`ios.bundleIdentifier` / `android.package`) and the Fastfile.
 
 app_identifier("dev.template.expo")
@@ -9,11 +9,11 @@ app_identifier("dev.template.expo")
 for_platform :ios do
   # The Apple ID (email) that owns the app in App Store Connect. Prefer the
   # env var so the file itself stays account-free.
-  apple_id(ENV["APPLE_ID"] || "you@example.com")
+  apple_id(ENV["APPLE_ID"] || "")
 
   # Apple Developer team id (10 characters). Same value as
   # `submit.production.ios.appleTeamId` in eas.json — keep them in sync.
-  team_id("XXXXXXXXXX")
+  team_id("")
 
   # itc_team_id("...")  # Set only if your App Store Connect team id differs.
 end

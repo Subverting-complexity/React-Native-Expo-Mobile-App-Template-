@@ -1,10 +1,12 @@
 import { ScrollView, StyleSheet, Text } from 'react-native';
 import { SafeAreaProvider, type Metrics } from 'react-native-safe-area-context';
-import { render, waitFor } from '@testing-library/react-native';
+import { waitFor } from '@testing-library/react-native';
 
 import { AppScreenContainer } from '../AppScreenContainer';
-import { ThemeProvider, lightColors, spacing } from '@/theme';
-import { makeStorage } from '@/test';
+import { ThemeProvider, spacing, DEFAULT_THEME_NAME, THEMES } from '@/theme';
+import { makeStorage, renderHydrated } from '@/test';
+
+const lightColors = THEMES[DEFAULT_THEME_NAME].light.colors;
 
 const METRICS: Metrics = {
   frame: { x: 0, y: 0, width: 390, height: 844 },
@@ -13,8 +15,11 @@ const METRICS: Metrics = {
 
 // Default to no saved mode so synchronous assertions stay free of act(...)
 // warnings; pass 'light' (with waitFor) only when asserting colour tokens.
-function renderWithTheme(ui: React.ReactElement, saved: string | null = null) {
-  return render(
+async function renderWithTheme(
+  ui: React.ReactElement,
+  saved: string | null = null,
+) {
+  return await renderHydrated(
     <SafeAreaProvider initialMetrics={METRICS}>
       <ThemeProvider storage={makeStorage(saved)}>{ui}</ThemeProvider>
     </SafeAreaProvider>,
@@ -22,8 +27,8 @@ function renderWithTheme(ui: React.ReactElement, saved: string | null = null) {
 }
 
 describe('AppScreenContainer', () => {
-  it('renders its children', () => {
-    const { getByText } = renderWithTheme(
+  it('renders its children', async () => {
+    const { getByText } = await renderWithTheme(
       <AppScreenContainer>
         <Text>Screen body</Text>
       </AppScreenContainer>,
@@ -32,7 +37,7 @@ describe('AppScreenContainer', () => {
   });
 
   it('applies the themed background to the safe-area root', async () => {
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId } = await renderWithTheme(
       <AppScreenContainer testID="screen">
         <Text>Body</Text>
       </AppScreenContainer>,
@@ -44,8 +49,8 @@ describe('AppScreenContainer', () => {
     });
   });
 
-  it('applies standard padding to the content when padded (default)', () => {
-    const { getByTestId } = renderWithTheme(
+  it('applies standard padding to the content when padded (default)', async () => {
+    const { getByTestId } = await renderWithTheme(
       <AppScreenContainer testID="screen">
         <Text>Padded</Text>
       </AppScreenContainer>,
@@ -54,8 +59,8 @@ describe('AppScreenContainer', () => {
     expect(flat.padding).toBe(spacing[4]);
   });
 
-  it('omits padding when padded is false', () => {
-    const { getByTestId } = renderWithTheme(
+  it('omits padding when padded is false', async () => {
+    const { getByTestId } = await renderWithTheme(
       <AppScreenContainer padded={false} testID="screen">
         <Text>Flush</Text>
       </AppScreenContainer>,
@@ -64,8 +69,8 @@ describe('AppScreenContainer', () => {
     expect(flat.padding).toBeUndefined();
   });
 
-  it('renders a ScrollView only when scroll is enabled', () => {
-    const scrolling = renderWithTheme(
+  it('renders a ScrollView only when scroll is enabled', async () => {
+    const scrolling = await renderWithTheme(
       <AppScreenContainer scroll>
         <Text>Scrolls</Text>
       </AppScreenContainer>,
@@ -74,7 +79,7 @@ describe('AppScreenContainer', () => {
       0,
     );
 
-    const stat = renderWithTheme(
+    const stat = await renderWithTheme(
       <AppScreenContainer>
         <Text>Static</Text>
       </AppScreenContainer>,

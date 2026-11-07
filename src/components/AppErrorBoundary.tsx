@@ -15,8 +15,9 @@ import {
 } from 'react-native';
 
 import { A11Y_ROLES } from '@/a11y';
-import { ThemeContext, darkTheme, lightTheme } from '@/theme';
+import { DEFAULT_THEME_NAME, THEMES, ThemeContext } from '@/theme';
 import type { ThemeTokens } from '@/theme';
+import { userFacingErrorMessage } from '@/utils';
 
 /**
  * What a fallback receives: the caught error and a `reset` callback that clears
@@ -153,14 +154,16 @@ function buildFallbackStyles(theme: ThemeTokens): FallbackStyles {
  * Themed fallback shown by {@link AppErrorBoundary} when no custom fallback is
  * given. Resolves the theme from {@link ThemeContext} directly rather than
  * `useTheme()` so it never throws when rendered above (or without) a
- * `<ThemeProvider>`; in that case it picks the token palette matching the OS
- * color scheme. Every value comes from theme tokens — no hardcoded colors,
+ * `<ThemeProvider>`; in that case it picks the default theme in the OS color
+ * scheme. Every value comes from theme tokens — no hardcoded colors,
  * sizes, or spacing.
  */
 export function DefaultErrorFallback({ error, reset }: ErrorFallbackProps) {
   const ctx = useContext(ThemeContext);
   const scheme = useColorScheme();
-  const theme = ctx?.theme ?? (scheme === 'light' ? lightTheme : darkTheme);
+  const theme =
+    ctx?.theme ??
+    THEMES[DEFAULT_THEME_NAME][scheme === 'light' ? 'light' : 'dark'];
 
   const styles = useMemo(() => buildFallbackStyles(theme), [theme]);
 
@@ -175,7 +178,8 @@ export function DefaultErrorFallback({ error, reset }: ErrorFallbackProps) {
         Something went wrong
       </Text>
       <Text style={styles.message}>
-        {error.message || 'An unexpected error occurred.'}
+        {/* A release build shows only the plain message, never raw error text. */}
+        {userFacingErrorMessage(error, 'An unexpected error occurred.')}
       </Text>
       <Pressable
         accessibilityRole={A11Y_ROLES.button}

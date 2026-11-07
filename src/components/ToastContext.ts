@@ -15,7 +15,8 @@ export interface ToastOptions {
   /** Intent / colour. Defaults to `info`. */
   tone?: ToastTone;
   /**
-   * Auto-dismiss delay in ms. Defaults to 4000. Pass `0` to make the toast
+   * Auto-dismiss delay in ms. Defaults to 4000, or 10000 when there is an
+   * `action`, so the user has time to press it. Pass `0` to make the toast
    * sticky (dismissed only by the close button or the next `show`).
    */
   duration?: number;

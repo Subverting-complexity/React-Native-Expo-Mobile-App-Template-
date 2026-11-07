@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 
 import { A11Y_ROLES } from '@/a11y';
-import { useTheme } from '@/theme';
+import { INTENT_COLORS, useTheme } from '@/theme';
 import type { ColorPalette } from '@/theme';
 
 /**
@@ -24,8 +24,8 @@ const SIZE_MAP: Record<AppSpinnerSize, 'small' | 'large'> = {
 };
 
 const TONE_COLORS: Record<AppSpinnerTone, keyof ColorPalette> = {
-  primary: 'primary',
-  secondary: 'secondary',
+  primary: INTENT_COLORS.primary.base,
+  secondary: INTENT_COLORS.secondary.base,
   inverse: 'textInverse',
   muted: 'textSecondary',
 };
