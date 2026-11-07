@@ -104,6 +104,14 @@ House rules for entries, learned from sibling projects:
   is too light for text fails the test.
 - Placeholder text in a text field uses the secondary text colour. Before,
   it used the disabled colour, which was too faint to read.
+- Tab labels and the error screen no longer clip at large device text
+  sizes. Their line height now grows with the text, and the error screen
+  uses the same text size limit as the rest of the app.
+- The app no longer claims a global text size limit that it did not have.
+  The old limit set a default on React Native's text component, which React
+  19 ignores. The limit comes from `AppText` and `AppTextInput`, and lint
+  now rejects raw `Text` and `TextInput` in screens and components.
+  `applyGlobalFontScaleCap` is removed.
 
 ### Tooling
 

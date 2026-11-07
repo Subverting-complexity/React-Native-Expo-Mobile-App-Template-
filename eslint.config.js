@@ -53,6 +53,37 @@ module.exports = defineConfig([
     },
   },
 
+  // Text goes through AppText, and fields through AppTextInput. They apply
+  // the font-scale cap and scale the line height with the OS text size. React
+  // 19 ignores defaultProps on function components, so a raw Text gets
+  // neither. The three files below wrap Text themselves; the error fallback
+  // must render without a ThemeProvider, so it cannot use AppText.
+  {
+    files: ['app/**/*.{ts,tsx}', 'src/**/*.{ts,tsx}'],
+    ignores: [
+      'src/components/AppText.tsx',
+      'src/components/AppTextInput.tsx',
+      'src/components/AppErrorBoundary.tsx',
+      '**/__tests__/**',
+      '**/*.test.{ts,tsx}',
+    ],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'react-native',
+              importNames: ['Text', 'TextInput'],
+              message:
+                'Use AppText or AppTextInput from @/components. They cap the font scale and scale the line height.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
   // Accessibility gating for shipped app/UI source (JSX lives in .tsx here).
   // The CI/quality gate runs `eslint`, so enabling these here makes them gate
   // automatically. Two kinds of rule are enabled:

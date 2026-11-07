@@ -1,15 +1,8 @@
 import { useMemo, type ReactNode } from 'react';
 
 import { A11yContext } from './A11yContext';
-import {
-  applyGlobalFontScaleCap,
-  MAX_FONT_SIZE_MULTIPLIER,
-} from './maxFontScale';
+import { MAX_FONT_SIZE_MULTIPLIER } from './maxFontScale';
 import { useReduceMotionDetection } from './reduceMotionDetection';
-
-// Install the global font-scale cap as the module loads, before any Text
-// renders. Idempotent, so importing the provider anywhere is safe.
-applyGlobalFontScaleCap();
 
 interface A11yProviderProps {
   children: ReactNode;

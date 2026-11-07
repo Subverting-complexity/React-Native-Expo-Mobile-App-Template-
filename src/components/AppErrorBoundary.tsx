@@ -9,12 +9,13 @@ import {
   Pressable,
   Text,
   useColorScheme,
+  useWindowDimensions,
   View,
   type TextStyle,
   type ViewStyle,
 } from 'react-native';
 
-import { A11Y_ROLES } from '@/a11y';
+import { A11Y_ROLES, MAX_FONT_SIZE_MULTIPLIER, fontScaleFactor } from '@/a11y';
 import { DEFAULT_THEME_NAME, THEMES, ThemeContext } from '@/theme';
 import type { ThemeTokens } from '@/theme';
 import { userFacingErrorMessage } from '@/utils';
@@ -98,7 +99,15 @@ interface FallbackStyles {
   buttonLabel: TextStyle;
 }
 
-function buildFallbackStyles(theme: ThemeTokens): FallbackStyles {
+/**
+ * `lineScale` is the factor React Native applies to the font size. React
+ * Native does not scale `lineHeight`, so the styles scale it here, as
+ * `AppText` does, or large text would clip.
+ */
+function buildFallbackStyles(
+  theme: ThemeTokens,
+  lineScale: number,
+): FallbackStyles {
   const { colors, spacing, radii, typography, a11y } = theme;
   const heading = typography.variants.heading;
   const headingSize = typography.sizes[heading.size];
@@ -118,7 +127,7 @@ function buildFallbackStyles(theme: ThemeTokens): FallbackStyles {
       fontFamily: heading.family,
       fontWeight: heading.weight,
       fontSize: headingSize.fontSize,
-      lineHeight: headingSize.lineHeight,
+      lineHeight: headingSize.lineHeight * lineScale,
       letterSpacing: headingSize.letterSpacing,
       color: colors.textPrimary,
       textAlign: 'center',
@@ -127,7 +136,7 @@ function buildFallbackStyles(theme: ThemeTokens): FallbackStyles {
       fontFamily: body.family,
       fontWeight: body.weight,
       fontSize: bodySize.fontSize,
-      lineHeight: bodySize.lineHeight,
+      lineHeight: bodySize.lineHeight * lineScale,
       color: colors.textSecondary,
       textAlign: 'center',
     },
@@ -165,7 +174,14 @@ export function DefaultErrorFallback({ error, reset }: ErrorFallbackProps) {
     ctx?.theme ??
     THEMES[DEFAULT_THEME_NAME][scheme === 'light' ? 'light' : 'dark'];
 
-  const styles = useMemo(() => buildFallbackStyles(theme), [theme]);
+  // This fallback cannot use AppText, which needs a ThemeProvider. So it
+  // applies the same font-scale cap and line-height scaling itself.
+  const { fontScale } = useWindowDimensions();
+  const lineScale = fontScaleFactor(fontScale, true, MAX_FONT_SIZE_MULTIPLIER);
+  const styles = useMemo(
+    () => buildFallbackStyles(theme, lineScale),
+    [theme, lineScale],
+  );
 
   return (
     <View
@@ -174,10 +190,17 @@ export function DefaultErrorFallback({ error, reset }: ErrorFallbackProps) {
       accessibilityLiveRegion="assertive"
       testID="app-error-boundary-fallback"
     >
-      <Text style={styles.title} accessibilityRole={A11Y_ROLES.header}>
+      <Text
+        style={styles.title}
+        accessibilityRole={A11Y_ROLES.header}
+        maxFontSizeMultiplier={MAX_FONT_SIZE_MULTIPLIER}
+      >
         Something went wrong
       </Text>
-      <Text style={styles.message}>
+      <Text
+        style={styles.message}
+        maxFontSizeMultiplier={MAX_FONT_SIZE_MULTIPLIER}
+      >
         {/* A release build shows only the plain message, never raw error text. */}
         {userFacingErrorMessage(error, 'An unexpected error occurred.')}
       </Text>
@@ -187,7 +210,12 @@ export function DefaultErrorFallback({ error, reset }: ErrorFallbackProps) {
         onPress={reset}
         style={styles.button}
       >
-        <Text style={styles.buttonLabel}>Try again</Text>
+        <Text
+          style={styles.buttonLabel}
+          maxFontSizeMultiplier={MAX_FONT_SIZE_MULTIPLIER}
+        >
+          Try again
+        </Text>
       </Pressable>
     </View>
   );

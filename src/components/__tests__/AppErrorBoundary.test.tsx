@@ -1,8 +1,9 @@
-import { Text } from 'react-native';
+import { Dimensions, StyleSheet, Text } from 'react-native';
 import { fireEvent, render } from '@testing-library/react-native';
 
 import { AppErrorBoundary, DefaultErrorFallback } from '../AppErrorBoundary';
-import { ThemeProvider } from '@/theme';
+import { MAX_FONT_SIZE_MULTIPLIER } from '@/a11y';
+import { ThemeProvider, typography } from '@/theme';
 import { makeStorage } from '@/test';
 
 /** Child that throws on render; `throwError` toggles recovery for reset tests. */
@@ -127,5 +128,42 @@ describe('AppErrorBoundary', () => {
     expect(getByText(/standalone/)).toBeTruthy();
     fireEvent.press(getByLabelText('Try again'));
     expect(reset).toHaveBeenCalledTimes(1);
+  });
+
+  describe('DefaultErrorFallback font scaling', () => {
+    // useWindowDimensions reads Dimensions.get('window'). The object must be
+    // stable, or the hook's change effect fires on every call.
+    const dims = { width: 360, height: 640, scale: 2, fontScale: 3 };
+    let dimsSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      dimsSpy = jest.spyOn(Dimensions, 'get').mockReturnValue(dims);
+    });
+
+    afterEach(() => {
+      dimsSpy.mockRestore();
+    });
+
+    it('caps the font scale on every text, because it cannot use AppText', () => {
+      const { getByText } = render(
+        <DefaultErrorFallback error={new Error('x')} reset={jest.fn()} />,
+      );
+      for (const text of ['Something went wrong', 'Try again']) {
+        expect(getByText(text).props.maxFontSizeMultiplier).toBe(
+          MAX_FONT_SIZE_MULTIPLIER,
+        );
+      }
+    });
+
+    it('scales the line height by the capped font scale, so large text does not clip', () => {
+      const { getByText } = render(
+        <DefaultErrorFallback error={new Error('x')} reset={jest.fn()} />,
+      );
+      const heading = typography.sizes[typography.variants.heading.size];
+      expect(
+        StyleSheet.flatten(getByText('Something went wrong').props.style)
+          .lineHeight,
+      ).toBe(heading.lineHeight * MAX_FONT_SIZE_MULTIPLIER);
+    });
   });
 });
