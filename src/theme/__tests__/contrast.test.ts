@@ -1,4 +1,5 @@
 import type { ColorPalette } from '../colors';
+import { INTENT_COLORS } from '../intents';
 import { THEMES, THEME_NAMES } from '../themes';
 import {
   AA_NORMAL_TEXT,
@@ -67,7 +68,10 @@ const TEXT_SURFACES: (keyof ColorPalette)[] = [
   'surfaceVariant',
 ];
 
-/** Filled foreground/background pairs (button + badge labels). */
+/**
+ * Filled foreground/background pairs: button, chip, toast and badge labels.
+ * `textInverse` on `textSecondary` is the solid neutral badge in AppBadge.
+ */
 const ON_PAIRS: [keyof ColorPalette, keyof ColorPalette][] = [
   ['onPrimary', 'primary'],
   ['onPrimary', 'primaryVariant'],
@@ -77,18 +81,17 @@ const ON_PAIRS: [keyof ColorPalette, keyof ColorPalette][] = [
   ['onWarning', 'warning'],
   ['onError', 'error'],
   ['onInfo', 'info'],
+  ['textInverse', 'textSecondary'],
 ];
 
-/** Semantic accents used as icons / fills — held to the 3:1 non-text bar. */
-const ACCENTS: (keyof ColorPalette)[] = [
-  'primary',
-  'secondary',
-  'success',
-  'warning',
-  'error',
-  'info',
-];
-const ACCENT_SURFACES: (keyof ColorPalette)[] = ['background', 'surface'];
+/**
+ * The `base` colour of every intent in INTENT_COLORS. Components also draw it
+ * as text on a plain surface: AppText tones, links, outline and ghost buttons,
+ * and soft and outline badges (soft badges sit on `surfaceVariant`). So it is
+ * held to the normal-text bar on every text surface, which also clears the
+ * 3:1 bar for icons and fills.
+ */
+const INTENT_BASES = Object.values(INTENT_COLORS).map(({ base }) => base);
 
 function runPaletteAudit(name: string, palette: ColorPalette): void {
   describe(`${name} palette WCAG AA`, () => {
@@ -110,12 +113,12 @@ function runPaletteAudit(name: string, palette: ColorPalette): void {
       });
     }
 
-    for (const accent of ACCENTS) {
-      for (const bg of ACCENT_SURFACES) {
-        it(`${accent} on ${bg} meets non-text contrast (>= ${AA_NON_TEXT}:1)`, () => {
+    for (const base of INTENT_BASES) {
+      for (const bg of TEXT_SURFACES) {
+        it(`${base} on ${bg} meets AA normal text (>= ${AA_NORMAL_TEXT}:1)`, () => {
           expect(
-            contrastRatio(palette[accent], palette[bg]),
-          ).toBeGreaterThanOrEqual(AA_NON_TEXT);
+            contrastRatio(palette[base], palette[bg]),
+          ).toBeGreaterThanOrEqual(AA_NORMAL_TEXT);
         });
       }
     }

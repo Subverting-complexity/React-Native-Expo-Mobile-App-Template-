@@ -52,8 +52,8 @@ export const standardLightColors: ColorPalette = {
   textDisabled: '#ADB5BD',
   textInverse: '#FFFFFF',
 
-  primary: '#4263EB',
-  primaryVariant: '#3B5BDB',
+  primary: '#3B5BDB',
+  primaryVariant: '#364FC7',
   onPrimary: '#FFFFFF',
 
   secondary: '#7048E8',
@@ -62,8 +62,8 @@ export const standardLightColors: ColorPalette = {
 
   success: '#1E7E34',
   onSuccess: '#FFFFFF',
-  warning: '#D9760A',
-  onWarning: '#1A1200',
+  warning: '#A85700',
+  onWarning: '#FFFFFF',
   error: '#C92A2A',
   onError: '#FFFFFF',
   info: '#1971C2',

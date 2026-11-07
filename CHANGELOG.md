@@ -93,6 +93,18 @@ House rules for entries, learned from sibling projects:
   development/preview, `m-medium` iOS builders), and Apple's
   export-compliance question is pre-answered in `app.config.ts`.
 
+### Fixed
+
+- Warning text, and warning badges with a soft or outline style, are now
+  readable in the Standard light theme. The warning colour is a darker
+  amber, and a filled warning label is white. The primary colour is one
+  step darker, so a soft primary badge, such as "Coming soon", also meets
+  the contrast that WCAG asks for text. The contrast test now checks every
+  status and brand colour as text on every surface, so a new palette that
+  is too light for text fails the test.
+- Placeholder text in a text field uses the secondary text colour. Before,
+  it used the disabled colour, which was too faint to read.
+
 ### Tooling
 
 - The developer tools moved from `scripts/` to `tools/`, with one folder

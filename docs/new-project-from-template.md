@@ -221,7 +221,10 @@ accessibility.
 2. **Pay attention to `on*` tokens.** Each fill colour (`primary`,
    `secondary`, `success`, etc.) has a foreground colour (`onPrimary`,
    `onSecondary`, `onSuccess`) that sits on top of it. These pairings must
-   meet at least 4.5:1 for normal text.
+   meet at least 4.5:1 for normal text. The fill colours must also meet
+   4.5:1 on `background`, `surface` and `surfaceVariant`, because links,
+   text tones and soft badges draw them as text. A bright brand colour
+   often fails this. If it does, use a darker shade for the token.
 
 3. **Choose your themes.** `THEMES` in `src/theme/themes.ts` is the only
    list of themes. The template ships Standard and High contrast. Add your
@@ -239,8 +242,8 @@ accessibility.
    ```
 
    If a contrast test fails, the output shows which pairing broke and by how
-   much. Adjust the colour until the ratio clears the threshold — 4.5:1 for
-   body text, 3:1 for large text and non-text UI.
+   much. Adjust the colour until the ratio clears the threshold: 4.5:1 for
+   text, 3:1 for large text and non-text UI.
 
 ## 8. Replace the app icon and splash screen
 

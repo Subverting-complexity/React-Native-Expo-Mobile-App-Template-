@@ -20,6 +20,16 @@ describe('AppTextInput', () => {
     expect(getByLabelText('Email')).toBeTruthy();
   });
 
+  it('draws placeholder text in a colour that meets AA text contrast', async () => {
+    // textDisabled is exempt only for disabled controls; a placeholder is not one.
+    const { getByLabelText } = await renderWithTheme(
+      <AppTextInput label="Name" placeholder="Ada Lovelace" />,
+    );
+    expect(getByLabelText('Name').props.placeholderTextColor).toBe(
+      lightColors.textSecondary,
+    );
+  });
+
   it('lets accessibilityLabel override the spoken name', async () => {
     const { getByLabelText } = await renderWithTheme(
       <AppTextInput label="Email" accessibilityLabel="Work email address" />,
