@@ -155,10 +155,21 @@ a user setting:
 
 If your app has no backend, leave `API_BASE_URL` blank locally and delete
 the guard at the top of `app.config.ts`. Once real endpoints exist, wrap the
-generic `get` and `post` calls in typed endpoint functions. To add a
-header, such as an auth token, add it in `buildInit` in
-`src/api/httpApiClient.ts`. Tests and a demo mode pass their own client to
-`ApiProvider`.
+generic `get` and `post` calls in typed endpoint functions. The `@/api`
+barrel exports the types they need, such as `ApiRequestOptions` and
+`ApiErrorKind`. To add a header, such as an auth token, pass `getHeaders`
+to `createHttpApiClient` in `src/api/ApiProvider.tsx`. The client calls it
+before each request, so a new token applies at once:
+
+```ts
+createHttpApiClient({
+  getBaseUrl: () => readApiBaseUrl(),
+  fetch: (...args) => fetch(...args),
+  getHeaders: async () => ({ Authorization: `Bearer ${await readToken()}` }),
+});
+```
+
+Tests and a demo mode pass their own client to `ApiProvider`.
 
 ## 5. Set up the tabs
 

@@ -28,6 +28,10 @@ House rules for entries, learned from sibling projects:
   JSON, could not be reached, or did not answer in time. The base URL comes
   from `API_BASE_URL` at build time, never from a user setting. A release
   build accepts only `https://`, and an EAS build with no URL fails at once.
+- The HTTP client can add headers, such as an auth token, to every request
+  through a `getHeaders` function. It reads the headers again before each
+  request, so a new token applies at once. The request option and error
+  types are exported from `@/api`, for typed endpoint functions.
 - Themes. `THEMES` is the one list of themes, each with a light and a dark
   version, and Settings lets the user choose one. The template ships
   Standard and a new High contrast theme. The choice is saved with the

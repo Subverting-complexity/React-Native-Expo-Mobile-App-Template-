@@ -58,6 +58,51 @@ describe('createHttpApiClient', () => {
     });
   });
 
+  it('adds the headers from getHeaders to each request, read each time', async () => {
+    const fetch = makeJsonFetch(200, {});
+    let token = 'first';
+    const client = makeClient(fetch, {
+      getHeaders: async () => ({ Authorization: `Bearer ${token}` }),
+    });
+
+    await client.get('/x');
+    token = 'second';
+    await client.post('/y', {});
+
+    expect(fetch.mock.calls[0][1].headers).toEqual({
+      Accept: 'application/json',
+      Authorization: 'Bearer first',
+    });
+    expect(fetch.mock.calls[1][1].headers).toEqual({
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer second',
+    });
+  });
+
+  it('lets getHeaders replace a default header', async () => {
+    const fetch = makeJsonFetch(200, {});
+
+    await makeClient(fetch, {
+      getHeaders: () => ({ Accept: 'application/vnd.example+json' }),
+    }).get('/x');
+    expect(fetch.mock.calls[0][1].headers).toEqual({
+      Accept: 'application/vnd.example+json',
+    });
+  });
+
+  it('rejects with the getHeaders error as it is, and sends nothing', async () => {
+    const fetch = makeJsonFetch(200, {});
+    const failure = new Error('No token');
+
+    await expect(
+      makeClient(fetch, {
+        getHeaders: () => Promise.reject(failure),
+      }).get('/x'),
+    ).rejects.toBe(failure);
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
   it('sends a POST with the body as JSON', async () => {
     const fetch = makeJsonFetch(200, { id: 7 });
 
