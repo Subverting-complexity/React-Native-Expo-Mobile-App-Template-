@@ -5,11 +5,14 @@
 // (usually white) for a frame before the themed UI mounts, producing a visible
 // flash. Setting the background in the pre-hydration <style> removes it.
 //
-// The app defaults to the dark scheme; users whose OS prefers a light theme
-// get the light background via a `prefers-color-scheme` media query. Values
+// The CSS defaults to the dark background; a browser that prefers a light
+// scheme gets the light background via a `prefers-color-scheme` media query.
+// (The provider itself defaults to the 'system' mode.) Values
 // come from the color tokens — never hardcode them here.
+// It covers the default theme only: a saved theme or mode applies after hydration.
 
-import { lightColors, darkColors, type ColorPalette } from './colors';
+import type { ColorPalette } from './colors';
+import { DEFAULT_THEME_NAME, THEMES } from './themes';
 
 /**
  * Build the pre-hydration background CSS string.
@@ -21,8 +24,8 @@ import { lightColors, darkColors, type ColorPalette } from './colors';
  *   default and the light token under `prefers-color-scheme: light`.
  */
 export function buildPreHydrationBackgroundCss(
-  light: ColorPalette = lightColors,
-  dark: ColorPalette = darkColors,
+  light: ColorPalette = THEMES[DEFAULT_THEME_NAME].light.colors,
+  dark: ColorPalette = THEMES[DEFAULT_THEME_NAME].dark.colors,
 ): string {
   return [
     ':root { color-scheme: dark; }',

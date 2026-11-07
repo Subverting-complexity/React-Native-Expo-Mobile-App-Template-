@@ -1,42 +1,18 @@
 import { useMemo } from 'react';
-import {
-  View,
-  type StyleProp,
-  type TextStyle,
-  type ViewStyle,
-} from 'react-native';
+import { View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { AppText } from './AppText';
-import { useTheme, FONT_FAMILIES } from '@/theme';
-import type { ColorPalette, ThemeTokens } from '@/theme';
+import { INTENT_COLORS, useTheme } from '@/theme';
+import type { ColorIntent, IntentColors, ThemeTokens } from '@/theme';
 
-export type AppBadgeTone =
-  | 'neutral'
-  | 'primary'
-  | 'secondary'
-  | 'success'
-  | 'warning'
-  | 'error'
-  | 'info';
+export type AppBadgeTone = 'neutral' | ColorIntent;
 
 export type AppBadgeVariant = 'solid' | 'soft' | 'outline';
 export type AppBadgeSize = 'sm' | 'md';
 
-interface ToneColors {
-  /** The tone's main colour token. */
-  base: keyof ColorPalette;
-  /** Readable foreground token for the solid fill. */
-  on: keyof ColorPalette;
-}
-
-const TONES: Record<AppBadgeTone, ToneColors> = {
+const TONES: Record<AppBadgeTone, IntentColors> = {
   neutral: { base: 'textSecondary', on: 'textInverse' },
-  primary: { base: 'primary', on: 'onPrimary' },
-  secondary: { base: 'secondary', on: 'onSecondary' },
-  success: { base: 'success', on: 'onSuccess' },
-  warning: { base: 'warning', on: 'onWarning' },
-  error: { base: 'error', on: 'onError' },
-  info: { base: 'info', on: 'onInfo' },
+  ...INTENT_COLORS,
 };
 
 const SIZE_SPEC: Record<
@@ -122,7 +98,6 @@ export function AppBadge({
   const { theme } = useTheme();
   const spec = SIZE_SPEC[size];
   const colors = resolveBadge(theme, tone, variant);
-  const textSize = theme.typography.sizes[spec.text];
 
   const containerStyle = useMemo<ViewStyle>(
     () => ({
@@ -133,21 +108,10 @@ export function AppBadge({
       paddingVertical: theme.spacing[spec.paddingV],
       borderRadius: theme.radii.full,
       backgroundColor: colors.background,
-      borderWidth: colors.border ? 1 : 0,
+      borderWidth: colors.border ? theme.borderWidths.thin : 0,
       borderColor: colors.border,
     }),
     [theme, spec, colors],
-  );
-
-  const labelStyle = useMemo<TextStyle>(
-    () => ({
-      fontFamily: FONT_FAMILIES.sansBold,
-      fontWeight: '700',
-      fontSize: textSize.fontSize,
-      lineHeight: textSize.lineHeight,
-      color: colors.foreground,
-    }),
-    [textSize, colors.foreground],
   );
 
   return (
@@ -157,7 +121,12 @@ export function AppBadge({
       accessible={accessibilityLabel != null ? true : undefined}
       accessibilityLabel={accessibilityLabel}
     >
-      <AppText variant="caption" style={labelStyle} numberOfLines={1}>
+      <AppText
+        variant="label"
+        size={spec.text}
+        style={{ color: colors.foreground }}
+        numberOfLines={1}
+      >
         {label}
       </AppText>
     </View>

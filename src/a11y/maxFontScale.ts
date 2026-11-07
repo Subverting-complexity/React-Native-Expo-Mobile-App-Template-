@@ -8,6 +8,26 @@ import { Text, TextInput } from 'react-native';
  */
 export const MAX_FONT_SIZE_MULTIPLIER = 1.5;
 
+/**
+ * The factor React Native applies to `fontSize`: the OS font scale, capped by
+ * `maxFontSizeMultiplier` (`null` or `undefined` removes the cap), or 1 when
+ * font scaling is off. React Native does not scale `lineHeight`, so text
+ * components multiply their line height by this factor to stop large text
+ * from clipping.
+ */
+export function fontScaleFactor(
+  fontScale: number,
+  allowFontScaling: boolean,
+  maxFontSizeMultiplier: number | null | undefined,
+): number {
+  if (!allowFontScaling) {
+    return 1;
+  }
+  return maxFontSizeMultiplier == null
+    ? fontScale
+    : Math.min(fontScale, maxFontSizeMultiplier);
+}
+
 interface CappableComponent {
   defaultProps?: { maxFontSizeMultiplier?: number | null } & Record<
     string,

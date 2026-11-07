@@ -36,10 +36,16 @@ module.exports = defineConfig([
 
   // Token-only styling: ban hardcoded colors and visual values in component/
   // screen code. Raw values belong in src/theme — components read tokens via
-  // useTheme(). Escape hatch: eslint-disable-next-line.
+  // useTheme(). Escape hatch: eslint-disable-next-line. src/api is excluded:
+  // its payloads use keys such as `start`, `end` and `color` that are not styles.
   {
     files: ['app/**/*.{ts,tsx}', 'src/**/*.{ts,tsx}'],
-    ignores: ['src/theme/**', '**/__tests__/**', '**/*.test.{ts,tsx}'],
+    ignores: [
+      'src/theme/**',
+      'src/api/**',
+      '**/__tests__/**',
+      '**/*.test.{ts,tsx}',
+    ],
     plugins: { 'theme-tokens': themeTokens },
     rules: {
       'theme-tokens/no-hardcoded-colors': 'error',
@@ -57,7 +63,7 @@ module.exports = defineConfig([
   //   - has-valid-accessibility-descriptors requires every *interactive*
   //     element (touchables, TextInput) to carry at least one descriptor
   //     (role, label+hint, or actions) so it is announceable. This matches the
-  //     template rule that every interactive surface must reach assistive tech.
+  //     project rule that every interactive surface must reach assistive tech.
   //   - no-nested-touchables catches a structural bug (a touchable inside a
   //     touchable swallows one of the targets).
   // Test files are excluded: they render bare primitives to assert behaviour,
@@ -86,7 +92,7 @@ module.exports = defineConfig([
     },
   },
 
-  // Plain-JS test suites (the local tooling under scripts/ and the lint
+  // Plain-JS test suites (the local tooling under tools/ and the lint
   // plugin) run under Jest but sit outside the TypeScript project, so the
   // Jest globals must be declared here or every `describe` is a no-undef.
   // `test-support/` holds helpers those suites import; they live outside
@@ -96,7 +102,7 @@ module.exports = defineConfig([
     files: [
       '**/__tests__/**/*.js',
       '**/*.test.js',
-      'scripts/**/test-support/**/*.js',
+      'tools/**/test-support/**/*.js',
     ],
     languageOptions: {
       globals: {

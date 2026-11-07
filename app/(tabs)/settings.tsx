@@ -13,78 +13,95 @@ import {
   announceForAccessibility,
   useA11y,
 } from '@/a11y';
-import { useTheme, type ColorMode } from '@/theme';
+import {
+  COLOR_MODES,
+  COLOR_MODE_LABELS,
+  THEMES,
+  THEME_NAMES,
+  useTheme,
+  type ColorMode,
+  type ThemeName,
+} from '@/theme';
+
+const MODE_OPTIONS: AppChipOption<ColorMode>[] = COLOR_MODES.map((mode) => ({
+  value: mode,
+  label: COLOR_MODE_LABELS[mode],
+}));
+
+const THEME_OPTIONS: AppChipOption<ThemeName>[] = THEME_NAMES.map((name) => ({
+  value: name,
+  label: THEMES[name].label,
+}));
 
 /**
- * Selectable colour-mode options. `value` matches the {@link ColorMode} union
- * the theme context understands; the visible `label` is what the user taps and
- * what a screen reader announces.
- */
-const MODE_OPTIONS: AppChipOption[] = [
-  { value: 'light', label: 'Light' },
-  { value: 'dark', label: 'Dark' },
-  { value: 'system', label: 'System' },
-];
-
-function modeLabel(mode: ColorMode): string {
-  return MODE_OPTIONS.find((option) => option.value === mode)?.label ?? mode;
-}
-
-/**
- * Settings tab. Surfaces the app's appearance and accessibility state through
- * existing seams — it owns no tokens or state of its own:
+ * Settings tab. It owns no tokens or state of its own; it shows the app's
+ * appearance and accessibility state through existing seams:
  *
- * - **Appearance**: a single-select theme-mode group bound to the theme
- *   context. Selecting a mode applies it immediately (the whole tree re-skins
- *   through `useTheme()`) and persists it (the provider writes the choice to
- *   storage), satisfying the "reflect live and persist" acceptance criterion.
- * - **Text size**: a live demonstration of OS font scaling. The cap is the
- *   single-source `MAX_FONT_SIZE_MULTIPLIER`; the sample text scales with the
- *   device setting because `AppText` honours `fontScale`. There is no in-app
- *   slider — font scale is an OS preference, capped centrally, not app state.
- * - **Motion**: an indicator that mirrors the OS reduce-motion preference.
+ * - **Appearance**: light, dark or system. The choice applies at once (the
+ *   whole tree re-skins through `useTheme()`) and the theme provider saves it.
+ * - **Theme**: one entry per theme in `THEMES`. Hidden when there is only one.
+ * - **Text size**: a live sample of OS font scaling, up to the central
+ *   `MAX_FONT_SIZE_MULTIPLIER` cap. Font scale is an OS preference, not app
+ *   state, so there is no in-app slider.
+ * - **Motion**: mirrors the OS reduce-motion preference.
+ *
+ * The tab header shows the title.
  */
 export default function SettingsScreen() {
-  const { theme, colorMode, setColorMode } = useTheme();
+  const { theme, colorMode, setColorMode, themeName, setThemeName } =
+    useTheme();
   const { reduceMotion } = useA11y();
   const { fontScale } = useWindowDimensions();
-
-  const onSelectMode = (value: string | null) => {
-    // A single-select group clears on re-tap, but a colour mode must always be
-    // set — so ignore the clear and keep the current selection.
-    if (value === null) {
-      return;
-    }
-    const mode = value as ColorMode;
-    setColorMode(mode);
-    announceForAccessibility(`Theme set to ${modeLabel(mode)}`);
-  };
-
   const reduceMotionLabel = reduceMotion ? 'On' : 'Off';
 
-  return (
-    <AppScreenContainer scroll testID="settings-screen">
-      <View style={{ gap: theme.spacing[6] }}>
-        <AppText variant="title" accessibilityRole="header">
-          Settings
-        </AppText>
+  const onSelectMode = (value: ColorMode) => {
+    setColorMode(value);
+    announceForAccessibility(`Appearance set to ${COLOR_MODE_LABELS[value]}`);
+  };
 
+  const onSelectTheme = (value: ThemeName) => {
+    setThemeName(value);
+    announceForAccessibility(`Theme set to ${THEMES[value].label}`);
+  };
+
+  return (
+    <AppScreenContainer
+      scroll
+      edges={['left', 'right']}
+      testID="settings-screen"
+    >
+      <View style={{ gap: theme.spacing[6] }}>
         <AppSection
           title="Appearance"
-          description="Choose how the app picks light or dark colours. System follows your device. Your choice applies immediately and is saved for next time."
+          description="Choose light or dark colours. System follows your device. Your choice applies at once and is saved."
           testID="settings-appearance"
         >
           <AppChipGroup
+            required
             options={MODE_OPTIONS}
             value={colorMode}
             onChange={onSelectMode}
+            accessibilityLabel="Appearance"
             testID="theme-mode-group"
           />
         </AppSection>
 
+        {THEME_OPTIONS.length > 1 ? (
+          <AppSection title="Theme" testID="settings-theme">
+            <AppChipGroup
+              required
+              options={THEME_OPTIONS}
+              value={themeName}
+              onChange={onSelectTheme}
+              accessibilityLabel="Theme"
+              testID="theme-group"
+            />
+          </AppSection>
+        ) : null}
+
         <AppSection
           title="Text size"
-          description="Text follows your device display and accessibility settings. Change the system text size to see this sample grow, up to the app's cap."
+          description="Text follows the text size in your device settings. Change it to see this sample grow, up to the app's limit."
           testID="settings-text-size"
         >
           <View style={{ gap: theme.spacing[2] }}>
@@ -100,7 +117,7 @@ export default function SettingsScreen() {
 
         <AppSection
           title="Motion"
-          description="Mirrors your device's reduce-motion setting. When on, the app keeps animations short or skips them."
+          description="Follows the reduce motion setting on your device. When it is on, the app keeps animations short or skips them."
           testID="settings-motion"
         >
           <AppBadge

@@ -1,9 +1,7 @@
 import { useMemo } from 'react';
 import {
   ActivityIndicator,
-  StyleSheet,
   type StyleProp,
-  type TextStyle,
   type ViewStyle,
 } from 'react-native';
 
@@ -16,7 +14,7 @@ import {
   type ResolvedColors,
 } from './buttonUtils';
 import { A11Y_ROLES } from '@/a11y';
-import { useTheme, FONT_FAMILIES } from '@/theme';
+import { useTheme } from '@/theme';
 import type { ThemeTokens } from '@/theme';
 
 export type AppButtonVariant = ButtonVariant;
@@ -76,10 +74,10 @@ function buildContainerStyle(
     paddingHorizontal: theme.spacing[spec.paddingH],
     borderRadius: theme.radii.md,
     backgroundColor: colors.background,
-    borderWidth: colors.border ? 1 : 0,
+    borderWidth: colors.border ? theme.borderWidths.thin : 0,
     borderColor: colors.border,
     alignSelf: fullWidth ? 'stretch' : 'flex-start',
-    opacity: isDisabled ? 0.5 : 1,
+    opacity: isDisabled ? theme.opacity.disabled : 1,
   };
 }
 
@@ -99,22 +97,10 @@ export function AppButton({
 
   const spec = SIZE_SPEC[size];
   const colors = resolveVariantColors(theme, BUTTON_VARIANTS[variant]);
-  const textSize = theme.typography.sizes[spec.text];
 
   const containerStyle = useMemo<ViewStyle>(
     () => buildContainerStyle(theme, spec, colors, fullWidth, isDisabled),
     [theme, spec, colors, fullWidth, isDisabled],
-  );
-
-  const labelStyle = useMemo<TextStyle>(
-    () => ({
-      fontFamily: FONT_FAMILIES.sansBold,
-      fontWeight: '700',
-      fontSize: textSize.fontSize,
-      lineHeight: textSize.lineHeight,
-      color: colors.foreground,
-    }),
-    [textSize, colors.foreground],
   );
 
   return (
@@ -125,7 +111,9 @@ export function AppButton({
       disabled={isDisabled}
       style={(state) => [
         containerStyle,
-        state.pressed && !isDisabled ? styles.pressed : null,
+        state.pressed && !isDisabled
+          ? { opacity: theme.opacity.pressed }
+          : null,
       ]}
       {...rest}
     >
@@ -135,14 +123,15 @@ export function AppButton({
           accessibilityElementsHidden
         />
       ) : (
-        <AppText variant="label" style={labelStyle} numberOfLines={1}>
+        <AppText
+          variant="label"
+          size={spec.text}
+          style={{ color: colors.foreground }}
+          numberOfLines={1}
+        >
           {label}
         </AppText>
       )}
     </AppPressable>
   );
 }
-
-const styles = StyleSheet.create({
-  pressed: { opacity: 0.85 },
-});

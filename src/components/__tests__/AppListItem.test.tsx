@@ -6,21 +6,23 @@ import { a11y } from '@/theme';
 import { renderWithTheme } from '@/test';
 
 describe('AppListItem', () => {
-  it('renders the title and subtitle', () => {
-    const { getByText } = renderWithTheme(
+  it('renders the title and subtitle', async () => {
+    const { getByText } = await renderWithTheme(
       <AppListItem title="Profile" subtitle="Name, photo, bio" />,
     );
     expect(getByText('Profile')).toBeTruthy();
     expect(getByText('Name, photo, bio')).toBeTruthy();
   });
 
-  it('is not interactive without onPress (no button role)', () => {
-    const { queryByRole } = renderWithTheme(<AppListItem title="Static" />);
+  it('is not interactive without onPress (no button role)', async () => {
+    const { queryByRole } = await renderWithTheme(
+      <AppListItem title="Static" />,
+    );
     expect(queryByRole('button')).toBeNull();
   });
 
-  it('renders leading and trailing slots', () => {
-    const { getByText } = renderWithTheme(
+  it('renders leading and trailing slots', async () => {
+    const { getByText } = await renderWithTheme(
       <AppListItem
         title="Notifications"
         leading={<Text>L</Text>}
@@ -31,9 +33,9 @@ describe('AppListItem', () => {
     expect(getByText('R')).toBeTruthy();
   });
 
-  it('becomes a tappable button when onPress is provided', () => {
+  it('becomes a tappable button when onPress is provided', async () => {
     const onPress = jest.fn();
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppListItem title="Open settings" onPress={onPress} />,
     );
     const el = getByLabelText('Open settings');
@@ -42,8 +44,8 @@ describe('AppListItem', () => {
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
-  it('defaults the accessibility label to the title but allows an override', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('defaults the accessibility label to the title but allows an override', async () => {
+    const { getByLabelText } = await renderWithTheme(
       <AppListItem
         title="Settings"
         onPress={jest.fn()}
@@ -53,16 +55,16 @@ describe('AppListItem', () => {
     expect(getByLabelText('Open app settings')).toBeTruthy();
   });
 
-  it('pressable row inherits the 44x44 touch floor', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('pressable row inherits the 44x44 touch floor', async () => {
+    const { getByLabelText } = await renderWithTheme(
       <AppListItem title="Tap" onPress={jest.fn()} />,
     );
     const flat = StyleSheet.flatten(getByLabelText('Tap').props.style);
     expect(flat.minHeight).toBe(a11y.minTouchTarget);
   });
 
-  it('reflects the disabled state on the pressable row', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('reflects the disabled state on the pressable row', async () => {
+    const { getByLabelText } = await renderWithTheme(
       <AppListItem title="Locked" onPress={jest.fn()} disabled />,
     );
     expect(getByLabelText('Locked').props.accessibilityState.disabled).toBe(

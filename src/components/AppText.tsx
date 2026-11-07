@@ -6,9 +6,9 @@ import {
   type TextStyle,
 } from 'react-native';
 
-import { MAX_FONT_SIZE_MULTIPLIER } from '@/a11y';
-import { useTheme } from '@/theme';
-import type { ColorPalette, TextVariantName } from '@/theme';
+import { MAX_FONT_SIZE_MULTIPLIER, fontScaleFactor } from '@/a11y';
+import { INTENT_COLORS, useTheme } from '@/theme';
+import type { ColorPalette, TextScale, TextVariantName } from '@/theme';
 
 /**
  * Semantic colour roles for text. Each maps to a single colour token, so a
@@ -36,11 +36,11 @@ export const TONE_COLORS: Record<TextTone, keyof ColorPalette> = {
   secondary: 'textSecondary',
   disabled: 'textDisabled',
   inverse: 'textInverse',
-  accent: 'primary',
-  success: 'success',
-  warning: 'warning',
-  error: 'error',
-  info: 'info',
+  accent: INTENT_COLORS.primary.base,
+  success: INTENT_COLORS.success.base,
+  warning: INTENT_COLORS.warning.base,
+  error: INTENT_COLORS.error.base,
+  info: INTENT_COLORS.info.base,
 };
 
 /**
@@ -51,6 +51,13 @@ export const TONE_COLORS: Record<TextTone, keyof ColorPalette> = {
 export interface AppTextProps extends TextProps {
   /** Semantic typography role. Defaults to `body`. */
   variant?: TextVariantName;
+  /**
+   * A size from the type scale in place of the variant's own size. The
+   * variant still sets the family and weight. Use this, not a `fontSize` or
+   * `lineHeight` in `style`, so the line height still scales with the OS font
+   * size.
+   */
+  size?: keyof TextScale;
   /** Semantic colour role. Defaults to `primary`. */
   tone?: TextTone;
 }
@@ -71,6 +78,7 @@ export interface AppTextProps extends TextProps {
  */
 export function AppText({
   variant = 'body',
+  size: sizeOverride,
   tone = 'primary',
   allowFontScaling = true,
   maxFontSizeMultiplier = MAX_FONT_SIZE_MULTIPLIER,
@@ -82,15 +90,12 @@ export function AppText({
 
   const resolved = useMemo<TextStyle>(() => {
     const v = theme.typography.variants[variant];
-    const size = theme.typography.sizes[v.size];
-
-    // Mirror the factor RN applies to `fontSize`: clamp the OS font scale to
-    // the cap (`null` opts out of the cap), or freeze at 1 when scaling is off.
-    const lineScale = !allowFontScaling
-      ? 1
-      : maxFontSizeMultiplier == null
-        ? fontScale
-        : Math.min(fontScale, maxFontSizeMultiplier);
+    const size = theme.typography.sizes[sizeOverride ?? v.size];
+    const lineScale = fontScaleFactor(
+      fontScale,
+      allowFontScaling,
+      maxFontSizeMultiplier,
+    );
 
     return {
       fontSize: size.fontSize,
@@ -103,6 +108,7 @@ export function AppText({
   }, [
     theme,
     variant,
+    sizeOverride,
     tone,
     fontScale,
     allowFontScaling,

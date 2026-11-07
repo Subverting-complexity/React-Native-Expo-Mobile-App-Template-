@@ -3,7 +3,7 @@
  *
  * `eas.json` drives every cloud build and store submission, but the only
  * official way to "validate" it is to run an `eas` command that requires an
- * Expo account — something this template deliberately never provisions. This
+ * Expo account — something the repository deliberately never provisions. This
  * module is the single source of truth for the *shape* a valid eas.json must
  * have, so the quality gate (and CI) can assert the profiles are well-formed
  * with no network and no credentials.
@@ -58,7 +58,7 @@ function checkBuildProfile(
 }
 
 /**
- * Validate an already-parsed eas.json object against the template's required
+ * Validate an already-parsed eas.json object against the project's required
  * shape. Returns every problem found rather than throwing on the first, so a
  * failing quality gate reports the whole list at once.
  */

@@ -2,20 +2,22 @@ import { StyleSheet } from 'react-native';
 import { fireEvent, waitFor } from '@testing-library/react-native';
 
 import { AppLinkButton } from '../AppLinkButton';
-import { ThemeProvider, lightColors } from '@/theme';
+import { ThemeProvider, DEFAULT_THEME_NAME, THEMES } from '@/theme';
 import { makeStorage, renderWithTheme } from '@/test';
 
+const lightColors = THEMES[DEFAULT_THEME_NAME].light.colors;
+
 describe('AppLinkButton', () => {
-  it('renders its label with the link role', () => {
-    const { getByText, getByLabelText } = renderWithTheme(
+  it('renders its label with the link role', async () => {
+    const { getByText, getByLabelText } = await renderWithTheme(
       <AppLinkButton label="Learn more" onPress={jest.fn()} />,
     );
     expect(getByText('Learn more')).toBeTruthy();
     expect(getByLabelText('Learn more').props.accessibilityRole).toBe('link');
   });
 
-  it('allows overriding the accessibility label', () => {
-    const { getByLabelText } = renderWithTheme(
+  it('allows overriding the accessibility label', async () => {
+    const { getByLabelText } = await renderWithTheme(
       <AppLinkButton
         label="Learn more"
         accessibilityLabel="Learn more about pricing"
@@ -25,18 +27,18 @@ describe('AppLinkButton', () => {
     expect(getByLabelText('Learn more about pricing')).toBeTruthy();
   });
 
-  it('fires onPress when enabled', () => {
+  it('fires onPress when enabled', async () => {
     const onPress = jest.fn();
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppLinkButton label="Open" onPress={onPress} />,
     );
     fireEvent.press(getByLabelText('Open'));
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
-  it('does not fire onPress when disabled and reports disabled state', () => {
+  it('does not fire onPress when disabled and reports disabled state', async () => {
     const onPress = jest.fn();
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithTheme(
       <AppLinkButton label="Open" onPress={onPress} disabled />,
     );
     const el = getByLabelText('Open');
@@ -47,8 +49,8 @@ describe('AppLinkButton', () => {
     );
   });
 
-  it('underlines the label only when underline is set', () => {
-    const { getByText, rerender } = renderWithTheme(
+  it('underlines the label only when underline is set', async () => {
+    const { getByText, rerender } = await renderWithTheme(
       <AppLinkButton label="Plain" onPress={jest.fn()} />,
     );
     expect(
@@ -65,7 +67,7 @@ describe('AppLinkButton', () => {
   });
 
   it('uses the accent (primary) colour by default', async () => {
-    const { getByText } = renderWithTheme(
+    const { getByText } = await renderWithTheme(
       <AppLinkButton label="Tinted" onPress={jest.fn()} />,
       'light',
     );

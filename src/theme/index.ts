@@ -4,7 +4,6 @@ export type { RadiiScale } from './radii';
 export type {
   TypographyTokens,
   FontWeight,
-  FontWeights,
   TextVariant,
   TextScale,
   FontFamilies,
@@ -24,10 +23,17 @@ export type {
 } from './shadows';
 export type { ZIndexScale } from './zIndex';
 export type { A11yTokens } from './a11y';
+export type { OpacityScale } from './opacity';
+export type { BorderWidthScale } from './borderWidths';
+export type { IconSizeScale } from './iconSizes';
+export type { ColorIntent, IntentColors } from './intents';
 
-export { lightColors, darkColors } from './colors';
 export { spacing } from './spacing';
 export { radii } from './radii';
+export { opacity } from './opacity';
+export { borderWidths } from './borderWidths';
+export { iconSizes } from './iconSizes';
+export { INTENT_COLORS } from './intents';
 export { typography, FONT_FAMILIES } from './typography';
 export { shadows, iosShadows, androidShadows, webShadows } from './shadows';
 export { zIndex } from './zIndex';
@@ -44,11 +50,8 @@ export {
 export { buildPreHydrationBackgroundCss } from './preHydrationTheme';
 export { withAlpha } from './withAlpha';
 
-export type {
-  ColorMode,
-  StorageAdapter,
-  ThemeContextValue,
-} from './ThemeContext';
+export type { ColorMode, ThemeContextValue } from './ThemeContext';
+export { COLOR_MODES, COLOR_MODE_LABELS, isColorMode } from './ThemeContext';
 // Exported so consumers that must tolerate a missing provider (e.g. an error
 // boundary fallback rendered above ThemeProvider) can read the context
 // directly with useContext instead of useTheme, which throws when absent.
@@ -59,5 +62,5 @@ export { useTheme } from './useTheme';
 // Theme assembly (token bundles → ThemeTokens) lives in its own module so the
 // barrel only re-exports. ThemeProvider/ThemeContext import these from
 // './themes' directly, avoiding a barrel-import cycle.
-export type { ThemeTokens } from './themes';
-export { lightTheme, darkTheme } from './themes';
+export type { ThemeTokens, ThemeName, ThemeDefinition } from './themes';
+export { THEMES, THEME_NAMES, DEFAULT_THEME_NAME, isThemeName } from './themes';

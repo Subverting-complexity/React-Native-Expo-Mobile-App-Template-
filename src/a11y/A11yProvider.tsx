@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import { useMemo, type ReactNode } from 'react';
 
 import { A11yContext } from './A11yContext';
 import {
@@ -21,12 +21,11 @@ interface A11yProviderProps {
  */
 export function A11yProvider({ children }: A11yProviderProps) {
   const reduceMotion = useReduceMotionDetection();
-
-  return (
-    <A11yContext.Provider
-      value={{ reduceMotion, maxFontSizeMultiplier: MAX_FONT_SIZE_MULTIPLIER }}
-    >
-      {children}
-    </A11yContext.Provider>
+  // A stable value, so consumers re-render only when the preference changes.
+  const value = useMemo(
+    () => ({ reduceMotion, maxFontSizeMultiplier: MAX_FONT_SIZE_MULTIPLIER }),
+    [reduceMotion],
   );
+
+  return <A11yContext.Provider value={value}>{children}</A11yContext.Provider>;
 }

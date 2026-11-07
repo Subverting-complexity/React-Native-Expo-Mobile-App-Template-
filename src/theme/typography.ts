@@ -9,16 +9,6 @@ export type FontWeight =
   | '800'
   | '900';
 
-export interface FontWeights {
-  thin: FontWeight;
-  light: FontWeight;
-  regular: FontWeight;
-  medium: FontWeight;
-  semibold: FontWeight;
-  bold: FontWeight;
-  extrabold: FontWeight;
-}
-
 export interface TextVariant {
   fontSize: number;
   lineHeight: number;
@@ -37,8 +27,7 @@ export interface TextScale {
 }
 
 export interface FontFamilies {
-  sans: string;
-  mono: string;
+  sans: FontFamilyValue;
 }
 
 /**
@@ -60,8 +49,8 @@ export type TextVariantName =
 export interface TextVariantStyle {
   /** Key into {@link TextScale} for fontSize / lineHeight / letterSpacing. */
   size: keyof TextScale;
-  /** A loaded font-family string (see {@link FONT_FAMILIES}). */
-  family: string;
+  /** A loaded font family from {@link FONT_FAMILIES}. */
+  family: FontFamilyValue;
   /** Numeric weight matching the chosen family. */
   weight: FontWeight;
 }
@@ -70,7 +59,6 @@ export type TextVariants = Record<TextVariantName, TextVariantStyle>;
 
 export interface TypographyTokens {
   families: FontFamilies;
-  weights: FontWeights;
   sizes: TextScale;
   variants: TextVariants;
 }
@@ -78,18 +66,21 @@ export interface TypographyTokens {
 /**
  * Font family tokens for the app.
  *
- * Keys match the font-family strings loaded by useAppFonts. Components
+ * Each value is a font-family name that useAppFonts loads. Components
  * read these tokens rather than referencing the raw expo-google-fonts
  * identifiers directly — re-skinning is a token edit, not a component edit.
+ * Atkinson Hyperlegible is the default because it is designed for
+ * readability. To add a family (for example a serif for display text), add
+ * it here and add its font file to `FONT_FILES` in `useAppFonts.ts`.
  */
 export const FONT_FAMILIES = {
-  /** Atkinson Hyperlegible — regular weight, upright */
+  /** Atkinson Hyperlegible, regular weight, upright */
   sans: 'AtkinsonHyperlegible_400Regular',
-  /** Atkinson Hyperlegible — bold weight, upright */
+  /** Atkinson Hyperlegible, bold weight, upright */
   sansBold: 'AtkinsonHyperlegible_700Bold',
-  /** Atkinson Hyperlegible — regular weight, italic */
+  /** Atkinson Hyperlegible, regular weight, italic */
   sansItalic: 'AtkinsonHyperlegible_400Regular_Italic',
-  /** Atkinson Hyperlegible — bold weight, italic */
+  /** Atkinson Hyperlegible, bold weight, italic */
   sansBoldItalic: 'AtkinsonHyperlegible_700Bold_Italic',
 } as const;
 
@@ -99,16 +90,6 @@ export type FontFamilyValue = (typeof FONT_FAMILIES)[FontFamily];
 export const typography: TypographyTokens = {
   families: {
     sans: FONT_FAMILIES.sans,
-    mono: 'Courier New',
-  },
-  weights: {
-    thin: '100',
-    light: '300',
-    regular: '400',
-    medium: '500',
-    semibold: '600',
-    bold: '700',
-    extrabold: '800',
   },
   sizes: {
     xs: { fontSize: 12, lineHeight: 16, letterSpacing: 0.4 },
@@ -121,8 +102,7 @@ export const typography: TypographyTokens = {
     '4xl': { fontSize: 36, lineHeight: 40, letterSpacing: -1 },
   },
   // Only the regular (400) and bold (700) Atkinson Hyperlegible weights are
-  // bundled, so heavier roles map to the bold family rather than an
-  // intermediate fontWeight that no font file backs.
+  // bundled, so each role names a weight that a loaded font file backs.
   variants: {
     display: { size: '4xl', family: FONT_FAMILIES.sansBold, weight: '700' },
     title: { size: '3xl', family: FONT_FAMILIES.sansBold, weight: '700' },

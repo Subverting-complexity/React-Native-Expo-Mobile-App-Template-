@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import {
   ActivityIndicator,
-  StyleSheet,
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
@@ -26,12 +25,12 @@ const SIZE_SPEC: Record<
   AppIconButtonSize,
   {
     pad: keyof ThemeTokens['spacing'];
-    icon: keyof ThemeTokens['typography']['sizes'];
+    icon: keyof ThemeTokens['iconSizes'];
   }
 > = {
-  sm: { pad: 2, icon: 'lg' },
-  md: { pad: 3, icon: '2xl' },
-  lg: { pad: 4, icon: '3xl' },
+  sm: { pad: 2, icon: 'sm' },
+  md: { pad: 3, icon: 'md' },
+  lg: { pad: 4, icon: 'lg' },
 };
 
 /**
@@ -69,9 +68,9 @@ function buildContainerStyle(
     padding,
     borderRadius: radius,
     backgroundColor: colors.background,
-    borderWidth: colors.border ? 1 : 0,
+    borderWidth: colors.border ? theme.borderWidths.thin : 0,
     borderColor: colors.border,
-    opacity: isDisabled ? 0.5 : 1,
+    opacity: isDisabled ? theme.opacity.disabled : 1,
   };
 }
 
@@ -96,7 +95,7 @@ export function AppIconButton({
 
   const spec = SIZE_SPEC[size];
   const colors = resolveVariantColors(theme, BUTTON_VARIANTS[variant]);
-  const iconSize = theme.typography.sizes[spec.icon].fontSize;
+  const iconSize = theme.iconSizes[spec.icon];
   const radius = round ? theme.radii.full : theme.radii.md;
 
   const containerStyle = useMemo<ViewStyle>(
@@ -123,7 +122,9 @@ export function AppIconButton({
       disabled={isDisabled}
       style={(state) => [
         containerStyle,
-        state.pressed && !isDisabled ? styles.pressed : null,
+        state.pressed && !isDisabled
+          ? { opacity: theme.opacity.pressed }
+          : null,
       ]}
       {...rest}
     >
@@ -139,7 +140,3 @@ export function AppIconButton({
     </AppPressable>
   );
 }
-
-const styles = StyleSheet.create({
-  pressed: { opacity: 0.85 },
-});

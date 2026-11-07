@@ -27,7 +27,7 @@ whatever account you are logged into globally. Full setup:
 Two Windows-specific traps worth knowing:
 
 - **direnv does not hook PowerShell.** If you rely on `.envrc` to load
-  `.env`, that only works in bash/zsh. The deploy scripts in `scripts/` load
+  `.env`, that only works in bash/zsh. The deploy scripts in `tools/` load
   `.env` themselves, so `npm run deploy:ios` needs nothing extra — but if you
   run `eas` commands by hand in PowerShell, load the token first:
 
@@ -80,15 +80,15 @@ chore(release): bump version to 1.1.0
 Default is a **minor** bump. Ask for another level with `-Level`:
 
 ```powershell
-./scripts/DeployiOSTestFlight.ps1 -Level patch   # 1.0.3 -> 1.0.4
-./scripts/DeployiOSTestFlight.ps1 -Level major   # 1.0.3 -> 2.0.0
+./tools/deploy/ps/DeployiOSTestFlight.ps1 -Level patch   # 1.0.3 -> 1.0.4
+./tools/deploy/ps/DeployiOSTestFlight.ps1 -Level major   # 1.0.3 -> 2.0.0
 ```
 
 You can also run it on its own, without deploying:
 
 ```bash
 npm run version:bump                 # minor
-node scripts/release/version-bump.js bump --level patch
+node tools/release/version-bump.js bump --level patch
 ```
 
 ### Why running both deploys does not bump twice
@@ -131,7 +131,7 @@ the bump through. It is a safety check, not a network dependency.
 
 Adding a second file that has to carry the same version (a `package.json`, a
 constants file) is one entry in `VERSION_FILES` in
-[`scripts/release/lib/version.js`](../scripts/release/lib/version.js); both
+[`tools/release/lib/version.js`](../tools/release/lib/version.js); both
 files then move in the same commit and cannot drift.
 
 ## Normal release flow

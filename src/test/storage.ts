@@ -1,4 +1,4 @@
-import type { StorageAdapter } from '@/theme';
+import type { StorageAdapter } from '@/storage';
 
 export function makeStorage(saved: string | null = null): StorageAdapter {
   return {

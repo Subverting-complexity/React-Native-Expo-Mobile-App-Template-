@@ -1,7 +1,7 @@
 # Fastlane lanes for the store LISTING.
 #
-# This template builds and submits its BINARIES with EAS (see eas.json and
-# scripts/Deploy*.ps1). These lanes handle the part EAS does not: the store
+# This project builds and submits its BINARIES with EAS (see eas.json and
+# tools/deploy/ps/Deploy*.ps1). These lanes handle the part EAS does not: the store
 # listing — metadata, keywords, screenshots, and the privacy/data-safety
 # declarations. That is why every lane skips the binary upload.
 #
@@ -29,7 +29,7 @@ platform :ios do
       key_content: ENV.fetch("ASC_KEY_CONTENT"), # raw .p8 contents, incl. BEGIN/END lines
     )
 
-    # Privacy "nutrition label". The template default declares that the app
+    # Privacy "nutrition label". The default declares that the app
     # collects nothing (DATA_NOT_COLLECTED). If your app DOES collect data,
     # fill the questionnaire once in App Store Connect, then run the
     # refresh_privacy_template lane below to capture the exact enum JSON.

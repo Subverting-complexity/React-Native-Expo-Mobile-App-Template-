@@ -21,35 +21,64 @@ brand-specific value.
 **Checked properties:** `color`, `backgroundColor`, `borderColor` (and
 all directional variants), `tintColor`, `shadowColor`, `textShadowColor`,
 `textDecorationColor`, `overlayColor`, `selectionColor`,
-`placeholderTextColor`, `underlineColorAndroid`.
+`placeholderTextColor`, `underlineColorAndroid`. The rule also finds a
+color inside the shorthand strings `boxShadow`, `textShadow`, `filter`,
+`background`, `backgroundImage`, `outline` and `border` (and its sides).
+
+The rule also checks the `color` prop on any JSX element, such as an icon:
+`<Ionicons color="#fff" />` fails.
 
 ### `theme-tokens/no-hardcoded-styles`
 
 Flags numeric literals on visual style properties that should come from
-the theme's spacing, typography, or radii scales:
+the theme's spacing, typography, radii, shadow, or z-index scales:
 
 - **Typography:** `fontSize`, `lineHeight`, `letterSpacing`
 - **Spacing:** `margin`, `padding` (and all directional variants), `gap`,
-  `rowGap`, `columnGap`, `top`, `right`, `bottom`, `left`
+  `rowGap`, `columnGap`, `top`, `right`, `bottom`, `left`, `start`, `end`
 - **Radii:** `borderRadius` (and all corner variants)
+- **Shadows:** `shadowRadius`, and the `width` and `height` of `shadowOffset`
+- **Layering:** `zIndex` (tokens in `src/theme/zIndex.ts`)
+- **Borders:** `borderWidth` and each side's width (tokens in
+  `src/theme/borderWidths.ts`)
+- **Opacity:** `opacity` (tokens in `src/theme/opacity.ts`)
 
-The value `0` is always allowed — it means "none/off" and is structural,
-not a design decision.
+The value `0` is always allowed. It means "none/off" and is structural,
+not a design decision. An `opacity` of `1` is also allowed, because it
+means "fully visible".
 
-**Not checked** (behavioral, not token-driven): `opacity`, `flex`,
-`flexGrow`, `flexShrink`, `zIndex`, `elevation`, `aspectRatio`,
-`borderWidth`, `width`, `height`, and dimension constraints.
+`fontWeight` fails with any literal, string or number, because weights
+come from the type variants in `theme.typography.variants`.
+
+The rule also checks a numeric `size` prop on any JSX element, such as
+`<Ionicons size={24} />`. A string size, such as `size="large"`, is a
+named variant and passes.
+
+**Not checked** (behavioral, not token-driven): `flex`, `flexGrow`,
+`flexShrink`, `elevation`, `aspectRatio`, `width`, `height`, and dimension
+constraints.
+
+### What counts as a literal
+
+Both rules look through an expression to the literal values it can
+produce:
+
+- Both branches of a conditional: `active ? '#fff' : '#000'`
+- Both sides of `||`, `&&` and `??`: `custom ?? 12`
+- A template literal with no expressions: `` `#abc` ``
+- A negative number: `-8`
 
 ## Where the rules apply
 
-The rules run on `app/**/*.{ts,tsx}` and `src/**/*.{ts,tsx}`, with three
+The rules run on `app/**/*.{ts,tsx}` and `src/**/*.{ts,tsx}`, with four
 exclusions:
 
-| Path                 | Why excluded                                    |
-| -------------------- | ----------------------------------------------- |
-| `src/theme/**`       | Token definition files — raw values belong here |
-| `**/__tests__/**`    | Test files mock styles for assertions           |
-| `**/*.test.{ts,tsx}` | Same as above                                   |
+| Path                 | Why excluded                                                     |
+| -------------------- | ---------------------------------------------------------------- |
+| `src/theme/**`       | Token definition files. Raw values belong here                   |
+| `src/api/**`         | API payloads use keys such as `start`, `end` and `color` as data |
+| `**/__tests__/**`    | Test files mock styles for assertions                            |
+| `**/*.test.{ts,tsx}` | Same as above                                                    |
 
 ## Escape hatch
 
