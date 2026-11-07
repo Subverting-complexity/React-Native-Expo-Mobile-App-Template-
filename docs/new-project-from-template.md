@@ -88,6 +88,20 @@ Change the Discussions link in `.github/ISSUE_TEMPLATE/config.yml`, and the
 issue links and contact details in `CONTRIBUTING.md` and
 `CODE_OF_CONDUCT.md`.
 
+### Project docs and the Home screen
+
+These files describe the template, not your app:
+
+- `README.md` and `CLAUDE.md`: change the title and the first paragraph to
+  describe your app. Keep the command and convention sections that still
+  apply.
+- `CHANGELOG.md`: keep the header and its rules, and remove the template's
+  entries under `[Unreleased]`.
+- `app/(tabs)/index.tsx`: the Home screen shows the title "Expo Template"
+  and the line "Home tab.". Replace them with your app's first screen.
+- `app/+html.tsx`: the web page sets `lang="en"`. Change it if your app is
+  in another language.
+
 ## 3. Wire up EAS
 
 EAS (Expo Application Services) handles cloud builds and store
@@ -333,6 +347,8 @@ a build under the wrong project.
       `package` in `app.config.ts`.
 - [ ] Set `name` (and `license`, if needed) in `package.json`.
 - [ ] Updated the GitHub links and contacts.
+- [ ] Rewrote the template text in `README.md`, `CLAUDE.md`,
+      `CHANGELOG.md` and the Home screen.
 - [ ] Ran `npx eas-cli init` and copied the `projectId` into `app.config.ts`.
 - [ ] Created an `EXPO_TOKEN` and added it to `.env`.
 - [ ] Ran `npm run verify:expo` to confirm account setup.
